@@ -25,3 +25,38 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes orb-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 0 10px rgba(124, 106, 174, 0.16),
+      0 0 60px rgba(124, 106, 174, 0.45);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 0 0 16px rgba(124, 106, 174, 0.10),
+      0 0 80px rgba(124, 106, 174, 0.65);
+  }
+}
+
+.orb {
+  width: 96px;
+  height: 96px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background: radial-gradient(
+    circle at 32% 30%,
+    var(--color-malva-soft),
+    var(--color-malva) 46%,
+    var(--color-sky) 100%
+  );
+  animation: orb-pulse 3.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    animation: none;
+  }
+}
