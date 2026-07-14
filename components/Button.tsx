@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
-type Variant = "primary" | "ghost";
+type Variant = "primary" | "ghost" | "link";
 
 type ButtonProps = ComponentPropsWithoutRef<"button"> & {
   variant?: Variant;
@@ -15,6 +15,8 @@ const variants: Record<Variant, string> = {
     "bg-malva text-white hover:-translate-y-px hover:brightness-110",
   ghost:
     "bg-transparent text-ink border-[1.5px] border-line hover:border-malva hover:text-malva",
+  link:
+    "bg-transparent text-malva px-0 py-0 rounded-none underline-offset-4 hover:underline focus-visible:outline-malva",
 };
 
 export function Button({
