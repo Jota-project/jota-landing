@@ -1,0 +1,11 @@
+{
+  "home": {
+    "eyebrow": "Work in progress",
+    "title": "Hello, Jota",
+    "subtitle": "Placeholder landing — the real sections are coming soon.",
+    "ctaComponents": "See the design system"
+  },
+  "placeholder": {
+    "note": "This page is a smoke test for the stack. Marketing copy will land later."
+  }
+}
