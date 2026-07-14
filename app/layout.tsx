@@ -19,8 +19,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jota",
-  description: "Jota — asistente de voz local, privado y en tiempo real.",
+  title: "Jota — Your personal agent, with a voice",
+  description:
+    "Not just another voice assistant: an agent that remembers, personalizes and acts for you. Your home, your work, your day. Private by design.",
 };
 
 export default async function RootLayout({

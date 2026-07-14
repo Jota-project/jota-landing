@@ -17,6 +17,11 @@
 
   --radius-card: 24px;
   --radius-pill: 9999px;
+
+  --spacing-section-y: 6rem;
+  --spacing-section-y-md: 8rem;
+  --width-prose: 60ch;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body {
@@ -24,6 +29,16 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 @keyframes orb-pulse {
