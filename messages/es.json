@@ -7,5 +7,117 @@
   },
   "placeholder": {
     "note": "Esta página es una prueba de integración del stack. El copy real llega más adelante."
+  },
+  "nav": {
+    "hero": "Inicio",
+    "what": "Qué puede hacer",
+    "model": "Modelo",
+    "team": "Equipo",
+    "contact": "Contacto",
+    "skipToContent": "Saltar al contenido"
+  },
+  "hero": {
+    "eyebrow": "Agente personal con voz",
+    "headline": "No un asistente.",
+    "headlineItalic": "Un agente.",
+    "subhead": "Jota recuerda, aprende cómo eres y actúa por ti — en tu casa, tu trabajo y tu día a día. Le hablas, y se encarga.",
+    "ctaPrimary": "Hablemos",
+    "ctaSecondary": "Qué puede hacer"
+  },
+  "problem": {
+    "eyebrow": "El problema",
+    "headline": "Los asistentes de hoy son rápidos.",
+    "headlineItalic": "Y tontos.",
+    "body": "Responden al momento, pero ahí se acaba. No te recuerdan, no aprenden cómo eres, no encadenan tareas ni se conectan con lo que de verdad usas. Para automatizar algo te obligan a pelearte con apps frágiles y menús que cambian. Contestan comandos sueltos — no hacen nada por ti."
+  },
+  "solution": {
+    "eyebrow": "La solución",
+    "headline": "Un agente que te conoce",
+    "headlineItalic": "y actúa por ti.",
+    "body": "Jota tiene memoria, aprende cómo eres y encadena tareas de verdad. Sobre OpenClaw —un orquestador de IA abierto y personalizable hasta el extremo— se conecta con lo que quieras: tu casa a través de Home Assistant, tu correo, tu código, tus tareas y tus rutinas. Le hablas con naturalidad y se encarga.",
+    "pillar1": "Memoria y contexto — te recuerda, retoma el hilo y no parte de cero cada vez.",
+    "pillar2": "Personalización al extremo — con OpenClaw, un agente moldeado a tu medida.",
+    "pillar3": "Conectado a todo — casa, trabajo y vida, no comandos sueltos."
+  },
+  "how": {
+    "eyebrow": "Cómo funciona",
+    "headline": "Le hablas.",
+    "headlineItalic": "Se encarga.",
+    "body": "Dices \"Ok Jota\" y le hablas con naturalidad. Jota entiende lo que quieres, decide qué hacer, actúa sobre lo que tengas conectado y te va respondiendo mientras trabaja — recordando el contexto de lo que ya habéis hablado.",
+    "step1": "Escucha — se activa con tu voz en cuanto dices \"Ok Jota\".",
+    "step2": "Entiende — interpreta tu intención y el contexto, no solo palabras clave.",
+    "step3": "Actúa — encadena tareas sobre tu casa, tu trabajo y tus servicios.",
+    "step4": "Responde — empieza a hablarte mientras piensa, con voz natural."
+  },
+  "what": {
+    "eyebrow": "Qué puede hacer",
+    "headline": "Un agente para toda tu vida,",
+    "headlineItalic": "no solo para tu casa.",
+    "card1": "Pone la lavadora antes de que te levantes y sube las persianas con el despertador.",
+    "card2": "Arma la alarma y apaga las luces cuando sales de casa, sin que se lo pidas.",
+    "card3": "Te lleva los correos: los resume, te avisa de lo urgente y redacta respuestas.",
+    "card4": "Es tu agente de código: revisa, te recuerda tareas pendientes y te frena un commit si algo falta por mirar.",
+    "card5": "Te recuerda lo que tienes a medias y retoma el hilo donde lo dejasteis.",
+    "closing": "Y como se apoya en OpenClaw, lo que hoy no hace, se le puede enseñar."
+  },
+  "why": {
+    "eyebrow": "Por qué ahora",
+    "headline": "La IA ya no solo responde:",
+    "headlineItalic": "actúa.",
+    "body": "Los modelos de IA por fin razonan, encadenan tareas y usan herramientas — dejan de ser un chat para convertirse en agentes. Al mismo tiempo, la gente está harta de asistentes que no recuerdan nada y Home Assistant se ha vuelto el estándar de la domótica seria. Nadie ha juntado todavía un agente de verdad con voz natural y personalización total. Esa es la ventana."
+  },
+  "model": {
+    "eyebrow": "Nube o local",
+    "headline": "Tú decides dónde",
+    "headlineItalic": "vive tu asistente.",
+    "body": "Jota funciona de las dos formas, y puedes cambiar cuando quieras.",
+    "cloudTitle": "Jota Cloud",
+    "cloudBody": "Lo enciendes y funciona. La potencia de la IA corre en nuestros servidores, con una suscripción. Privado por diseño, sin montar nada.",
+    "localTitle": "Jota Local",
+    "localBody": "Control absoluto. Todo funciona en tu casa, por tu cuenta o con nuestro hardware. Tu asistente, tu red, tus reglas.",
+    "recommended": "Recomendado"
+  },
+  "team": {
+    "eyebrow": "Equipo",
+    "headline": "Dos personas construyendo esto",
+    "headlineItalic": "a fondo.",
+    "body": "Un equipo con la parte técnica y la de producto cubiertas, construyendo Jota de arriba abajo: desde el motor de voz hasta la experiencia final.",
+    "members": [
+      {
+        "name": "Alfonso Garre",
+        "role": "Founder · Producto",
+        "bio": "Construyó el motor de voz de Jota y la arquitectura completa del agente de principio a fin."
+      },
+      {
+        "name": "Joan Moreno",
+        "role": "Co-fundador · Empresa",
+        "bio": "Traduce la visión técnica a algo que un cliente, un inversor o un socio pueda entender y querer."
+      }
+    ]
+  },
+  "engineering": {
+    "eyebrow": "Estado del producto",
+    "eyebrow_en": "Product status",
+    "headline": "No es una idea.",
+    "headlineItalic": "Ya funciona.",
+    "body": "La arquitectura de Jota está construida y operativa de principio a fin: de la voz al razonamiento del agente y de vuelta a la voz, conectada a la casa y a servicios reales. Iteramos sobre ella cada semana.",
+    "proof1": "Flujo de voz completo funcionando end-to-end.",
+    "proof2": "Agente sobre OpenClaw, conectado a Home Assistant y a herramientas reales.",
+    "proof3": "Wake word propia entrenada (\"Ok Jota\").",
+    "proof4": "Desarrollo activo y continuo, con releases frecuentes."
+  },
+  "contact": {
+    "eyebrow": "Hablemos",
+    "headline": "¿Construimos el agente que sí",
+    "headlineItalic": "es tuyo?",
+    "body": "Si inviertes en IA aplicada, agentes o el hogar del futuro, hablemos.",
+    "ctaPrimary": "Escríbenos",
+    "ctaSecondary": "Apúntate a la lista de espera",
+    "emailSubject": "Hablemos de Jota",
+    "waitlistSubject": "Lista de espera Jota"
+  },
+  "footer": {
+    "tagline": "Jota — tu agente, con voz.",
+    "rights": "Todos los derechos reservados."
   }
 }

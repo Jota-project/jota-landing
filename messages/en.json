@@ -7,5 +7,116 @@
   },
   "placeholder": {
     "note": "This page is a smoke test for the stack. Marketing copy will land later."
+  },
+  "nav": {
+    "hero": "Home",
+    "what": "What it can do",
+    "model": "Model",
+    "team": "Team",
+    "contact": "Contact",
+    "skipToContent": "Skip to content"
+  },
+  "hero": {
+    "eyebrow": "Personal agent with a voice",
+    "headline": "Not an assistant.",
+    "headlineItalic": "An agent.",
+    "subhead": "Jota remembers, learns who you are and acts for you — across your home, your work and your day. You talk, it handles the rest.",
+    "ctaPrimary": "Let's talk",
+    "ctaSecondary": "What it can do"
+  },
+  "problem": {
+    "eyebrow": "The problem",
+    "headline": "Today's assistants are fast.",
+    "headlineItalic": "And dumb.",
+    "body": "They answer in a snap, and that's where it ends. They don't remember you, don't learn who you are, can't chain tasks or connect to what you actually use. To automate anything, they make you fight fragile apps and menus that keep changing. They answer isolated commands — they don't do anything for you."
+  },
+  "solution": {
+    "eyebrow": "The solution",
+    "headline": "An agent that knows you",
+    "headlineItalic": "and acts for you.",
+    "body": "Jota has memory, learns who you are and actually chains tasks together. Built on OpenClaw — an open, endlessly customizable AI orchestrator — it connects to whatever you want: your home through Home Assistant, your email, your code, your tasks and your routines. You talk to it naturally, and it takes care of things.",
+    "pillar1": "Memory and context — it remembers you, picks up the thread, never starts from zero.",
+    "pillar2": "Deep personalization — with OpenClaw, an agent shaped around you.",
+    "pillar3": "Connected to everything — home, work and life, not isolated commands."
+  },
+  "how": {
+    "eyebrow": "How it works",
+    "headline": "You talk.",
+    "headlineItalic": "It handles it.",
+    "body": "Say \"Ok Jota\" and speak naturally. Jota understands what you want, decides what to do, acts on whatever you've connected and replies as it works — remembering the context of what you've already discussed.",
+    "step1": "Listens — wakes on your voice the moment you say \"Ok Jota\".",
+    "step2": "Understands — reads your intent and context, not just keywords.",
+    "step3": "Acts — chains tasks across your home, your work and your services.",
+    "step4": "Responds — starts speaking while it thinks, in a natural voice."
+  },
+  "what": {
+    "eyebrow": "What it can do",
+    "headline": "An agent for your whole life,",
+    "headlineItalic": "not just your home.",
+    "card1": "Starts the laundry before you wake up and raises the blinds with your alarm.",
+    "card2": "Arms the alarm and turns off the lights when you leave — without being asked.",
+    "card3": "Runs your inbox: summarizes it, flags what's urgent and drafts replies.",
+    "card4": "Acts as your coding agent: reviews, reminds you of open tasks and stops a commit if something's left to check.",
+    "card5": "Reminds you what's unfinished and picks up where you left off.",
+    "closing": "And because it's built on OpenClaw, what it can't do yet, you can teach it."
+  },
+  "why": {
+    "eyebrow": "Why now",
+    "headline": "AI no longer just answers —",
+    "headlineItalic": "it acts.",
+    "body": "AI models can finally reason, chain tasks and use tools — they're turning from a chat into agents. Meanwhile, people are tired of assistants that remember nothing, and Home Assistant has become the standard for serious home automation. Nobody has yet combined a real agent with natural voice and full personalization. That's the window."
+  },
+  "model": {
+    "eyebrow": "Cloud or local",
+    "headline": "You decide where",
+    "headlineItalic": "your assistant lives.",
+    "body": "Jota works both ways, and you can switch whenever you want.",
+    "cloudTitle": "Jota Cloud",
+    "cloudBody": "Turn it on and it works. The AI runs on our servers, on a subscription. Private by design, nothing to set up.",
+    "localTitle": "Jota Local",
+    "localBody": "Absolute control. Everything runs in your home, on your own or with our hardware. Your assistant, your network, your rules.",
+    "recommended": "Recommended"
+  },
+  "team": {
+    "eyebrow": "Team",
+    "headline": "Two people building this",
+    "headlineItalic": "for real.",
+    "body": "A team covering both engineering and product, building Jota end to end — from the voice engine to the final experience.",
+    "members": [
+      {
+        "name": "Alfonso Garre",
+        "role": "Founder · Product",
+        "bio": "Built Jota's voice engine and the full agent architecture end to end."
+      },
+      {
+        "name": "Joan Moreno",
+        "role": "Co-founder · Business",
+        "bio": "Turns the technical vision into something a customer, an investor or a partner can understand."
+      }
+    ]
+  },
+  "engineering": {
+    "eyebrow": "Product status",
+    "headline": "Not an idea.",
+    "headlineItalic": "It already works.",
+    "body": "Jota's architecture is built and running end to end: from voice to the agent's reasoning and back to voice, wired to the home and to real services. We iterate on it every week.",
+    "proof1": "Full voice flow working end-to-end.",
+    "proof2": "Agent on OpenClaw, connected to Home Assistant and real tools.",
+    "proof3": "Custom wake word trained (\"Ok Jota\").",
+    "proof4": "Active, continuous development with frequent releases."
+  },
+  "contact": {
+    "eyebrow": "Let's talk",
+    "headline": "Let's build the agent that's",
+    "headlineItalic": "actually yours.",
+    "body": "If you invest in applied AI, agents or the home of the future, let's talk.",
+    "ctaPrimary": "Get in touch",
+    "ctaSecondary": "Join the waitlist",
+    "emailSubject": "Let's talk about Jota",
+    "waitlistSubject": "Jota waitlist"
+  },
+  "footer": {
+    "tagline": "Jota — your agent, with a voice.",
+    "rights": "All rights reserved."
   }
 }
