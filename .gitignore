@@ -1,1 +1,11 @@
-docs/dev/
+node_modules/
+.next/
+out/
+build/
+*.log
+.env*.local
+.DS_Store
+next-env.d.ts
+.vercel
+tsconfig.tsbuildinfo
+docs/
