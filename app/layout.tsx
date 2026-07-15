@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -39,6 +40,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-linen text-ink">
         {children}
+        <Analytics />
       </body>
     </html>
   );
