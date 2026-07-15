@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { headers } from "next/headers";
