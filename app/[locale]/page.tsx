@@ -1,9 +1,14 @@
-import { setRequestLocale, getTranslations } from "next-intl/server";
-import { Eyebrow } from "@/components/Eyebrow";
-import { Button } from "@/components/Button";
-import { Orb } from "@/components/Orb";
-import { LanguageToggle } from "@/components/LanguageToggle";
-import { Link } from "@/i18n/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { Hero } from "@/components/sections/Hero";
+import { Problem } from "@/components/sections/Problem";
+import { Solution } from "@/components/sections/Solution";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { WhatItCanDo } from "@/components/sections/WhatItCanDo";
+import { WhyNow } from "@/components/sections/WhyNow";
+import { CloudVsLocal } from "@/components/sections/CloudVsLocal";
+import { Team } from "@/components/sections/Team";
+import { Engineering } from "@/components/sections/Engineering";
+import { Contact } from "@/components/sections/Contact";
 
 export default async function HomePage({
   params,
@@ -12,32 +17,41 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("home");
-  const note = await getTranslations("placeholder");
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-12 px-6 py-16 md:py-24">
-      <header className="flex items-center justify-between">
-        <span className="font-display text-xl font-medium text-ink">J</span>
-        <LanguageToggle />
-      </header>
-
-      <section className="flex flex-col items-start gap-6">
-        <Eyebrow>{t("eyebrow")}</Eyebrow>
-        <h1 className="font-display text-[clamp(2.6rem,7vw,4.4rem)] font-medium leading-[1.02] tracking-[-0.02em] text-ink">
-          {t("title")}
-        </h1>
-        <p className="max-w-[34ch] text-lg text-ink-soft">{t("subtitle")}</p>
-
-        <div className="mt-2 flex flex-wrap items-center gap-4">
-          <Link href="/components">
-            <Button variant="primary">{t("ctaComponents")}</Button>
-          </Link>
-          <Orb className="ml-2" />
-        </div>
-
-        <p className="mt-4 max-w-prose text-sm text-ink-soft">{note("note")}</p>
-      </section>
-    </main>
+    <>
+      <main className="mx-auto w-full max-w-5xl px-6">
+        <section id="hero" className="py-16 md:py-24">
+          <Hero />
+        </section>
+        <section id="problem" className="py-16 md:py-24">
+          <Problem />
+        </section>
+        <section id="solution" className="py-16 md:py-24">
+          <Solution />
+        </section>
+        <section id="how" className="py-16 md:py-24">
+          <HowItWorks />
+        </section>
+        <section id="what" className="py-16 md:py-24">
+          <WhatItCanDo />
+        </section>
+        <section id="why" className="py-16 md:py-24">
+          <WhyNow />
+        </section>
+        <section id="model" className="py-16 md:py-24">
+          <CloudVsLocal />
+        </section>
+        <section id="team" className="py-16 md:py-24">
+          <Team />
+        </section>
+        <section id="engineering" className="py-16 md:py-24">
+          <Engineering />
+        </section>
+        <section id="contact" className="py-16 md:py-24">
+          <Contact />
+        </section>
+      </main>
+    </>
   );
 }
