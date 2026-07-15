@@ -114,10 +114,20 @@ describe("WhatItCanDo renders 5 cards", () => {
 });
 
 describe("CloudVsLocal renders Cloud with recommended badge", () => {
-  it("renders the recommended text", async () => {
+  it("renders the English badge text", async () => {
+    process.env.TEST_LOCALE = "en";
     const { CloudVsLocal } = await import("@/components/sections/CloudVsLocal");
     const Element = await CloudVsLocal();
     const { container } = render(<>{Element}</>);
-    expect(container.textContent).toMatch(/Recommended|Recomendado/);
+    expect(container.textContent).toContain("Recommended");
+  });
+
+  it("renders the Spanish badge text", async () => {
+    process.env.TEST_LOCALE = "es";
+    const { CloudVsLocal } = await import("@/components/sections/CloudVsLocal");
+    const Element = await CloudVsLocal();
+    const { container } = render(<>{Element}</>);
+    expect(container.textContent).toContain("Recomendado");
+    delete process.env.TEST_LOCALE;
   });
 });

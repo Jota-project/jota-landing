@@ -1,13 +1,4 @@
 {
-  "home": {
-    "eyebrow": "En construcción",
-    "title": "Hola, Jota",
-    "subtitle": "Placeholder de la landing — las secciones reales llegan pronto.",
-    "ctaComponents": "Ver el sistema de diseño"
-  },
-  "placeholder": {
-    "note": "Esta página es una prueba de integración del stack. El copy real llega más adelante."
-  },
   "nav": {
     "hero": "Inicio",
     "what": "Qué puede hacer",
@@ -97,7 +88,6 @@
   },
   "engineering": {
     "eyebrow": "Estado del producto",
-    "eyebrow_en": "Product status",
     "headline": "No es una idea.",
     "headlineItalic": "Ya funciona.",
     "body": "La arquitectura de Jota está construida y operativa de principio a fin: de la voz al razonamiento del agente y de vuelta a la voz, conectada a la casa y a servicios reales. Iteramos sobre ella cada semana.",

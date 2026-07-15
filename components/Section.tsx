@@ -6,18 +6,16 @@ export function Section({
   headline,
   headlineItalic,
   lead,
-  id,
   children,
 }: {
   eyebrow: string;
   headline: string;
   headlineItalic?: string;
   lead?: string;
-  id?: string;
   children?: ReactNode;
 }) {
   return (
-    <div id={id} className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6">
       <Eyebrow>{eyebrow}</Eyebrow>
       <h2 className="font-display text-[clamp(2rem,5vw,3.2rem)] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
         {headline}
