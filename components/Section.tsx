@@ -14,7 +14,7 @@ export function Section({
   headlineItalic?: string;
   lead?: string;
   id?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <div id={id} className="flex flex-col gap-6">
