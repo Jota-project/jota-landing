@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { headers } from "next/headers";
@@ -18,7 +19,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const siteUrl =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    siteUrl ? `https://${siteUrl}` : "http://localhost:3000",
+  ),
   title: "Jota — Your personal agent, with a voice",
   description:
     "Not just another voice assistant: an agent that remembers, personalizes and acts for you. Your home, your work, your day. Private by design.",
