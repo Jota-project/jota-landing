@@ -8,6 +8,12 @@ import { Reposo } from "@/components/screen/tv/Reposo";
 import { Words } from "@/components/screen/tv/Words";
 import { ToolCard } from "@/components/screen/tv/ToolCard";
 import { ActivityPill } from "@/components/screen/tv/ActivityPill";
+import { Inicio } from "@/components/screen/tv/Inicio";
+import { Serie } from "@/components/screen/tv/Serie";
+import { MusicaFull } from "@/components/screen/tv/MusicaFull";
+import { WebReceta } from "@/components/screen/tv/WebReceta";
+import { GrowTile } from "@/components/screen/tv/GrowTile";
+import { PairCode } from "@/components/screen/tv/PairCode";
 
 const wrap = (ui: ReactNode) =>
   render(
@@ -159,5 +165,64 @@ describe("ActivityPill", () => {
     render(<ActivityPill on label="Cena" time="20:00" progress={0.5} />);
     expect(screen.getByText("Cena")).toBeInTheDocument();
     expect(screen.getByText("20:00")).toBeInTheDocument();
+  });
+});
+
+describe("TV screens", () => {
+  it("Inicio focuses the first tile on El faro with the fixed time", () => {
+    wrap(<Inicio />);
+    expect(screen.getByText("21:40")).toBeTruthy();
+    expect(screen.getAllByText("El faro").length).toBeGreaterThan(0);
+    expect(screen.getByTestId("tv-tile-0").getAttribute("data-focus")).toBe("true");
+    expect(screen.getByTestId("tv-tile-1").getAttribute("data-focus")).toBe("false");
+  });
+
+  it("Inicio hero follows the focus", () => {
+    wrap(<Inicio focus={2} />);
+    expect(screen.getAllByText("Mareas").length).toBeGreaterThan(1);
+  });
+
+  it("Serie shows the show title", () => {
+    wrap(<Serie playing progress={0.38} />);
+    expect(screen.getByText(/El faro/)).toBeTruthy();
+    expect(screen.getByTestId("tv-serie").getAttribute("data-playing")).toBe("true");
+  });
+
+  it("MusicaFull compact adds the compact class", () => {
+    const { container, rerender } = wrap(<MusicaFull compact />);
+    expect(container.querySelector(".tv-musica")!.classList.contains("compact")).toBe(true);
+    expect(screen.getByText("Blue in Green")).toBeTruthy();
+    rerender(
+      <NextIntlClientProvider locale="es" messages={es}>
+        <MusicaFull compact={false} />
+      </NextIntlClientProvider>,
+    );
+    expect(container.querySelector(".tv-musica")!.classList.contains("compact")).toBe(false);
+  });
+
+  it("WebReceta shows the recipe site and its loading state", () => {
+    wrap(<WebReceta loading />);
+    expect(screen.getByText("cocinadecasa.example")).toBeTruthy();
+    expect(screen.getByTestId("tv-web").getAttribute("data-loading")).toBe("true");
+  });
+
+  it("GrowTile full shows its title", () => {
+    wrap(<GrowTile phase="full" title="Netflix" sub="Abriendo…" from={{ x: 96, y: 572, scale: 0.206 }} />);
+    expect(screen.getByText("Netflix")).toBeTruthy();
+    const t = screen.getByTestId("tv-grow");
+    expect(t.getAttribute("data-phase")).toBe("full");
+    expect(t.style.transform).toBe("none");
+  });
+
+  it("GrowTile small starts at the tile position", () => {
+    wrap(<GrowTile phase="small" title="Netflix" sub="x" from={{ x: 96, y: 572, scale: 0.206 }} />);
+    expect(screen.getByTestId("tv-grow").style.transform).toBe("translate(96px,572px) scale(0.206)");
+  });
+
+  it("PairCode shows the code digits", () => {
+    wrap(<PairCode code="4821" visibleDigits={2} />);
+    const d = screen.getAllByTestId("tv-digit");
+    expect(d.map((n) => n.textContent)).toEqual(["4", "8", "2", "1"]);
+    expect(d.map((n) => n.getAttribute("data-on"))).toEqual(["true", "true", "false", "false"]);
   });
 });
