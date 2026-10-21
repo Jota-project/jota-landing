@@ -340,7 +340,11 @@ describe("TrackA", () => {
     sc.toQ2(0.87);
     expect(jota().length).toBeGreaterThan(2);
     expect(lit()).toBeLessThan(jota().length);
-    act(() => void vi.advanceTimersByTime(20000));
+    // reading on past it (still before the next turn), the answer completes at once
+    sc.toQ2(1.1);
+    expect(lit()).toBe(jota().length);
+    // and it is not typed again when the visitor comes back onto it
+    sc.toQ2(1.0);
     expect(lit()).toBe(jota().length);
     // a jump over the second turn: its answer is whole at once
     sc.toQ2(SCENE2[SCENE2.length - 1].pos + 0.01);

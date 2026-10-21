@@ -51,8 +51,9 @@ export function firstEvents(events: ScriptEvent[], n: number): Set<string> {
   return new Set(events.slice(0, Math.max(0, n)).map((e) => e.id));
 }
 
-/** A step this short past the newest event counts as reading along (not a jump). */
-export const STEP_MAX = 0.3;
+/** Reading along: a line animates while the scroll is less than this past its event; further on (a jump, or simply
+ *  reading on) it is painted whole, so every answer is seen whole for a while before the next turn. */
+export const STEP_MAX = 0.2;
 /** Faster than this (screens a second) the visitor is skimming: lines come out whole. */
 export const FAST = 2.5;
 
@@ -63,6 +64,11 @@ export function readsAlong(events: ScriptEvent[], prev: number, next: number, q:
   if (next <= prev || prev < 0 || prev >= events.length) return false;
   if (speed > FAST) return false;
   return q - events[prev].pos < STEP_MAX;
+}
+
+/** Whether the newest of the n events done is still close enough to animate (see STEP_MAX). */
+export function stillReading(events: ScriptEvent[], n: number, q: number): boolean {
+  return n >= 1 && n <= events.length && q - events[n - 1].pos < STEP_MAX;
 }
 
 /** What turn n has said so far. */

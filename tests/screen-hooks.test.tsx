@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import { useInView, useReducedMotion, useTrackProgress } from "@/components/screen/hooks";
-import { FAST, STEP_MAX, eventsDone, firstEvents, readsAlong } from "@/components/screen/tracks/scriptsA";
+import { FAST, STEP_MAX, eventsDone, firstEvents, readsAlong, stillReading } from "@/components/screen/tracks/scriptsA";
 
 type IOCb = (entries: Partial<IntersectionObserverEntry>[]) => void;
 let ioCbs: IOCb[] = [];
@@ -155,5 +155,11 @@ describe("eventsDone", () => {
     // scrolling back, or no change
     expect(readsAlong(evs, 2, 1, 0.4, 0.4)).toBe(false);
     expect(readsAlong(evs, 1, 1, 0.4, 0.4)).toBe(false);
+  });
+  it("a line read along completes (stops animating) once the scroll is STEP_MAX past its event", () => {
+    expect(stillReading(evs, 1, 0.2)).toBe(true);
+    expect(stillReading(evs, 1, 0.2 + STEP_MAX - 0.01)).toBe(true);
+    expect(stillReading(evs, 1, 0.2 + STEP_MAX)).toBe(false);
+    expect(stillReading(evs, 0, 0.1)).toBe(false);
   });
 });

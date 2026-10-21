@@ -6,7 +6,7 @@ import { useInView, useReducedMotion, useTrackProgress } from "../hooks";
 import { TvFrame } from "../tv/TvFrame";
 import type { GrowPhase } from "../tv/GrowTile";
 import { Scene1Tv, Scene2Tv, Scene3Tv } from "./ScenesA";
-import { SCENE2, SCENE3, eventsDone, firstEvents, readsAlong } from "./scriptsA";
+import { SCENE2, SCENE3, eventsDone, firstEvents, readsAlong, stillReading } from "./scriptsA";
 
 type Scene = 1 | 2 | 3;
 const ALL2 = new Set(SCENE2.map((e) => e.id));
@@ -137,8 +137,9 @@ function Progress({
     seen.push({ t: now, q: q2 });
     while (seen.length > 2 && seen[1].t <= now - SPEED_WINDOW) seen.shift();
     const L = last.current;
-    const a2 = n2 === L.n2 ? L.a2 : readsAlong(SCENE2, L.n2, n2, q2, speed);
-    const a3 = n3 === L.n3 ? L.a3 : readsAlong(SCENE3, L.n3, n3, q3, speed);
+    // a new event animates if read along; a line already animating completes once the scroll is past it
+    const a2 = n2 === L.n2 ? L.a2 && stillReading(SCENE2, n2, q2) : readsAlong(SCENE2, L.n2, n2, q2, speed);
+    const a3 = n3 === L.n3 ? L.a3 && stillReading(SCENE3, n3, q3) : readsAlong(SCENE3, L.n3, n3, q3, speed);
     if (grow !== L.grow || n2 !== L.n2 || n3 !== L.n3 || a2 !== L.a2 || a3 !== L.a3) {
       last.current = { grow, n2, n3, a2, a3 };
       onStep(last.current);
