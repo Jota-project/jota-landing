@@ -63,10 +63,11 @@
   --base:#211b2a;--clock:#d9d1dc;--dsoft:#bab2c4;--dacc:#c3b7e3;--pillbg:#2a2433;--orb:.42;--mbase:#1a1420;
   background:var(--base);color:var(--text);overflow:hidden;font:400 16px/1.5 var(--sans);
   --la:#7c6aae;--lb:#6e8cc4;--sheet:#2a2233;--tint:.76;--br:.6;--t-main:#ddd6d0;--t-you:#c3b7e3;--t-soft:#d0c9d9}
-/* sin JS (antes de hidratar) la escala sale del ancho del marco: tan(atan2(a,b)) = a/b sin unidades. Solo entonces:
-   WebKit (Safari, todo iOS) lo calcula mal y dejaría el lienzo en miniatura; hidratado manda --s, medido por TvFrame */
+/* antes de hidratar, --s lo pone FitFrames (script en línea tras el marcado, antes de pintar); hidratado, TvFrame.
+   Solo sin JS (ningún --s en el marco) la escala sale del ancho: tan(atan2(a,b)) = a/b sin unidades. WebKit lo
+   calcula mal, por eso con JS nunca se usa */
 @supports (transform:scale(tan(atan2(1px,1px)))){
-  .jscreen:not([data-hydrated]) .tv-stage{transform:scale(tan(atan2(100cqw,1920px)))}
+  .jscreen:not([data-hydrated]) .tv-vp:not([style*="--s"]) .tv-stage{transform:scale(tan(atan2(100cqw,1920px)))}
 }
 
 /* ---------- Reposo v2 · Distribución 1, margen editorial ---------- */

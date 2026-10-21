@@ -38,6 +38,8 @@ export function TvFrame({
   return (
     <div
       ref={ref}
+      // FitFrames may have set --s on it before hydration
+      suppressHydrationWarning
       data-testid="tv-frame"
       data-paused={paused ? "true" : "false"}
       className={`tv-vp ${className}`.trim()}

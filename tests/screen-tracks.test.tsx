@@ -16,6 +16,7 @@ import { TvB } from "@/components/screen/tracks/ScenesB";
 import { TrackC } from "@/components/screen/tracks/TrackC";
 import { NIGHT_AT, TrackD, perfilAt } from "@/components/screen/tracks/TrackD";
 import { MoreList } from "@/components/screen/MoreList";
+import { FIT_SCRIPT, FitFrames } from "@/components/screen/FitFrames";
 import { CONTACT_EMAIL, mailtoHref } from "@/lib/contact";
 import { MandoPair } from "@/components/screen/phone/MandoPair";
 import { MandoRemote } from "@/components/screen/phone/MandoRemote";
@@ -620,21 +621,47 @@ describe("no-JS and CSS fallbacks", () => {
   it("TV and phone canvases scale with container units, without JS", () => {
     const tv = css("screen-tv.css");
     expect(tv).toMatch(/\.tv-vp\{[^}]*container-type:inline-size/);
-    expect(tv).toMatch(/@supports[^{]*atan2[^{]*\{\s*\.jscreen:not\(\[data-hydrated\]\) \.tv-stage\{transform:scale\(tan\(atan2\(100cqw,1920px\)\)\)/);
+    expect(tv).toMatch(/@supports[^{]*atan2[^{]*\{\s*\.jscreen:not\(\[data-hydrated\]\) \.tv-vp:not\(\[style\*="--s"\]\) \.tv-stage\{transform:scale\(tan\(atan2\(100cqw,1920px\)\)\)/);
     const b = css("screen-track-b.css");
     expect(b).toMatch(/\.ph-vp\{[^}]*container-type:inline-size/);
-    expect(b).toMatch(/@supports[^{]*atan2[^{]*\{[^@]*\.jscreen:not\(\[data-hydrated\]\) \.ph-screen\{[^}]*tan\(atan2\(100cqw,390px\)\)/);
+    expect(b).toMatch(/@supports[^{]*atan2[^{]*\{[^@]*\.jscreen:not\(\[data-hydrated\]\) \.ph-vp:not\(\[style\*="--ps"\]\) \.ph-screen\{[^}]*tan\(atan2\(100cqw,390px\)\)/);
   });
 
-  it("WebKit: the trig/cqw scale only applies before hydration; hydrated, the JS-measured --s/--ps rule", () => {
+  it("WebKit: the trig/cqw scale only applies without JS (no --s/--ps on the frame yet); otherwise --s/--ps rule", () => {
     // Safari (every iPhone browser) gets tan(atan2(100cqw,…)) wrong and the TV shrank to a thumbnail
     for (const f of ["screen-tv.css", "screen-track-b.css"]) {
       const src = css(f);
       const rules = [...src.matchAll(/([^{}]+)\{[^{}]*(?:atan2|cqw)[^{}]*\}/g)].map((m) => m[1].trim());
-      for (const sel of rules) expect(sel, f).toMatch(/:not\(\[data-hydrated\]\)/);
+      for (const sel of rules) expect(sel, f).toMatch(/:not\(\[data-hydrated\]\).*:not\(\[style\*="--p?s"\]\)/);
     }
     expect(css("screen-tv.css")).toMatch(/\.tv-stage\{[^}]*transform:scale\(var\(--s\)\)/);
     expect(css("screen-track-b.css")).toMatch(/\.ph-screen\{[^}]*transform:scale\(var\(--ps\)\)/);
+  });
+
+  it("before hydration an inline script sets --s/--ps from each frame's width (width/1920, width/390)", () => {
+    document.body.innerHTML = '<main class="jscreen"><div class="tv-vp"></div><div class="tv-vp"></div><div class="ph-vp"></div></main>';
+    const [a, b] = [...document.querySelectorAll<HTMLElement>(".tv-vp")];
+    const ph = document.querySelector<HTMLElement>(".ph-vp")!;
+    Object.defineProperty(a, "clientWidth", { value: 960 });
+    Object.defineProperty(b, "clientWidth", { value: 1440 });
+    Object.defineProperty(ph, "clientWidth", { value: 195 });
+    new Function(FIT_SCRIPT)();
+    expect(a.style.getPropertyValue("--s")).toBe("0.5");
+    expect(b.style.getPropertyValue("--s")).toBe("0.75");
+    expect(ph.style.getPropertyValue("--ps")).toBe("0.5");
+    // a frame with no width yet keeps the CSS default
+    document.body.innerHTML = '<main class="jscreen"><div class="tv-vp"></div></main>';
+    new Function(FIT_SCRIPT)();
+    expect(document.querySelector<HTMLElement>(".tv-vp")!.style.getPropertyValue("--s")).toBe("");
+    document.body.innerHTML = "";
+    // and the server page emits it after the tracks with frames (A, B, D)
+    const html = renderToString(<FitFrames />);
+    expect(html).toContain(FIT_SCRIPT.slice(0, 40));
+    const page = readFileSync(path.resolve(process.cwd(), "app/[locale]/jota-screen/page.tsx"), "utf-8");
+    expect(page.match(/<FitFrames \/>/g)).toHaveLength(3);
+    expect(page).toMatch(/<TrackA \/>\s*<FitFrames \/>/);
+    expect(page).toMatch(/<TrackB \/>\s*<FitFrames \/>/);
+    expect(page).toMatch(/<TrackD \/>\s*<FitFrames \/>/);
   });
 
   it("sections keep their heights before hydration (no layout jump)", () => {

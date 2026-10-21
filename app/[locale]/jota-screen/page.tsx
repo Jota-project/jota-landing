@@ -5,6 +5,7 @@ import "@/components/screen/screen-tv-screens.css";
 import "@/components/screen/screen-track-a.css";
 import "@/components/screen/screen-track-b.css";
 import "@/components/screen/screen-end.css";
+import { FitFrames } from "@/components/screen/FitFrames";
 import { MoreList } from "@/components/screen/MoreList";
 import { NavTone } from "@/components/screen/NavTone";
 import { TrackA } from "@/components/screen/tracks/TrackA";
@@ -41,17 +42,21 @@ export default async function JotaScreenPage({ params }: Props) {
   setRequestLocale(locale);
 
   // Tramos A–D are sticky tracks (scenes 1–6 and 8); scene 7 is a plain list. Every scene keeps
-  // its id and its captions as real text. The page opens and closes on linen (TrackD ends there).
+  // its id and its captions as real text. The page opens and closes on linen (TrackD ends there). After each track
+  // with frames, FitFrames scales their canvases before the first paint (WebKit, before hydration).
   return (
     <main className="jscreen">
       <NavTone />
       <TrackA />
+      <FitFrames />
 
       <div className="bg-[#211b2a] text-linen" data-tone="dark">
         <TrackB />
+        <FitFrames />
         <TrackC />
         <MoreList />
         <TrackD />
+        <FitFrames />
       </div>
     </main>
   );

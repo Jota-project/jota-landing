@@ -24,7 +24,7 @@ export function PhoneFrame({ className = "", children }: { className?: string; c
     return () => ro.disconnect();
   }, []);
   return (
-    <div ref={ref} data-testid="phone-frame" className={`ph-vp ${className}`.trim()}>
+    <div ref={ref} suppressHydrationWarning data-testid="phone-frame" className={`ph-vp ${className}`.trim()}>
       <div className="ph-screen" aria-hidden="true">
         {children}
       </div>
