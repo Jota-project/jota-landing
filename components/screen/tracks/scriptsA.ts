@@ -22,8 +22,8 @@ export const SCENE2: ScriptEvent[] = [
   { pos: 2.25, id: "activity" },
 ];
 
-/** Scene 3 · spare screen: music from the first turn, the recipe web from the second (the tile grows .35 screen,
- *  ~1 s at a calm pace, before the web opens over it). */
+/** Scene 3 · spare screen: music from the first turn, the recipe web from the second (the tile grows with the
+ *  tool card, .5 screen, ~1.3 s at a calm pace, before the web fades in over it). */
 export const SCENE3: ScriptEvent[] = [
   { pos: 0.25, id: "you1" },
   { pos: 0.5, id: "tool1" },
@@ -32,10 +32,10 @@ export const SCENE3: ScriptEvent[] = [
   { pos: 0.75, id: "jota1" },
   { pos: 1.2, id: "you2" },
   { pos: 1.45, id: "tool2" },
-  { pos: 1.5, id: "grow" },
-  { pos: 1.85, id: "web" },
-  { pos: 1.95, id: "toolDone2" },
-  { pos: 2.05, id: "jota2" },
+  { pos: 1.45, id: "grow" },
+  { pos: 1.95, id: "web" },
+  { pos: 2.0, id: "toolDone2" },
+  { pos: 2.1, id: "jota2" },
 ];
 
 /** What the scene has said at q screens into it: every event whose position has been passed. Both ways: scrolling

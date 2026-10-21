@@ -66,6 +66,8 @@ export function duskAt(p1: number): number {
   return x < DARK_AT ? 0.6 * x : 0.72 + 0.56 * (x - DARK_AT);
 }
 
+const WEB_AT = SCENE3.find((e) => e.id === "web")!.pos;
+
 const NO_GEO: Geo = { trackH: 0, viewH: 0, top: 0, height: 0 };
 
 /** Measures a scene inside the track and the screen unit (its .ta-unit probe, 100svh tall), on mount and whenever
@@ -154,6 +156,8 @@ function Progress({
       // screens into scenes 2 and 3, for what follows the scroll inside them (the series and song bars)
       el.style.setProperty("--q2", String(clamp(q2, 4)));
       el.style.setProperty("--q3", String(clamp(q3, 4)));
+      // screens since the recipe web opened (the gallery drifts up with them)
+      el.style.setProperty("--w3", String(clamp(q3 - WEB_AT, 4)));
     }
     const now = typeof performance === "undefined" ? Date.now() : performance.now();
     const seen = samples.current;

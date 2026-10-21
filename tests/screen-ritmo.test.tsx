@@ -84,7 +84,7 @@ describe("the scroll drives the conversations", () => {
       }
       expect(pos(sc, "you2") - pos(sc, "jota1")).toBeGreaterThanOrEqual(READ_GAP - 1e-9);
       // no stretch of a screen or more without a change
-      for (let i = 1; i < p.length; i++) expect(p[i] - p[i - 1]).toBeLessThan(0.5);
+      for (let i = 1; i < p.length; i++) expect(p[i] - p[i - 1]).toBeLessThanOrEqual(0.5 + 1e-9);
     });
   }
 
@@ -93,8 +93,10 @@ describe("the scroll drives the conversations", () => {
     expect(pos(SCENE2, "activity") - pos(SCENE2, "jota2")).toBeGreaterThanOrEqual(READ_GAP - 1e-9);
   });
 
-  it("scene 3: the recipe web opens once the tile has grown (≥ .3 screen, ~1 s at a calm pace)", () => {
-    expect(pos(SCENE3, "web") - pos(SCENE3, "grow")).toBeGreaterThanOrEqual(0.3);
+  it("scene 3: the tile grows with the tool card and the web fades in once it has grown (.5 screen)", () => {
+    expect(pos(SCENE3, "grow")).toBe(pos(SCENE3, "tool2"));
+    expect(pos(SCENE3, "web") - pos(SCENE3, "grow")).toBeGreaterThanOrEqual(0.5);
+    expect(css("screen-track-a.css")).toMatch(/\.ta \.tv-web\{animation:ta-in \.4s/);
   });
 
   it("the second caption comes on with its event, half a screen or more into the scene", () => {
@@ -114,10 +116,10 @@ describe("the tracks fit their script, and no more", () => {
   for (const [label, src] of [["desktop", a], ["mobile", mobile]] as const) {
     it(`${label}: each script ends inside its scene with time to read it and some margin`, () => {
       // scene 2 holds the TV from its top crossing mid-screen until scene 3's does: h2 screens
-      expect(h(src, "s2") - end(SCENE2)).toBeGreaterThanOrEqual(0.15);
+      expect(h(src, "s2") - end(SCENE2)).toBeGreaterThanOrEqual(0.15 - 1e-9);
       // scene 3 takes the TV at mid-screen and the TV leaves with the track's bottom, half a screen early (on mobile
       // the TV stays longer: this is the tighter bound)
-      expect(h(src, "s3") - 0.5 - end(SCENE3)).toBeGreaterThanOrEqual(0.15);
+      expect(h(src, "s3") - 0.5 - end(SCENE3)).toBeGreaterThanOrEqual(0.15 - 1e-9);
       // and not much more: no long scroll with the script over
       expect(h(src, "s2") - end(SCENE2)).toBeLessThanOrEqual(0.6);
       expect(h(src, "s3") - 0.5 - end(SCENE3)).toBeLessThanOrEqual(0.6);
@@ -201,8 +203,19 @@ describe("feedback while the TV is pinned", () => {
     expect(bar(tb)).toMatch(/scaleX\(calc\(\.32 \+ [.\d]+\*var\(--p,0\)\)\)/);
   });
 
-  it("the song bar follows the scroll in scene 3 (--q3)", () => {
-    expect(a).toMatch(/\.ta \.tv-musica \.pr \.bar b\{transform:scaleX\(calc\(\.4 \+ [.\d]+\*var\(--q3,0\)\)\)\}/);
+  it("the song bar follows the scroll in scene 3 (--q3), visibly (≥ .1 a screen)", () => {
+    const m = a.match(/\.ta \.tv-musica \.pr \.bar b\{transform:scaleX\(calc\(\.4 \+ ([.\d]+)\*var\(--q3,0\)\)\)\}/);
+    expect(m).not.toBeNull();
+    expect(Number(m![1])).toBeGreaterThanOrEqual(0.1);
+    // at the end of scene 3 (q3 2.7 on desktop) it is still inside the bar
+    expect(0.4 + Number(m![1]) * 3.4).toBeLessThanOrEqual(1);
+  });
+
+  it("with the web open the gallery drifts up by --w3 (screens since it opened), 60px at most", () => {
+    expect(a).toMatch(/\.ta \.tv-web \.gal\{transform:translateY\(calc\(min\(1,var\(--w3,0\)\)\*-60px\)\)\}/);
+    // the gallery (top 560 of the canvas) stays below the text lines
+    const web = css("screen-tv-screens.css");
+    expect(Number(web.match(/\.tv-web \.gal\{[^}]*top:(\d+)px/)![1]) - 60).toBeGreaterThan(470);
   });
 
   it("a fine line under the TV follows the scroll of tracks A and B (only once hydrated)", () => {
@@ -210,8 +223,12 @@ describe("feedback while the TV is pinned", () => {
       expect(src).toMatch(new RegExp(`\\.${cls}::after\\{[^}]*transform:scaleX\\(var\\(--p,0\\)\\)`));
       expect(src).toMatch(new RegExp(`\\.jscreen:not\\(\\[data-hydrated\\]\\) \\.${cls}\\{display:none\\}`));
     }
-    // in track B it is absolute: it does not move the mobile layout
+    // absolute in both tracks: it never pushes the layout (nor the mobile caption)
     expect(b).toMatch(/\.tb-meter\{position:absolute/);
+    expect(a).toMatch(/\.ta-meter\{position:absolute/);
+    const mobile = a.slice(a.indexOf("@media (max-width:1023px)"));
+    // on mobile it sits in the 1rem between the TV (ta-tv padding .5rem) and the caption
+    expect(mobile).toMatch(/\.ta-meter\{top:calc\(100% \+ \.25rem\)\}/);
   });
 });
 

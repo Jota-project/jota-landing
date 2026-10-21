@@ -26,14 +26,18 @@
 .jscreen .ta-scr[data-fade=true]{animation:ta-in .9s ease both}
 @keyframes ta-in{from{opacity:0}}
 /* la línea fina bajo la tele: avanza con el scroll de todo el tramo (--p), para que siempre se note que se avanza */
-.jscreen .ta-meter{position:relative;display:block;height:2px;margin-top:1rem;border-radius:1px;overflow:hidden}
+.jscreen .ta-tv-in{position:relative}
+.jscreen .ta-meter{position:absolute;left:0;right:0;top:calc(100% + 1rem);height:2px;border-radius:1px;overflow:hidden}
 .jscreen .ta-meter::before,.jscreen .ta-meter::after{content:"";position:absolute;inset:0;background:currentColor}
 .jscreen .ta-meter::before{opacity:.12}
 .jscreen .ta-meter::after{opacity:.45;transform-origin:left;transform:scaleX(var(--p,0))}
 .jscreen:not([data-hydrated]) .ta-meter{display:none}
-/* la barra de la canción sigue al scroll de la escena 3 (--q3) y, con la web abierta, la galería sube un poco */
-.jscreen .ta .tv-musica .pr .bar b{transform:scaleX(calc(.4 + .05*var(--q3,0)))}
-.jscreen .ta .tv-web .gal{transform:translateY(calc((1.85 - var(--q3,1.85))*60px))}
+/* la barra de la canción sigue al scroll de la escena 3 (--q3); con la web abierta (--w3, pantallas desde que se abrió)
+   la galería sube un poco, 60px como mucho: nunca llega a las líneas del texto (acaban hacia y = 460, ella en 560) */
+.jscreen .ta .tv-musica .pr .bar b{transform:scaleX(calc(.4 + .12*var(--q3,0)))}
+.jscreen .ta .tv-web .gal{transform:translateY(calc(min(1,var(--w3,0))*-60px))}
+/* la web entra con un fundido corto sobre la tesela ya crecida */
+.jscreen .ta .tv-web{animation:ta-in .4s ease both}
 /* con la píldora abierta, la actividad se va a la esquina superior derecha del lienzo (no depende del ancho de la píldora) */
 .jscreen .ta-act[data-aside=true] .tv-act{left:auto;right:56px;transform:translateY(-24px)}
 .jscreen .ta-act[data-aside=true] .tv-act[data-on=true]{transform:none}
@@ -56,7 +60,8 @@
   .jscreen #s1.ta-scene{min-height:120svh}
   .jscreen #s2.ta-scene{min-height:300svh}
   .jscreen #s3.ta-scene{min-height:320svh}
-  .jscreen .ta-meter{margin-top:.35rem}
+  /* entre la tele y el texto, sin empujar nada (el texto empieza 1rem por debajo de la tele) */
+  .jscreen .ta-meter{top:calc(100% + .25rem)}
   .jscreen .ta-cap{top:calc(4rem + (100vw - 2rem)*9/16 + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
 }
 /* movimiento reducido: una tele quieta por escena, sin sticky */
@@ -67,7 +72,7 @@
 /* filas a todo lo ancho para que el fondo Dusk llegue a los bordes */
 .jscreen .ta-still .ta-cap{position:static;min-height:0}
 @media (max-width:1023px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
-@media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase],.jscreen .ta-dusk,.jscreen .ta-tv-in{transition:none}.jscreen .ta-scr{animation:none}}
+@media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase],.jscreen .ta-dusk,.jscreen .ta-tv-in{transition:none}.jscreen .ta-scr,.jscreen .ta .tv-web{animation:none}}
 /* sin JS (o antes de hidratar) el tramo mide lo mismo y es fijo igual: la tele enseña su fotograma de reposo
    y se lee todo el texto; así la restauración del scroll y las anclas caen en su sitio al hidratar */
 /* movimiento reducido antes de hidratar: ya sin tramo alto, como la versión quieta que viene después */
