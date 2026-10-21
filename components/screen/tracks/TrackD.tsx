@@ -63,7 +63,7 @@ export function TrackD() {
           <div className="tdk-tv">
             <TvFrame>
               <Reposo
-                layout="talk"
+                layout="rotate"
                 perfil={reduced ? "noche" : perfil}
                 showMusic={false}
               />

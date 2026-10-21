@@ -54,6 +54,7 @@ export function TrackC() {
             <path d={box(20, 50, 150, 90, 12)} pathLength={1} style={at(0.04, 0.14)} />
             <path d="M44 110H96M140 110h8" pathLength={1} style={at(0.16, 0.05)} />
             <path className="tck-hl" d="M170 95H410M410 85V105M410 85H430V105H410" pathLength={1} style={at(0.2, 0.2)} />
+            <path d="M170 120H215V250" pathLength={1} style={at(0.46, 0.08)} />
             <path d={box(440, 35, 180, 100, 10)} pathLength={1} style={at(0.38, 0.14)} />
             <path d="M530 135V158M494 158H566" pathLength={1} style={at(0.5, 0.06)} />
             <path d={box(20, 250, 380, 120, 16)} pathLength={1} style={at(0.5, 0.14)} />

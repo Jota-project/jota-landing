@@ -286,6 +286,7 @@ describe("TrackC / MoreList / TrackD", () => {
     items.forEach((li, i) => {
       expect(li.textContent).toContain(s.s7.items[i].title);
       expect(li.textContent).toContain(s.s7.items[i].body);
+      expect(s.s7.items[i].icon).toBeTruthy();
       expect(li.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
   });
@@ -312,11 +313,13 @@ describe("TrackC / MoreList / TrackD", () => {
   it("TrackD: server render shows the TV at night; reduced motion has no sticky", () => {
     const html = renderToString(wrap(<TrackD />));
     expect(html).toContain('data-perfil="noche"');
+    expect(html).toContain('data-layout="rotate"');
     expect(html).toContain(s.s8.headline);
     reduce();
     mockIO({});
     const { container } = render(wrap(<TrackD />));
     expect(container.querySelector("#s8")).toHaveAttribute("data-sticky", "false");
     expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-perfil", "noche");
+    expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-layout", "rotate");
   });
 });

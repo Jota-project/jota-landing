@@ -163,23 +163,28 @@
       "items": [
         {
           "title": "Stage",
-          "body": "Jota puts presentations, tasks and alerts on top of any website."
+          "body": "Jota puts presentations, tasks and alerts on top of any website.",
+          "icon": "stage"
         },
         {
           "title": "Spotify Connect",
-          "body": "The TV is one more speaker. Optional."
+          "body": "The TV is one more speaker. Optional.",
+          "icon": "spotify"
         },
         {
           "title": "Standby that follows your schedule",
-          "body": "It shifts from day to night."
+          "body": "It shifts from day to night.",
+          "icon": "reposo"
         },
         {
           "title": "Other agents",
-          "body": "Claude and others control it through MCP."
+          "body": "Claude and others control it through MCP.",
+          "icon": "agents"
         },
         {
           "title": "Jota Cloud or Jota Local",
-          "body": "You choose where it thinks."
+          "body": "You choose where it thinks.",
+          "icon": "cloud"
         }
       ]
     },

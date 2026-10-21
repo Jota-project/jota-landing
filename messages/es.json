@@ -163,23 +163,28 @@
       "items": [
         {
           "title": "Escenario",
-          "body": "Jota pone presentaciones, tareas y avisos encima de cualquier web."
+          "body": "Jota pone presentaciones, tareas y avisos encima de cualquier web.",
+          "icon": "stage"
         },
         {
           "title": "Spotify Connect",
-          "body": "La tele es un altavoz más. Opcional."
+          "body": "La tele es un altavoz más. Opcional.",
+          "icon": "spotify"
         },
         {
           "title": "Reposo que sigue tu horario",
-          "body": "Cambia de día a noche."
+          "body": "Cambia de día a noche.",
+          "icon": "reposo"
         },
         {
           "title": "Otros agentes",
-          "body": "Claude y otros la manejan por MCP."
+          "body": "Claude y otros la manejan por MCP.",
+          "icon": "agents"
         },
         {
           "title": "Jota Cloud o Jota Local",
-          "body": "Tú eliges dónde piensa."
+          "body": "Tú eliges dónde piensa.",
+          "icon": "cloud"
         }
       ]
     },
