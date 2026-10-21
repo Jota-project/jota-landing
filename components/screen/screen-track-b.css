@@ -152,11 +152,17 @@
   /* la tele a lo ancho; el móvil, más pequeño, sobre su esquina inferior derecha; el texto debajo */
   .jscreen .tb-grid{display:block;padding:0 1rem}
   .jscreen .tb-sticky{top:4rem;height:auto;z-index:2;padding:.5rem 0 0;background:#211b2a}
-  .jscreen .tb-stage{display:block;padding-bottom:33vw}
-  .jscreen .tb-phone{position:absolute;right:.5rem;top:calc((100vw - 2rem)*9/16*.56);width:26vw}
+  /* --tb-c: ancho de la tele; --tb-pht/--tb-phb: arriba y abajo del móvil (con su aro de 10px a escala); --tb-low: lo más
+     bajo de la tele o del móvil. Bajo eso, 1rem de aire y el texto: el móvil nunca tapa el texto */
+  .jscreen .tbk{--tb-c:calc(100vw - 2rem);--tb-tvh:calc(var(--tb-c)*9/16);--tb-pht:calc(var(--tb-c)*9/16*.56);
+    --tb-phb:calc(var(--tb-pht) + 26vw*844/390 + 26vw*10/390);--tb-low:max(calc(var(--tb-tvh) + 33vw),var(--tb-phb))}
+  .jscreen .tb-stage{display:block;padding-bottom:calc(var(--tb-low) - var(--tb-tvh) + 1rem)}
+  .jscreen .tb-phone{position:absolute;right:.5rem;top:var(--tb-pht);width:26vw}
+  /* aquí el móvil entra solo con opacidad: un desplazamiento lo bajaría sobre el texto */
+  .jscreen[data-hydrated] .tb-live .tb-phone{transform:none}
   .jscreen #s4.tb-scene{min-height:225svh}
   .jscreen #s5.tb-scene{min-height:225svh}
-  .jscreen .tb-cap{top:calc(4.5rem + (100vw - 2rem)*9/16 + 33vw);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
+  .jscreen .tb-cap{top:calc(4.5rem + var(--tb-low) + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
   .jscreen .tb-still .tb-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}
   .jscreen .tb-still .tb-cap{order:2}
 }

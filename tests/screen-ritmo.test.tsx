@@ -210,3 +210,44 @@ describe("recipe", () => {
     expect(en.screen.chat.recipeYou).toMatch(/roasted pumpkin soup/);
   });
 });
+
+describe("track B on mobile", () => {
+  const b = readFileSync(path.resolve(process.cwd(), "components/screen/screen-track-b.css"), "utf-8");
+  const mobile = b.slice(b.indexOf("@media (max-width:1023px)"));
+  /** Evaluates a CSS length (calc/max/var, vw and rem) in px at a viewport width. */
+  const px = (expr: string, vw: number, vars: Record<string, string>): number => {
+    let e = expr;
+    for (let i = 0; i < 10 && /var\(/.test(e); i++) e = e.replace(/var\((--[\w-]+)\)/g, (_, v) => `(${vars[v]})`);
+    e = e
+      .replace(/calc\(/g, "(")
+      .replace(/max\(/g, "Math.max(")
+      .replace(/([\d.]+)vw/g, `($1*${vw / 100})`)
+      .replace(/([\d.]+)rem/g, "($1*16)")
+      .replace(/([\d.]+)px/g, "$1");
+    if (/[a-z-]{3,}/i.test(e.replace(/Math\.max/g, ""))) throw new Error(`cannot evaluate ${e}`);
+    return Function(`return ${e}`)();
+  };
+  const vars: Record<string, string> = {};
+  for (const m of mobile.matchAll(/(--tb-[\w-]+):((?:[^;{}()]|\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))+)[;}]/g)) vars[m[1]] = m[2];
+  const rule = (sel: string, prop: string) => mobile.match(new RegExp(`${sel}\\{[^}]*?${prop}:([^;}]+)`))![1];
+
+  for (const vw of [375, 393]) {
+    it(`the phone stays above the caption text at ${vw}px`, () => {
+      // the stage starts under the nav (4rem) and the sticky's .5rem padding
+      const phoneBottom = 72 + px(vars["--tb-phb"], vw, vars);
+      // the smallest caption padding (short screens) is 1rem
+      const textTop = px(rule("\\.jscreen \\.tb-cap", "top"), vw, vars) + 16;
+      expect(phoneBottom).toBeLessThanOrEqual(textTop);
+      // the sticky block (TV, phone and reserved space) ends where the caption starts
+      const stageBottom = 72 + px(vars["--tb-tvh"], vw, vars) + px(rule("\\.jscreen \\.tb-stage", "padding-bottom"), vw, vars);
+      expect(stageBottom).toBeCloseTo(px(rule("\\.jscreen \\.tb-cap", "top"), vw, vars));
+      // the phone sits where --tb-pht says and is 26vw wide
+      expect(rule("\\.jscreen \\.tb-phone", "top")).toBe("var(--tb-pht)");
+      expect(rule("\\.jscreen \\.tb-phone", "width")).toBe("26vw");
+    });
+  }
+
+  it("the phone enters with opacity only on mobile (no shift down onto the text)", () => {
+    expect(mobile).toMatch(/\.jscreen\[data-hydrated\] \.tb-live \.tb-phone\{transform:none\}/);
+  });
+});
