@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import "@/components/screen/screen.css";
 import { Button } from "@/components/Button";
 import { CONTACT_EMAIL } from "@/components/sections/Contact";
 
@@ -32,7 +33,7 @@ export default async function JotaScreenPage({ params }: Props) {
   // Static text scenes. Later tasks replace these with animated tracks; each
   // scene keeps its id and its captions as real text.
   return (
-    <main>
+    <main className="jscreen">
       <section id="s1" className="mx-auto w-full max-w-5xl px-6 py-16 md:py-24">
         <h1 className="font-display text-4xl font-medium text-ink md:text-6xl">
           {t("s1.headline")}

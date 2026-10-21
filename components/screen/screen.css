@@ -1,0 +1,152 @@
+/* Estilos de la página /jota-screen. Todo bajo .jscreen para no tocar el resto de la landing.
+   Port de la demo de conversación (jota-reposo-v2.html): mismo aspecto, clases con prefijo tv-. */
+
+@property --la{syntax:'<color>';inherits:true;initial-value:#7c6aae}
+@property --lb{syntax:'<color>';inherits:true;initial-value:#6e8cc4}
+
+/* ---------- Tokens ---------- */
+/* copiado de jota-screen @ 2026-10-21 (tokens-tv.css) */
+.jscreen{
+  --tv-text:#ddd6d0;
+  --tv-text-soft:#bab2c4;
+  --tv-accent:#c3b7e3;
+  --tv-surface:#1d1825;
+  --tv-veil:rgba(246,243,240,.08);
+  --tv-track:rgba(246,243,240,.16);
+  --tv-track-2:rgba(246,243,240,.12);
+  --tv-track-radius:3px;
+  --tv-shadow-float:0 0 0 1px rgba(246,243,240,.08),0 12px 40px rgba(0,0,0,.45);
+  --tv-serif:var(--font-fraunces),"Fraunces",Georgia,serif;
+  --tv-sans:var(--font-inter),"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --tv-ease:cubic-bezier(.32,.72,0,1);
+  --tv-pulse:1.6s;
+  --tv-tick:1s;
+}
+/* copiado de jota-screen @ 2026-10-21 (tokens-mando.css; solo el tema oscuro y el claro) */
+.jscreen{
+  --bg:#211b2a;--orb:.24;--pad:rgba(246,243,240,.045);--halo:rgba(210,201,238,.16);
+  --text:#f6f3f0;--text-soft:#d6d0de;--text-faint:#a39bb0;
+  --accent:#7c6aae;--accent-press:#6c5b9d;--accent-text:#d2c9ee;--accent-tint:#3e3554;--on-accent:#fff;
+  --status:#8fa8d8;--warn:#e8b26a;--bad:#ef8a7c;
+  --surface:#2d2637;--surface-2:#272030;--surface-3:#3a3247;--edge:transparent;--line:#3d3449;--switch-off:#7f7590;
+  --sheet:#272030;--shade:rgba(20,16,26,.6);--hl:rgba(246,243,240,.06);--grab:rgba(246,243,240,.24);--shadow:rgba(10,8,14,.5);
+  --pill-bg:rgba(45,38,55,.94);--rail:rgba(246,243,240,.1);--rail-thumb:rgba(246,243,240,.34);
+  --play-shadow:0 14px 34px rgba(60,40,110,.38);
+  --veil:linear-gradient(180deg,rgba(26,21,34,.86),rgba(26,21,34,.72) 60%,rgba(26,21,34,.6));--vz-a:.32;--vz-b:.28;
+  --sp-bg:#1a1420;--sp-orb:.4;--sp-track:rgba(246,243,240,.18);
+  --tv:#16121c;--tv-ink:#d2c9ee;--tv-field:rgba(246,243,240,.12);--kbd:#17131e;--kbd-text:#8f879c;
+  --serif:var(--font-fraunces),"Fraunces",Georgia,serif;
+  --sans:var(--font-inter),"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --ease:cubic-bezier(.32,.72,0,1);
+  --malva:#7c6aae;--cielo:#6e8cc4;
+}
+.jscreen[data-theme=claro]{
+  --bg:#f6f3f0;--orb:.16;--pad:rgba(42,36,51,.04);--halo:rgba(79,65,137,.12);
+  --text:#2a2433;--text-soft:#4d4659;--text-faint:#6a6377;
+  --accent:#7c6aae;--accent-press:#6c5b9d;--accent-text:#4f4189;--accent-tint:#e9e3f2;--on-accent:#fff;
+  --status:#6e8cc4;--warn:#b07a2a;--bad:#c2483a;
+  --surface:#fff;--surface-2:#efe9e4;--surface-3:#e4dcd5;--edge:#e6dfd8;--line:#ded6cf;--switch-off:#8f8698;
+  --sheet:#f6f3f0;--shade:rgba(42,36,51,.38);--hl:rgba(42,36,51,.05);--grab:rgba(42,36,51,.2);--shadow:rgba(42,36,51,.18);
+  --pill-bg:rgba(255,255,255,.94);--rail:rgba(42,36,51,.08);--rail-thumb:rgba(42,36,51,.3);
+  --play-shadow:0 12px 28px rgba(79,65,137,.28);
+  --veil:linear-gradient(180deg,rgba(246,243,240,.9),rgba(246,243,240,.8) 60%,rgba(246,243,240,.7));--vz-a:.18;--vz-b:.16;
+  --sp-bg:#f6f3f0;--sp-orb:.2;--sp-track:rgba(42,36,51,.14);
+  --kbd:#e9e4df;--kbd-text:#6a6377;
+}
+
+/* ---------- Lienzo 1920×1080 ---------- */
+.jscreen .tv-vp{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:24px;background:#000;--s:.5}
+.jscreen .tv-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(var(--s));
+  /* perfil día (Reposo v2); en la tele manda esta paleta, no la del mando */
+  --accent:#c3b7e3;--text:#ddd6d0;--ease:cubic-bezier(.32,.72,0,1);
+  --base:#211b2a;--clock:#d9d1dc;--dsoft:#bab2c4;--dacc:#c3b7e3;--pillbg:#2a2433;--orb:.42;--mbase:#1a1420;
+  background:var(--base);color:var(--text);overflow:hidden;font:400 16px/1.5 var(--sans);
+  --la:#7c6aae;--lb:#6e8cc4;--sheet:#2a2233;--tint:.76;--br:.6;--t-main:#ddd6d0;--t-you:#c3b7e3;--t-soft:#d0c9d9}
+
+/* ---------- Reposo v2 · Distribución 1, margen editorial ---------- */
+.jscreen .tv-reposo{position:absolute;inset:0;overflow:hidden;pointer-events:none;
+  background:var(--base);color:var(--text);transition:background-color 4s,transform 1.2s var(--ease);
+  transition-property:--la,--lb,background-color,transform;transition-duration:4s,4s,4s,1.2s}
+.jscreen .tv-reposo[data-layout=talk]{transform:scale(.985);transform-origin:0 0}
+.jscreen .tv-reposo[data-perfil=tarde]{--base:#16121c;--clock:#cec6d2;--text:#d3ccc6;--dsoft:#aea6b8;--dacc:#b6a9da;--pillbg:#221d2a;--orb:.38;--mbase:#120e17;--la:#5e4c92;--lb:#3d5486;--sheet:#221d2a}
+.jscreen .tv-reposo[data-perfil=noche]{--base:#000;--clock:#7a7a7a;--text:#808080;--dsoft:#767676;--dacc:#8a80a3;--pillbg:#0d0c0f;--orb:0;--mbase:#000;
+  --sheet:#0c0c0c;--tint:1;--t-main:#8a8a8a;--t-you:#808080;--t-soft:#808080;--la:#2a2a2a;--lb:#2a2a2a}
+.jscreen .luz{position:absolute;border-radius:50%;opacity:var(--orb);transition:opacity 4s}
+.jscreen .luz.a{left:260px;top:120px;width:1300px;height:1300px;background:radial-gradient(closest-side,var(--la),transparent);animation:tv-orbA 131s linear infinite}
+.jscreen .luz.b{left:820px;top:-420px;width:1200px;height:1200px;background:radial-gradient(closest-side,var(--lb),transparent);animation:tv-orbB 173s linear infinite}
+@keyframes tv-orbA{from{transform:rotate(0deg) translateX(300px) rotate(0deg)}to{transform:rotate(360deg) translateX(300px) rotate(-360deg)}}
+@keyframes tv-orbB{from{transform:rotate(360deg) translateX(240px) rotate(-360deg)}to{transform:rotate(0deg) translateX(240px) rotate(0deg)}}
+.jscreen .tv-zone{position:absolute;left:0;top:0;transition:transform 1.5s var(--ease),opacity .7s ease}
+.jscreen .tv-reposo[data-leaving=true] .tv-zone{opacity:.18}
+.jscreen .z-hora{width:1180px}
+.jscreen .z-hora .t{margin:0;font:340 380px/.9 var(--serif);font-variation-settings:'opsz' 144;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--clock);transition:color 4s}
+.jscreen .z-ctx{width:600px;transition-delay:.12s}
+.jscreen .z-ctx .d{font:500 36px/1.3 var(--sans)}
+.jscreen .z-ctx .wx{display:flex;align-items:baseline;gap:22px;margin-top:18px}
+.jscreen .z-ctx .deg{font:340 96px/1 var(--serif)}
+.jscreen .z-ctx .wd{font:400 32px/1.35 var(--sans);color:var(--dsoft)}
+.jscreen .z-mus{width:600px;display:flex;align-items:center;gap:28px;transition-delay:.24s}
+.jscreen .tv-reposo[data-perfil=noche] .z-mus{visibility:hidden}
+.jscreen .z-mus .cv{flex:none;width:128px;height:128px;border-radius:24px;background:linear-gradient(135deg,var(--c1,#c96a5a),var(--c2,#3b2a6e) 70%);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.jscreen .z-mus .mt{min-width:0}
+.jscreen .z-mus .mti{font:450 46px/1.15 var(--serif);margin-top:12px}
+.jscreen .z-mus .mar{font:400 30px var(--sans);color:var(--dsoft);margin-top:4px}
+.jscreen .eq{display:flex;align-items:flex-end;gap:5px;height:26px;color:var(--dacc)}
+.jscreen .eq i{display:block;width:5px;height:26px;border-radius:3px;background:currentColor;transform-origin:bottom;animation:tv-eqb 1.6s ease-in-out infinite}
+.jscreen .eq i:nth-child(2){animation-delay:-.5s}
+.jscreen .eq i:nth-child(3){animation-delay:-1.1s}
+@keyframes tv-eqb{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.jscreen .tv-reposo[data-perfil=noche] :is(.luz,.eq i){animation:none}
+
+/* ---------- Actividad (Live Activity) ---------- */
+.jscreen .tv-act{position:absolute;top:64px;left:960px;transform:translateX(-50%) translateY(-24px);display:flex;align-items:center;gap:20px;height:84px;padding:0 30px 0 18px;border-radius:999px;
+  background:var(--pillbg);box-shadow:0 0 0 1px rgba(246,243,240,.08),0 18px 40px -12px rgba(0,0,0,.5);color:var(--text);white-space:nowrap;
+  opacity:0;transition:opacity .6s var(--ease),transform .9s var(--ease),left .9s var(--ease)}
+.jscreen .tv-act[data-on=true]{opacity:1;transform:translateX(-50%)}
+.jscreen .tv-act[data-shifted=true]{left:600px}
+.jscreen .tv-act[data-hidden=true]{opacity:0}
+.jscreen .tv-act .k{font:500 30px var(--sans)}
+.jscreen .tv-act .n{font:400 44px var(--serif);font-variant-numeric:tabular-nums;color:var(--dacc);margin-left:12px}
+.jscreen .tv-act circle.r{transition:stroke-dashoffset 1s linear}
+
+/* ---------- Orbe de Jota ---------- */
+.jscreen .orbe{position:relative;width:var(--sz,48px);height:var(--sz,48px);flex:none;animation:tv-breathe 3.4s ease-in-out infinite}
+.jscreen .orbe i{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 28%,#efe9fb,var(--la) 52%,var(--lb) 125%);box-shadow:0 0 30px color-mix(in srgb,var(--la) 55%,transparent),0 0 0 calc(var(--ring,0)*18px) color-mix(in srgb,var(--accent) 16%,transparent)}
+.jscreen .orbe::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px;border-radius:50%;background:var(--accent);opacity:0;transition:opacity .5s}
+.jscreen .orbe[data-state=think]::after{opacity:1;animation:tv-sat 3.1s linear infinite}
+@keyframes tv-breathe{50%{transform:scale(1.06)}}
+@keyframes tv-sat{to{transform:rotate(360deg) translateY(calc(var(--sz,48px)*-.7))}}
+
+/* ---------- Tarjeta de herramienta ---------- */
+.jscreen .tv-tc{display:grid;grid-template-columns:52px 1fr 36px;gap:0 18px;align-items:center;padding:16px 22px;border-radius:26px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.1);
+  animation:tv-bud .9s var(--ease) both}
+@keyframes tv-bud{from{opacity:0;transform:translateY(-14px) scale(.94)}}
+.jscreen .tv-tc .ic{width:52px;height:52px;border-radius:16px;background:rgba(195,183,227,.14);display:grid;place-items:center}
+.jscreen .tv-tc .ic svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.jscreen .tv-tc .tt{font:500 28px/1.2 var(--sans);color:var(--t-main)}
+.jscreen .tv-tc .tb{font:400 26px/1.25 var(--sans);color:var(--t-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jscreen .tv-tc[data-state=done] .tb{display:none}
+.jscreen .tv-tc .ss{width:30px;height:30px;justify-self:end}
+.jscreen .tv-spin{border-radius:50%;border:3px solid rgba(195,183,227,.25);border-top-color:var(--accent);animation:tv-rot 1s linear infinite}
+@keyframes tv-rot{to{transform:rotate(360deg)}}
+.jscreen .ss svg{width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* forma píldora (con vídeo): sin subtítulo */
+.jscreen .tv-tc[data-compact=true]{display:inline-grid;grid-template-columns:36px auto 30px;padding:8px 18px 8px 10px;border-radius:999px;width:fit-content}
+.jscreen .tv-tc[data-compact=true] .ic{width:36px;height:36px;border-radius:50%}
+.jscreen .tv-tc[data-compact=true] .ic svg{width:22px;height:22px}
+.jscreen .tv-tc[data-compact=true] .tb{display:none}
+.jscreen .tv-tc[data-compact=true] .tt{font-size:26px}
+
+/* ---------- Palabras ---------- */
+.jscreen .tv-w{display:inline-block;margin-right:.26em;opacity:0;filter:blur(4px);transition:opacity .5s var(--ease),filter .5s var(--ease)}
+.jscreen .tv-w.in{opacity:1;filter:none}
+
+/* ---------- Pausa y movimiento reducido ---------- */
+.jscreen [data-paused="true"] *{animation-play-state:paused}
+@media (prefers-reduced-motion: reduce){
+  .jscreen .luz,.jscreen .eq i,.jscreen .orbe,.jscreen .orbe::after,.jscreen .tv-spin{animation:none}
+  .jscreen .eq i{transform:scaleY(.6)}
+  .jscreen .tv-w{filter:none;transition:opacity .2s}
+  .jscreen .tv-tc{animation:none}
+  .jscreen .tv-zone,.jscreen .tv-reposo,.jscreen .tv-act{transition:none}
+}
