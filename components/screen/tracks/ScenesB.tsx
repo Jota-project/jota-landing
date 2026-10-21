@@ -11,9 +11,9 @@ import { Serie } from "../tv/Serie";
 
 export type PhaseB = "trackpad" | "controls" | "type" | "talk" | "pair" | "roles";
 export const CODE = "4821";
-/** Each digit flies for .075 of the track, the first from .55 (see digitsAt). */
-export const FLY_FROM = 0.55;
-export const FLY_SPAN = 0.075;
+/** Each digit flies for .08 of the track, the first from .51 (see digitsAt). */
+export const FLY_FROM = 0.51;
+export const FLY_SPAN = 0.08;
 // resting finger on the trackpad (and cursor on the TV) when nothing drives it
 export const REST = { x: 0.68, y: 0.34 };
 

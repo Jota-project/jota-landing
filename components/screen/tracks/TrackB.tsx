@@ -12,18 +12,19 @@ import { Serie } from "../tv/Serie";
 import { TvFrame } from "../tv/TvFrame";
 import { CODE, FLY_FROM, FLY_SPAN, Flyers, PhoneB, REST, TvB, type PhaseB } from "./ScenesB";
 
-/** Track progress (0–1) → phase. Scenes are 220/200svh tall (span 320svh): the caption handoff
- *  (s4 leaving, s5 arriving at mid-screen) lands near p≈.53, just before the pairing at .55. */
+/** Track progress (0–1) → phase. Scenes are 300/300svh tall (span 500svh): each zone of the remote gets
+ *  ~.12 (.6 screen); the caption handoff (s5 reaching mid-screen) lands at p = .5, just after the pairing at .49;
+ *  the digits fly from .51 to .83 and the roles come at .86. */
 export function phaseOf(p: number): PhaseB {
-  if (p < 0.15) return "trackpad";
-  if (p < 0.3) return "controls";
-  if (p < 0.45) return "type";
-  if (p < 0.55) return "talk";
-  if (p < 0.85) return "pair";
+  if (p < 0.14) return "trackpad";
+  if (p < 0.26) return "controls";
+  if (p < 0.38) return "type";
+  if (p < 0.49) return "talk";
+  if (p < 0.86) return "pair";
   return "roles";
 }
 
-/** Digits of the code already on the phone: one every .075 from .55, all four at .85. */
+/** Digits of the code already on the phone: one every .08 from .51, all four at .83. */
 export function digitsAt(p: number): number {
   // round first: 0.7 - 0.55 is 0.1499… in floating point
   const n = Math.floor(Math.round((p - FLY_FROM) * 1000) / (FLY_SPAN * 1000));
@@ -32,7 +33,7 @@ export function digitsAt(p: number): number {
 
 /** In «controls» the series pauses, then resumes. */
 function pausedAt(p: number): boolean {
-  return p >= 0.19 && p < 0.26;
+  return p >= 0.17 && p < 0.23;
 }
 
 type Step = { phase: PhaseB; digits: number; paused: boolean };

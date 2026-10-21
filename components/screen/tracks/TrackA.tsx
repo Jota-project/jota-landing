@@ -18,22 +18,41 @@ const MID = { rootMargin: "-50% 0px -50% 0px" };
 /** Where scene 2 sits in the track (px): track height, viewport height, top and height of #s2. */
 export type Geo = { trackH: number; viewH: number; top: number; height: number };
 
-/** How far scene 2 has scrolled past the middle of the viewport (0 = its top crosses the middle, when it
- *  becomes active; 1 = its bottom does), from the track progress p and the layout. Works for any heights. */
-export function sceneProgress(p: number, geo: Geo): number {
-  if (geo.height <= 0) return 1;
+/** Screens scrolled since scene 2's top crossed the middle of the viewport (when it becomes active), from the
+ *  track progress p and the layout. Works for any heights; with no layout yet it is far past the grow. */
+export function scrolledIn(p: number, geo: Geo): number {
+  if (geo.height <= 0 || geo.viewH <= 0) return 99;
   const scroll = p * Math.max(0, geo.trackH - geo.viewH);
-  return (scroll + geo.viewH / 2 - geo.top) / geo.height;
+  return (scroll + geo.viewH / 2 - geo.top) / geo.viewH;
 }
 
-/** Scene 2 progress (sceneProgress) at which the «El faro» tile leaves Inicio, fills the TV and gives way
- *  to the series: right after the scene becomes active, over its first sixth. */
-export function growAt(q: number): GrowPhase {
-  if (q < 0.045) return "hidden";
-  if (q < 0.08) return "small";
-  if (q < 0.155) return "full";
+/** Screens into scene 2 at which the «El faro» tile has filled the TV and gives way to the series. */
+export const GROW_END = 0.7;
+
+/** The «El faro» tile leaves Inicio, fills the TV and gives way to the series over scene 2's first screen,
+ *  measured in screens (not in fractions of the scene, so a taller scene does not stretch it). It stays full
+ *  for .45 screen (~1.1 s at a calm pace), long enough for its 1.3 s grow (its curve has settled by then). */
+export function growAt(d: number): GrowPhase {
+  if (d < 0.1) return "hidden";
+  if (d < 0.25) return "small";
+  if (d < GROW_END) return "full";
   return "gone";
 }
+
+/** The opening (--p1, 0–1): the TV grows and the linen turns dusk over scene 1, eased in and out, done by the time
+ *  scene 2 takes the TV (90 % of the way there). Measured, so it does not depend on the track's length. */
+export function openingAt(p: number, geo: Geo): number {
+  const end = (geo.top - geo.viewH / 2) * 0.9;
+  if (geo.viewH <= 0 || end <= 0) return 1;
+  const scroll = p * Math.max(0, geo.trackH - geo.viewH);
+  const x = Math.min(1, Math.max(0, scroll / end));
+  return x * x * (3 - 2 * x);
+}
+
+/** A playing scene keeps the TV until the next one covers all but this fraction of the screen. */
+export const HOLD_LINE = 0.25;
+// a scene still «there» while it crosses the band between HOLD_LINE and 1 − HOLD_LINE of the viewport
+const BAND = { rootMargin: `-${HOLD_LINE * 100}% 0px -${HOLD_LINE * 100}% 0px` };
 
 const NO_GEO: Geo = { trackH: 0, viewH: 0, top: 0, height: 0 };
 
@@ -76,10 +95,14 @@ function Progress({
 }) {
   const p = useTrackProgress(track);
   const geo = useGeo(track, scene2);
-  const g = growAt(sceneProgress(p, geo));
-  // the text switches ink → linen once, when the dusk layer (--p1 = p·6) passes half
-  const dark = p * 6 >= 0.5;
+  const g = growAt(scrolledIn(p, geo));
+  const p1 = openingAt(p, geo);
+  // the text switches ink → linen once, when the dusk layer passes half
+  const dark = p1 >= 0.5;
   useEffect(() => onGrow(g), [g, onGrow]);
+  useEffect(() => {
+    track.current?.style.setProperty("--p1", String(p1));
+  }, [p1, track]);
   useEffect(() => {
     track.current?.setAttribute("data-dark", dark ? "true" : "false");
   }, [dark, track]);
@@ -117,10 +140,18 @@ export function TrackA() {
     track.current?.closest(".jscreen")?.setAttribute("data-hydrated", "");
   }, []);
 
-  const active: Scene = v3.inView ? 3 : v2.inView ? 2 : v1.inView ? 1 : v3.passed ? 3 : v2.passed ? 2 : 1;
+  const b2 = useInView(r2, BAND);
+  const b3 = useInView(r3, BAND);
+  const nominal: Scene = v3.inView ? 3 : v2.inView ? 2 : v1.inView ? 1 : v3.passed ? 3 : v2.passed ? 2 : 1;
 
-  // a scene plays once when it becomes active; leaving it (either way) jumps to its final state
+  // a scene plays once when it becomes active; leaving it (either way) jumps to its final state, but only once
+  // it has really gone: while its script is still playing it keeps the TV until the next scene covers all but
+  // HOLD_LINE of the screen (it left the middle band), so a slow reader sees it to the end
   const [started, setStarted] = useState({ 2: false, 3: false });
+  const [fin, setFin] = useState({ 2: false, 3: false });
+  const holds2 = started[2] && !fin[2] && b2.inView;
+  const holds3 = started[3] && !fin[3] && b3.inView;
+  const active: Scene = nominal !== 2 && holds2 ? 2 : nominal !== 3 && holds3 ? 3 : nominal;
   const ready2 = grow === "gone";
   const play2 = active === 2 && ready2;
   const play3 = active === 3;
@@ -131,6 +162,14 @@ export function TrackA() {
   const skip3 = active !== 3 && started[3];
   const s2 = useScript(SCENE2, { play: play2, skip: skip2 });
   const s3 = useScript(SCENE3, { play: play3, skip: skip3 });
+  if (fin[2] !== s2.finished || fin[3] !== s3.finished) setFin({ 2: s2.finished, 3: s3.finished });
+  // a new scene fades in over the black of the TV (not on the first frame)
+  const [shown, setShown] = useState<Scene>(active);
+  const [fade, setFade] = useState(false);
+  if (shown !== active) {
+    setShown(active);
+    setFade(true);
+  }
   // once started or skipped, scene 2 always shows its series (never back to Inicio)
   const final2 = reduced || started[2] || active > 2;
 
@@ -246,7 +285,9 @@ export function TrackA() {
         <div className="ta-tv">
           <div className="ta-tv-in">
             <TvFrame paused={!trackView.inView} overlay={replay}>
-              {tv(active)}
+              <div key={active} className="ta-scr" data-fade={fade ? "true" : "false"}>
+                {tv(active)}
+              </div>
             </TvFrame>
           </div>
         </div>

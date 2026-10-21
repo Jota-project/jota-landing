@@ -119,7 +119,9 @@ export const Scene3Tv = memo(function Scene3Tv({
   const grow: GrowPhase = done.has("web") ? "gone" : done.has("grow") ? "full" : "hidden";
   return (
     <>
-      {done.has("music") ? <MusicaFull compact /> : <Reposo layout={open ? "talk" : "rotate"} perfil="tarde" />}
+      {/* the music fades in over the idle screen, which stays below it */}
+      <Reposo layout={open ? "talk" : "rotate"} perfil="tarde" />
+      {done.has("music") && <MusicaFull compact />}
       {done.has("web") && <WebReceta loading={!done.has("toolDone2")} />}
       <GrowTile phase={grow} title={t("tv.recipeTitle")} sub={t("tv.recipeSite")} from={FROM_PANEL} />
       <LiveActivity on={activity} ring={ring} shifted={open} aside={false} web={done.has("web")} />

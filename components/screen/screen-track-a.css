@@ -1,21 +1,27 @@
 /* Tramo A de /jota-screen (escenas 1–3). */
 /* ---------- Tramo A (escenas 1–3) ---------- */
-/* --p (0–1) lo escribe useTrackProgress; --p1 es la apertura: la tele crece y el fondo pasa de lino a Dusk */
-.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:var(--color-ink);transition:color .4s ease}
+/* --p (0–1) lo escribe useTrackProgress; --p1 es la apertura: la tele crece y el fondo pasa de lino a Dusk. Con JS
+   --p1 lo escribe el tramo (openingAt: medido sobre la escena 1 y suavizado); esta fórmula es solo la de sin JS */
+.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:var(--color-ink);transition:color .8s ease}
 /* el texto cambia de tinta a lino de una vez, cuando el fondo ya es más Dusk que lino (data-dark lo pone el tramo) */
 .jscreen .ta[data-dark=true]{color:var(--color-linen)}
-.jscreen .ta-dusk{position:absolute;inset:0;background:#211b2a;opacity:var(--p1);pointer-events:none}
+.jscreen .ta-dusk{position:absolute;inset:0;background:#211b2a;opacity:var(--p1);pointer-events:none;transition:opacity .3s ease-out}
 .jscreen .ta-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
 .jscreen .ta-tv{grid-column:2;grid-row:1 / span 3;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center;justify-content:center}
 /* 4rem = la barra de navegación fija (h-16) */
-.jscreen .ta-tv-in{width:min(100%,calc((100svh - 8rem)*16/9));transform:scale(calc(.55 + .45*var(--p1)));will-change:transform}
+/* una transición corta sobre lo que sigue al scroll alisa los saltos de la rueda del ratón sin retrasarlo */
+.jscreen .ta-tv-in{width:min(100%,calc((100svh - 8rem)*16/9));transform:scale(calc(.55 + .45*var(--p1)));will-change:transform;transition:transform .3s ease-out}
 .jscreen .ta-scene{grid-column:1;min-width:0}
-.jscreen #s1.ta-scene{grid-row:1;min-height:120svh}
-.jscreen #s2.ta-scene{grid-row:2;min-height:260svh}
-.jscreen #s3.ta-scene{grid-row:3;min-height:200svh}
+.jscreen #s1.ta-scene{grid-row:1;min-height:160svh}
+.jscreen #s2.ta-scene{grid-row:2;min-height:620svh}
+.jscreen #s3.ta-scene{grid-row:3;min-height:640svh}
 .jscreen .ta-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
 .jscreen .ta-sub{opacity:.8}
-.jscreen .ta-act{position:absolute;inset:0;pointer-events:none;transition:transform .9s var(--tv-ease)}
+.jscreen .ta-act{position:absolute;inset:0;pointer-events:none;transition:transform 1.1s var(--tv-ease)}
+/* cada escena entra en la tele con un fundido (no en el primer fotograma) */
+.jscreen .ta-scr{position:absolute;inset:0}
+.jscreen .ta-scr[data-fade=true]{animation:ta-in .9s ease both}
+@keyframes ta-in{from{opacity:0}}
 /* con la píldora abierta, la actividad se va a la esquina superior derecha del lienzo (no depende del ancho de la píldora) */
 .jscreen .ta-act[data-aside=true] .tv-act{left:auto;right:56px;transform:translateY(-24px)}
 .jscreen .ta-act[data-aside=true] .tv-act[data-on=true]{transform:none}
@@ -26,7 +32,7 @@
 .jscreen .ta-act[data-web=true] .tv-act[data-on=true]{transform:translateX(calc(-50% + 580px)) translateY(-60px) scale(.8)}
 /* las fases del texto solo se esconden con JS; sin JS se lee todo */
 .jscreen[data-hydrated] .ta-cap [data-on=false]{opacity:0;transform:translateY(8px)}
-.jscreen .ta-cap [data-phase]{transition:opacity .6s ease,transform .6s ease}
+.jscreen .ta-cap [data-phase]{transition:opacity .8s ease,transform .8s var(--tv-ease)}
 /* Ruling 6: el cuerpo y el halo del cristal miden 0×0 sin rAF; la hoja lleva fondo estático */
 .jscreen:not([data-hydrated]) .tv-sheet{background:rgba(42,34,51,.92);border-radius:48px}
 @media (max-width:1023px){
@@ -34,9 +40,10 @@
   .jscreen .ta-grid{display:block;padding:0 1rem}
   .jscreen .ta-tv{top:4rem;height:auto;z-index:2;padding:.5rem 0}
   .jscreen .ta-tv-in{width:100%}
-  .jscreen #s1.ta-scene{min-height:90svh}
-  .jscreen #s2.ta-scene{min-height:200svh}
-  .jscreen #s3.ta-scene{min-height:150svh}
+  /* el guion dura lo mismo en el móvil: s2 y s3 no encogen (ver tests/screen-ritmo) */
+  .jscreen #s1.ta-scene{min-height:120svh}
+  .jscreen #s2.ta-scene{min-height:620svh}
+  .jscreen #s3.ta-scene{min-height:640svh}
   .jscreen .ta-cap{top:calc(4rem + (100vw - 2rem)*9/16 + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
 }
 /* movimiento reducido: una tele quieta por escena, sin sticky */
@@ -47,7 +54,7 @@
 /* filas a todo lo ancho para que el fondo Dusk llegue a los bordes */
 .jscreen .ta-still .ta-cap{position:static;min-height:0}
 @media (max-width:1023px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
-@media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase]{transition:none}}
+@media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase],.jscreen .ta-dusk,.jscreen .ta-tv-in{transition:none}.jscreen .ta-scr{animation:none}}
 /* sin JS (o antes de hidratar) el tramo mide lo mismo y es fijo igual: la tele enseña su fotograma de reposo
    y se lee todo el texto; así la restauración del scroll y las anclas caen en su sitio al hidratar */
 /* movimiento reducido antes de hidratar: ya sin tramo alto, como la versión quieta que viene después */

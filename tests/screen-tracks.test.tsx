@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import es from "../messages/es.json";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { TrackA, growAt, sceneProgress } from "@/components/screen/tracks/TrackA";
+import { TrackA, GROW_END, growAt, scrolledIn } from "@/components/screen/tracks/TrackA";
 import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
@@ -29,7 +29,8 @@ const wrap = (ui: ReactNode) => (
 // Words paints each word in its own span (no space nodes)
 const flat = (t: string | null | undefined) => (t ?? "").replace(/\s/g, "");
 
-type Geo = { inView: boolean; bottom: number; rootTop?: number };
+/** band: what the HOLD band observer (rootMargin -25% … -25%) sees; defaults to inView. */
+type Geo = { inView: boolean; bottom: number; rootTop?: number; band?: boolean };
 /** IntersectionObserver that reports a fixed geometry per scene marker (data-scene). */
 function mockIO(scenes: Record<string, Geo>) {
   class IO {
@@ -58,23 +59,26 @@ function mockIO(scenes: Record<string, Geo>) {
 
 /** Like mockIO, but the geometry can change later (the reader scrolls to another scene). */
 function mockMovableIO(start: Record<string, Geo>) {
-  const seen: { el: Element; cb: IntersectionObserverCallback; io: unknown }[] = [];
+  const seen: { el: Element; cb: IntersectionObserverCallback; io: unknown; band: boolean }[] = [];
   let scenes = start;
   const fire = (o: (typeof seen)[number]) => {
     const scene = (o.el as HTMLElement).dataset.scene;
     const g = (scene && scenes[scene]) || { inView: true, bottom: 800 };
+    const hit = o.band ? (g.band ?? g.inView) : g.inView;
     o.cb(
-      [{ target: o.el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
+      [{ target: o.el, isIntersecting: hit, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
       o.io as IntersectionObserver,
     );
   };
   class IO {
     cb: IntersectionObserverCallback;
-    constructor(cb: IntersectionObserverCallback) {
+    band: boolean;
+    constructor(cb: IntersectionObserverCallback, opts?: IntersectionObserverInit) {
       this.cb = cb;
+      this.band = (opts?.rootMargin ?? "").startsWith("-25%");
     }
     observe(el: Element) {
-      const o = { el, cb: this.cb, io: this };
+      const o = { el, cb: this.cb, io: this, band: this.band };
       seen.push(o);
       fire(o);
     }
@@ -238,6 +242,55 @@ describe("TrackA", () => {
     expect(ta).toHaveAttribute("data-active", "3");
   });
 
+  it("a playing scene keeps the TV until the next one really covers the screen, then jumps to its end", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
+    const { container } = render(wrap(<TrackA />));
+    const ta = container.querySelector(".ta")!;
+    act(() => void vi.advanceTimersByTime(4000));
+    // scene 3 crosses mid-screen, but scene 2 is still in the middle band: it keeps playing on the TV
+    act(() =>
+      io.move({
+        "1": { inView: false, bottom: -2000 },
+        "2": { inView: false, bottom: 400, band: true },
+        "3": { inView: true, bottom: 6000 },
+      }),
+    );
+    expect(ta).toHaveAttribute("data-active", "2");
+    expect(screen.getByTestId("tv-serie")).toBeInTheDocument();
+    const said = () => flat(container.querySelector("section#s2")!.textContent);
+    expect(said()).not.toContain(flat(s.chat.series2Jota));
+    act(() => void vi.advanceTimersByTime(1000));
+    expect(ta).toHaveAttribute("data-active", "2");
+    // scene 3 now covers three quarters of the screen: scene 2 jumps to its end, scene 3 takes the TV
+    act(() =>
+      io.move({
+        "1": { inView: false, bottom: -2000 },
+        "2": { inView: false, bottom: 100, band: false },
+        "3": { inView: true, bottom: 6000 },
+      }),
+    );
+    expect(ta).toHaveAttribute("data-active", "3");
+    expect(said()).toContain(flat(s.chat.series2Jota));
+    // the new scene fades in on the TV
+    expect(container.querySelector(".ta-scr")).toHaveAttribute("data-fade", "true");
+  });
+
+  it("a scene that finished hands the TV over at mid-screen, as before", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
+    const { container } = render(wrap(<TrackA />));
+    act(() => void vi.advanceTimersByTime(30000));
+    act(() =>
+      io.move({
+        "1": { inView: false, bottom: -2000 },
+        "2": { inView: false, bottom: 400, band: true },
+        "3": { inView: true, bottom: 6000 },
+      }),
+    );
+    expect(container.querySelector(".ta")).toHaveAttribute("data-active", "3");
+  });
+
   it("the activity ring keeps counting down from scene 2 into scene 3", () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
     const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
@@ -306,24 +359,24 @@ describe("TrackA", () => {
   it("growAt follows scene 2 on desktop and mobile heights", () => {
     // svh in px, scene heights (svh) and the TV block above the scenes on mobile (px)
     const layouts = [
-      { vh: 900, s: [120, 260, 200], above: 0 },
-      { vh: 812, s: [90, 200, 150], above: 210 },
-      { vh: 667, s: [90, 200, 150], above: 210 },
+      { vh: 900, s: [160, 620, 640], above: 0 },
+      { vh: 812, s: [120, 620, 640], above: 210 },
+      { vh: 667, s: [120, 620, 640], above: 210 },
     ];
     for (const { vh, s: [h1, h2, h3], above } of layouts) {
       const u = vh / 100;
       const geo = { trackH: above + (h1 + h2 + h3) * u, viewH: vh, top: above + h1 * u, height: h2 * u };
       const span = geo.trackH - vh;
-      const atScroll = (y: number) => growAt(sceneProgress(y / span, geo));
-      // scene 2 becomes active when its top crosses the middle of the viewport
+      const atScroll = (y: number) => growAt(scrolledIn(y / span, geo));
+      // scene 2 becomes active when its top crosses the middle of the viewport; the grow is measured in screens
       const active = geo.top - vh / 2;
       expect(atScroll(active - 1)).toBe("hidden");
-      expect(atScroll(active + 0.06 * geo.height)).toBe("small");
-      expect(atScroll(active + 0.1 * geo.height)).toBe("full");
-      expect(atScroll(active + 0.2 * geo.height)).toBe("gone");
+      expect(atScroll(active + 0.15 * vh)).toBe("small");
+      expect(atScroll(active + 0.4 * vh)).toBe("full");
+      expect(atScroll(active + GROW_END * vh + 1)).toBe("gone");
     }
     // no layout yet (jsdom, first frame): straight to the series
-    expect(growAt(sceneProgress(0, { trackH: 0, viewH: 800, top: 0, height: 0 }))).toBe("gone");
+    expect(growAt(scrolledIn(0, { trackH: 0, viewH: 800, top: 0, height: 0 }))).toBe("gone");
   });
 
   it("reduced motion: scene 1 on linen, scenes 2 and 3 on dusk", () => {
@@ -372,16 +425,16 @@ describe("TrackB", () => {
   it("TrackB maps progress to phases", () => {
     expect(phaseOf(0)).toBe("trackpad");
     expect(phaseOf(0.2)).toBe("controls");
-    expect(phaseOf(0.4)).toBe("type");
-    expect(phaseOf(0.5)).toBe("talk");
+    expect(phaseOf(0.3)).toBe("type");
+    expect(phaseOf(0.45)).toBe("talk");
     expect(phaseOf(0.6)).toBe("pair");
     expect(phaseOf(0.9)).toBe("roles");
     expect(phaseOf(1)).toBe("roles");
     expect(digitsAt(0.5)).toBe(0);
-    expect(digitsAt(0.55)).toBe(0);
-    expect(digitsAt(0.625)).toBe(1);
-    expect(digitsAt(0.7)).toBe(2);
-    expect(digitsAt(0.85)).toBe(4);
+    expect(digitsAt(0.51)).toBe(0);
+    expect(digitsAt(0.59)).toBe(1);
+    expect(digitsAt(0.67)).toBe(2);
+    expect(digitsAt(0.83)).toBe(4);
     expect(digitsAt(0.9)).toBe(4);
     expect(digitsAt(1)).toBe(4);
   });
@@ -551,10 +604,7 @@ describe("no-JS and CSS fallbacks", () => {
     expect(b).toMatch(/@supports \(opacity:min\(1,1\)\)\{[^@]*\.tb-fly span\{opacity:calc\(min/);
   });
 
-  it("tracks C and D are short (~150svh); tablets get the one-column layout below 1024px", () => {
-    const end = css("screen-end.css");
-    expect(end).toMatch(/\.jscreen \.tck\{position:relative;height:150svh/);
-    expect(end).toMatch(/\.jscreen \.tdk\{position:relative;height:150svh/);
+  it("tablets get the one-column layout below 1024px", () => {
     expect(css("screen-track-a.css")).toMatch(/@media \(max-width:1023px\)\{\s*\/\*[^*]*\*\/\s*\.jscreen \.ta-grid\{display:block/);
     expect(css("screen-track-b.css")).toMatch(/@media \(max-width:1023px\)\{\s*\/\*[^*]*\*\/\s*\.jscreen \.tb-grid\{display:block/);
   });

@@ -88,20 +88,20 @@
 /* ---------- Tramo B (escenas 4–5) ---------- */
 /* --p (0–1) lo escribe useTrackProgress; de él salen el dedo y el cursor (--tp, --cx, --cy), lo que se teclea (--ty) y el vuelo de las cifras */
 .jscreen .tbk{position:relative}
-.jscreen .tb-live{--tp:clamp(0,calc(var(--p,0)/.15),1);--cx:calc(.22 + .5*var(--tp));--cy:calc(.7 - .36*var(--tp));--ty:clamp(0,calc((var(--p,0) - .31)/.1),1)}
+.jscreen .tb-live{--tp:clamp(0,calc(var(--p,0)/.14),1);--cx:calc(.22 + .5*var(--tp));--cy:calc(.7 - .36*var(--tp));--ty:clamp(0,calc((var(--p,0) - .27)/.1),1)}
 .jscreen .tb-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
 .jscreen .tb-sticky{grid-column:2;grid-row:1 / span 2;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center}
 .jscreen .tb-stage{position:relative;width:100%;display:flex;align-items:center;gap:2rem}
 .jscreen .tb-tv{flex:1;min-width:0}
 .jscreen .tb-phone{flex:none;width:min(14rem,28%,calc((100svh - 10rem)*390/844))}
 .jscreen .tb-scene{grid-column:1;min-width:0}
-.jscreen #s4.tb-scene{grid-row:1;min-height:220svh}
-.jscreen #s5.tb-scene{grid-row:2;min-height:200svh}
+.jscreen #s4.tb-scene{grid-row:1;min-height:300svh}
+.jscreen #s5.tb-scene{grid-row:2;min-height:300svh}
 .jscreen .tb-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
 .jscreen .tb-cap p{margin:0}
 .jscreen[data-hydrated] .tb-cap [data-on=false]{opacity:0;transform:translateY(8px)}
-.jscreen .tb-cap [data-step]{transition:opacity .6s ease,transform .6s ease}
-.jscreen .tb-layer{position:absolute;inset:0;transition:opacity .6s ease}
+.jscreen .tb-cap [data-step]{transition:opacity .8s ease,transform .8s var(--tv-ease)}
+.jscreen .tb-layer{position:absolute;inset:0;transition:opacity .9s ease}
 .jscreen .tb-layer[data-on=false]{opacity:0}
 /* el móvil entra al empezar el tramo; cada fase enciende su zona del mando */
 .jscreen[data-hydrated] .tb-live .tb-phone{--pin:clamp(0,calc(var(--p,0)*25),1);opacity:var(--pin);transform:translateY(calc((1 - var(--pin))*10%))}
@@ -125,12 +125,12 @@
 .jscreen .tb-search .tx i{position:absolute;top:0;bottom:0;left:0;right:-4px;background:#2a2433;border-left:3px solid var(--tv-accent);transform:translateX(calc(var(--ty,1)*100%))}
 .jscreen .tb-listen{position:absolute;left:960px;top:64px;display:flex;align-items:center;gap:24px;height:120px;padding:0 48px 0 24px;border-radius:999px;background:rgba(42,34,51,.94);box-shadow:var(--tv-shadow-float);color:var(--tv-text);font:400 40px var(--tv-serif);white-space:nowrap;opacity:0;transform:translateX(-50%) translateY(-16px);transition:opacity .4s ease,transform .6s var(--tv-ease)}
 .jscreen .tb-listen[data-on=true]{opacity:1;transform:translateX(-50%)}
-.jscreen .tb-pair{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
+.jscreen .tb-pair{position:absolute;inset:0;opacity:0;transition:opacity .9s ease}
 .jscreen .tb-pair[data-on=true]{opacity:1}
 /* las cifras vuelan de la tele al móvil: --f (0–1) por cifra, con un arco hacia arriba; se apagan al llenarse su casilla */
 .jscreen .tb-fly{position:absolute;inset:0;z-index:3;pointer-events:none}
 .jscreen .tb-fly span{position:absolute;display:grid;place-items:center;font-family:var(--tv-serif);font-weight:340;line-height:1;font-variant-numeric:tabular-nums;color:var(--tv-accent);will-change:transform,opacity;
-  --f:clamp(0,calc((var(--p,0) - var(--t0))/.075),1);
+  --f:clamp(0,calc((var(--p,0) - var(--t0))/.08),1);
   transform:translate(calc(var(--dx)*(1 - var(--f))),calc(var(--dy)*(1 - var(--f)))) scale(calc(var(--k) + (1 - var(--k))*var(--f)));
   opacity:0}
 /* min() con var() no admite respaldo en la misma regla (sería inválido al calcular): solo donde existe; si no, las cifras no vuelan */
@@ -154,8 +154,8 @@
   .jscreen .tb-sticky{top:4rem;height:auto;z-index:2;padding:.5rem 0 0;background:#211b2a}
   .jscreen .tb-stage{display:block;padding-bottom:33vw}
   .jscreen .tb-phone{position:absolute;right:.5rem;top:calc((100vw - 2rem)*9/16*.56);width:26vw}
-  .jscreen #s4.tb-scene{min-height:165svh}
-  .jscreen #s5.tb-scene{min-height:150svh}
+  .jscreen #s4.tb-scene{min-height:225svh}
+  .jscreen #s5.tb-scene{min-height:225svh}
   .jscreen .tb-cap{top:calc(4.5rem + (100vw - 2rem)*9/16 + 33vw);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
   .jscreen .tb-still .tb-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}
   .jscreen .tb-still .tb-cap{order:2}

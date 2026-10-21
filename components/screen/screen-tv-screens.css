@@ -12,7 +12,7 @@
 .jscreen .tv-ini-hint{margin-left:auto;display:flex;align-items:center;gap:22px;font:400 38px var(--tv-serif)}
 .jscreen .tv-ini-dot{display:block;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#a99ad1,#7c6aae 55%,#6e8cc4);box-shadow:0 0 0 8px rgba(124,106,174,.16),0 0 40px rgba(124,106,174,.5);animation:tv-beat 3.4s ease-in-out infinite}
 @keyframes tv-beat{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.jscreen .tv-ini-hero{position:absolute;left:96px;top:230px;width:1300px;animation:tv-rise .6s var(--tv-ease) both}
+.jscreen .tv-ini-hero{position:absolute;left:96px;top:230px;width:1300px;animation:tv-rise .9s var(--tv-ease) both}
 @keyframes tv-rise{from{opacity:0;transform:translateY(14px)}}
 .jscreen .tv-ini-hero .sv{font:400 30px var(--tv-sans);color:var(--tv-accent)}
 .jscreen .tv-ini-hero .ti{font:420 84px/1.05 var(--tv-serif);margin-top:10px}
@@ -46,7 +46,9 @@
 .jscreen .tv-serie .meta{position:absolute;left:96px;bottom:96px;font:400 30px/1.2 var(--tv-sans);color:rgba(255,255,255,.75)}
 
 /* ---------- Música a pantalla completa ---------- */
-.jscreen .tv-musica{position:absolute;inset:0;overflow:hidden;background:var(--mbase,#1a1420);color:var(--tv-text)}
+/* la música entra con un fundido sobre el reposo, que sigue debajo */
+.jscreen .tv-musica{position:absolute;inset:0;overflow:hidden;background:var(--mbase,#1a1420);color:var(--tv-text);animation:tv-fade .9s ease both}
+@keyframes tv-fade{from{opacity:0}}
 .jscreen .tv-mo{position:absolute;border-radius:50%}
 .jscreen .tv-mo.a{left:-260px;top:80px;width:1500px;height:1500px;opacity:.5;background:radial-gradient(closest-side,var(--la),transparent);animation:tv-orbM1 139s linear infinite}
 .jscreen .tv-mo.b{left:900px;top:-560px;width:1300px;height:1300px;opacity:.55;background:radial-gradient(closest-side,var(--lb),transparent);animation:tv-orbM2 167s linear infinite}
@@ -89,8 +91,8 @@
 /* ---------- Tesela que crece ---------- */
 .jscreen .tv-grow{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;pointer-events:none;overflow:hidden;
   background:linear-gradient(135deg,#a0603f,#5e3f6e);box-shadow:0 30px 60px rgba(0,0,0,.45);
-  transition:transform .9s var(--tv-ease),border-radius .9s var(--tv-ease),opacity .6s ease}
-.jscreen .tv-grow .nm{position:absolute;left:0;right:0;top:400px;text-align:center;opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .7s var(--tv-ease)}
+  transition:transform 1.3s var(--tv-ease),border-radius 1.3s var(--tv-ease),opacity .9s ease}
+.jscreen .tv-grow .nm{position:absolute;left:0;right:0;top:400px;text-align:center;opacity:0;transform:translateY(24px);transition:opacity .8s ease .2s,transform 1s var(--tv-ease) .2s}
 .jscreen .tv-grow[data-phase=full] .nm{opacity:1;transform:none}
 .jscreen .tv-grow .nm b{display:block;font:400 150px/1 var(--tv-serif);color:#f1ece7}
 .jscreen .tv-grow .nm span{display:block;font:400 36px var(--tv-sans);color:#e4ddeb;margin-top:24px}
@@ -106,7 +108,7 @@
 
 @media (prefers-reduced-motion: reduce){
   .jscreen .tv-ini-orb,.jscreen .tv-ini-dot,.jscreen .tv-mo,.jscreen .tv-serie .sol{animation:none}
-  .jscreen .tv-ini-hero{animation:none}
+  .jscreen .tv-ini-hero,.jscreen .tv-musica{animation:none}
   .jscreen .tv-tile,.jscreen .tv-grow,.jscreen .tv-grow .nm,.jscreen .tv-musica .art,.jscreen .tv-musica .mcol,.jscreen .tv-musica .ti,.jscreen .tv-musica .nx,.jscreen .tv-web .ld,.jscreen .tv-pair .d{transition:none}
 }
 

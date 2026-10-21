@@ -118,7 +118,7 @@
 /* ---------- Actividad (Live Activity) ---------- */
 .jscreen .tv-act{position:absolute;top:64px;left:960px;transform:translateX(-50%) translateY(-24px);display:flex;align-items:center;gap:20px;height:84px;padding:0 30px 0 18px;border-radius:999px;
   background:var(--pillbg);box-shadow:0 0 0 1px rgba(246,243,240,.08),0 18px 40px -12px rgba(0,0,0,.5);color:var(--text);white-space:nowrap;
-  opacity:0;transition:opacity .6s var(--ease),transform .9s var(--ease),left .9s var(--ease)}
+  opacity:0;transition:opacity .8s var(--ease),transform 1.1s var(--ease),left 1.1s var(--ease)}
 .jscreen .tv-act[data-on=true]{opacity:1;transform:translateX(-50%)}
 .jscreen .tv-act[data-shifted=true]{left:600px}
 .jscreen .tv-act[data-hidden=true]{opacity:0}
