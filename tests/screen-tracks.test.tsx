@@ -7,6 +7,7 @@ import es from "../messages/es.json";
 import { TrackA } from "@/components/screen/tracks/TrackA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
+import { KickContext, TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
 
 const s = es.screen;
 const wrap = (ui: ReactNode) => (
@@ -82,6 +83,29 @@ describe("Words onWord", () => {
   });
 });
 
+describe("glass kick", () => {
+  it("kicks 1 when a tool starts and when it ends, only on the active turn", () => {
+    const kick = vi.fn();
+    const turn: Turn = { you: "Pon jazz", tool: { icon: "music", title: "Reproducir" }, jota: "Ahí va." };
+    const view = (tool: "none" | "run" | "done", active = true) => (
+      <KickContext.Provider value={kick}>
+        <TurnView turn={turn} state={{ you: true, tool, jota: false }} active={active} compact={false} />
+      </KickContext.Provider>
+    );
+    const { rerender } = render(view("none"));
+    expect(kick).not.toHaveBeenCalled();
+    rerender(view("run"));
+    expect(kick).toHaveBeenCalledTimes(1);
+    expect(kick).toHaveBeenLastCalledWith(1);
+    rerender(view("done"));
+    expect(kick).toHaveBeenCalledTimes(2);
+    expect(kick).toHaveBeenLastCalledWith(1);
+    kick.mockClear();
+    render(view("done", false));
+    expect(kick).not.toHaveBeenCalled();
+  });
+});
+
 describe("TrackA", () => {
   it("TrackA shows scene 2 final state when mounted past it", () => {
     // scenes 1 and 2 are above the viewport, scene 3 is on screen
@@ -118,6 +142,16 @@ describe("TrackA", () => {
     expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
   });
 
+  it("reduced motion: scene 1 on linen, scenes 2 and 3 on dusk", () => {
+    vi.stubGlobal("matchMedia", (q: string) => ({ matches: true, media: q, addEventListener() {}, removeEventListener() {} }));
+    mockIO({});
+    const { container } = render(wrap(<TrackA />));
+    expect(container.querySelector(".ta-still")).not.toBeNull();
+    expect(container.querySelector("section#s1")).toHaveAttribute("data-dark", "false");
+    expect(container.querySelector("section#s2")).toHaveAttribute("data-dark", "true");
+    expect(container.querySelector("section#s3")).toHaveAttribute("data-dark", "true");
+  });
+
   it("TrackA renders static frames without JS-driven state", () => {
     const html = renderToString(wrap(<TrackA />));
     expect(html).toContain(s.s1.headline);
@@ -128,5 +162,7 @@ describe("TrackA", () => {
     for (const id of ["s1", "s2", "s3"]) expect(html).toContain(`id="${id}"`);
     // the server frame is scene 1 (idle screen): no conversation has been said yet
     expect(html).not.toContain(s.chat.series1Jota);
+    // no JS: the page starts in lino with ink text (no data-dark, no dusk yet)
+    expect(html).not.toContain('data-dark="true"');
   });
 });

@@ -26,8 +26,14 @@ function growAt(p: number): GrowPhase {
 
 /** Leaf that owns the per-frame progress (and --p), so only discrete changes reach the track. */
 function Progress({ track, onGrow }: { track: RefObject<HTMLElement | null>; onGrow: (g: GrowPhase) => void }) {
-  const g = growAt(useTrackProgress(track));
+  const p = useTrackProgress(track);
+  const g = growAt(p);
+  // the text switches ink → linen once, when the dusk layer (--p1 = p·6) passes half
+  const dark = p * 6 >= 0.5;
   useEffect(() => onGrow(g), [g, onGrow]);
+  useEffect(() => {
+    track.current?.setAttribute("data-dark", dark ? "true" : "false");
+  }, [dark, track]);
   return null;
 }
 
@@ -141,7 +147,7 @@ export function TrackA() {
     return (
       <div ref={track} className="ta ta-still">
         {([1, 2, 3] as Scene[]).map((n) => (
-          <section key={n} id={`s${n}`} data-scene={n} className="ta-row">
+          <section key={n} id={`s${n}`} data-scene={n} data-dark={n === 1 ? "false" : "true"} className="ta-row">
             <div className="ta-cap">
               {n === 1 ? heading : caption(n, true)}
               <Transcript lines={n === 2 ? lines2 : n === 3 ? lines3 : []} />

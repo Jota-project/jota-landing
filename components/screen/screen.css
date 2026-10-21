@@ -307,7 +307,9 @@
 
 /* ---------- Tramo A (escenas 1–3) ---------- */
 /* --p (0–1) lo escribe useTrackProgress; --p1 es la apertura: la tele crece y el fondo pasa de lino a Dusk */
-.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:color-mix(in srgb,var(--color-linen) calc(var(--p1)*100%),var(--color-ink))}
+.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:var(--color-ink);transition:color .4s ease}
+/* el texto cambia de tinta a lino de una vez, cuando el fondo ya es más Dusk que lino (data-dark lo pone el tramo) */
+.jscreen .ta[data-dark=true]{color:var(--color-linen)}
 .jscreen .ta-dusk{position:absolute;inset:0;background:#211b2a;opacity:var(--p1);pointer-events:none}
 .jscreen .ta-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
 .jscreen .ta-tv{grid-column:2;grid-row:1 / span 3;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center;justify-content:center}
@@ -342,8 +344,11 @@
   .jscreen .ta-cap{top:calc(4rem + (100vw - 2rem)*9/16 + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
 }
 /* movimiento reducido: una tele quieta por escena, sin sticky */
-.jscreen .ta-still{--p1:1}
-.jscreen .ta-still .ta-row{display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);gap:2rem 3rem;align-items:center;max-width:84rem;margin:0 auto;padding:4rem 1.5rem}
+/* escena 1 en lino con tinta; escenas 2 y 3 sobre Dusk con lino */
+.jscreen .ta-still .ta-row[data-dark=true]{background:#211b2a;color:var(--color-linen)}
+.jscreen .ta-still .ta-row>*{min-width:0}
+.jscreen .ta-still .ta-row{display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);gap:2rem 3rem;align-items:center;padding:4rem max(1.5rem,calc((100% - 81rem)/2))}
+/* filas a todo lo ancho para que el fondo Dusk llegue a los bordes */
 .jscreen .ta-still .ta-cap{position:static;min-height:0}
 @media (max-width:767px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
-@media (prefers-reduced-motion: reduce){.jscreen .ta-act,.jscreen .ta-cap [data-phase]{transition:none}}
+@media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase]{transition:none}}

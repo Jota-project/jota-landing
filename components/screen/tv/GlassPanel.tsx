@@ -8,7 +8,7 @@ import { Words } from "./Words";
 import { createSpringGlass, type SpringGlass } from "./glass";
 
 /** Swells the glass and the orb (no-op outside a Glass). */
-const KickContext = createContext<(a: number) => void>(() => {});
+export const KickContext = createContext<(a: number) => void>(() => {});
 
 export type Turn = {
   you: string;
