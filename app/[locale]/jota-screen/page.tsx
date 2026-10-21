@@ -5,6 +5,7 @@ import "@/components/screen/screen.css";
 import { Button } from "@/components/Button";
 import { CONTACT_EMAIL } from "@/components/sections/Contact";
 import { TrackA } from "@/components/screen/tracks/TrackA";
+import { TrackB } from "@/components/screen/tracks/TrackB";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -31,28 +32,14 @@ export default async function JotaScreenPage({ params }: Props) {
   const mail = (subject: string) =>
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
 
-  // Scenes 1–3 are tramo A; the rest are static text until later tasks replace
+  // Scenes 1–3 are tramo A, 4–5 tramo B; the rest are static text until later tasks replace
   // them with tracks. Every scene keeps its id and its captions as real text.
   return (
     <main className="jscreen">
       <TrackA />
 
       <div className="bg-[#211b2a] text-linen">
-        <section id="s4" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
-          <p>{t("s4.caption1")}</p>
-          <p>{t("s4.caption2")}</p>
-        </section>
-        <section id="s5" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
-          <p>{t("s5.caption1")}</p>
-          <p>{t("s5.caption2")}</p>
-          <ul className="flex flex-wrap gap-4 text-sm">
-            <li>{t("s5.admin")}</li>
-            <li>{t("s5.member")}</li>
-            <li>
-              {t("s5.guest")} · {t("s5.guestExpiry")}
-            </li>
-          </ul>
-        </section>
+        <TrackB />
         <section id="s6" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
           <p>{t("s6.line1")}</p>
           <p>{t("s6.line2")}</p>

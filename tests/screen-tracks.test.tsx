@@ -8,6 +8,9 @@ import { TrackA } from "@/components/screen/tracks/TrackA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
 import { KickContext, TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
+import { TrackB, digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
+import { MandoPair } from "@/components/screen/phone/MandoPair";
+import { MandoRemote } from "@/components/screen/phone/MandoRemote";
 
 const s = es.screen;
 const wrap = (ui: ReactNode) => (
@@ -164,5 +167,74 @@ describe("TrackA", () => {
     expect(html).not.toContain(s.chat.series1Jota);
     // no JS: the page starts in lino with ink text (no data-dark, no dusk yet)
     expect(html).not.toContain('data-dark="true"');
+  });
+});
+
+describe("TrackB", () => {
+  it("MandoPair shows typed digits", () => {
+    const { container, rerender } = render(wrap(<MandoPair digits={2} code="4821" paired={false} />));
+    const slots = [...container.querySelectorAll("[data-slot]")];
+    expect(slots).toHaveLength(4);
+    // typed digits show, the rest are placeholders (not hidden digits)
+    expect(slots.map((el) => el.textContent).join("")).toBe("48··");
+    expect(container.textContent).not.toContain(s.s5.paired);
+    rerender(wrap(<MandoPair digits={4} code="4821" paired />));
+    expect([...container.querySelectorAll("[data-slot]")].map((el) => el.textContent).join("")).toBe("4821");
+    expect(container.textContent).toContain(s.s5.paired);
+  });
+
+  it("TrackB maps progress to phases", () => {
+    expect(phaseOf(0)).toBe("trackpad");
+    expect(phaseOf(0.2)).toBe("controls");
+    expect(phaseOf(0.4)).toBe("type");
+    expect(phaseOf(0.5)).toBe("talk");
+    expect(phaseOf(0.6)).toBe("pair");
+    expect(phaseOf(0.9)).toBe("roles");
+    expect(phaseOf(1)).toBe("roles");
+    expect(digitsAt(0.5)).toBe(0);
+    expect(digitsAt(0.55)).toBe(0);
+    expect(digitsAt(0.625)).toBe(1);
+    expect(digitsAt(0.7)).toBe(2);
+    expect(digitsAt(0.85)).toBe(4);
+    expect(digitsAt(0.9)).toBe(4);
+    expect(digitsAt(1)).toBe(4);
+  });
+
+  it("MandoRemote has the three app shortcuts", () => {
+    const { container } = render(wrap(<MandoRemote focus="type" cursor={{ x: 0.5, y: 0.5 }} />));
+    const apps = [...container.querySelectorAll("[data-app]")];
+    expect(apps.map((a) => a.getAttribute("data-app"))).toEqual(["spotify", "netflix", "youtube"]);
+    for (const a of apps) expect(a.querySelector("svg")).not.toBeNull();
+    expect(container.textContent).toContain("Spotify");
+    expect(container.textContent).toContain("Netflix");
+    expect(container.textContent).toContain("YouTube");
+    expect(container.textContent).toContain(s.remote.room);
+    expect(container.textContent).toContain(s.remote.type);
+    expect(container.querySelector('[data-focus="type"]')).not.toBeNull();
+    // a visual copy: nothing focusable inside the phone
+    expect(container.querySelector("button")).toBeNull();
+  });
+
+  it("reduced motion: no sticky, code shown in full, paired and role cards", () => {
+    vi.stubGlobal("matchMedia", (q: string) => ({ matches: true, media: q, addEventListener() {}, removeEventListener() {} }));
+    mockIO({});
+    const { container } = render(wrap(<TrackB />));
+    const track = container.querySelector("[data-sticky]");
+    expect(track).toHaveAttribute("data-sticky", "false");
+    const s5 = container.querySelector("section#s5")!;
+    expect([...s5.querySelectorAll('[data-testid="tv-digit"][data-on="true"]')]).toHaveLength(4);
+    expect([...s5.querySelectorAll("[data-slot]")].map((el) => el.textContent).join("")).toBe("4821");
+    expect(s5.textContent).toContain(s.s5.paired);
+    for (const k of ["admin", "member", "guest", "guestExpiry"] as const) expect(s5.textContent).toContain(s.s5[k]);
+    expect(container.querySelector("section#s4")).not.toBeNull();
+  });
+
+  it("TrackB renders readable text without JS", () => {
+    const html = renderToString(wrap(<TrackB />));
+    for (const id of ["s4", "s5"]) expect(html).toContain(`id="${id}"`);
+    for (const text of [s.s4.caption1, s.s4.caption2, s.s5.caption1, s.s5.caption2, s.s5.admin, s.s5.member, s.s5.guest, s.s5.guestExpiry]) {
+      expect(html).toContain(text);
+    }
+    expect(html).toContain('data-sticky="true"');
   });
 });
