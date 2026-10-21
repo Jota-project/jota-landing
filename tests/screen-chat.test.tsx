@@ -74,7 +74,7 @@ describe("ChatPill", () => {
 describe("createSpringGlass", () => {
   it("stops its loop", () => {
     let id = 0;
-    const raf = vi.fn((_cb: FrameRequestCallback) => ++id);
+    const raf = vi.fn<(cb: FrameRequestCallback) => number>(() => ++id);
     const caf = vi.fn();
     vi.stubGlobal("requestAnimationFrame", raf);
     vi.stubGlobal("cancelAnimationFrame", caf);
