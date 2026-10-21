@@ -8,6 +8,7 @@ import { GlassPanel, type Turn } from "../tv/GlassPanel";
 import { GrowTile, type GrowPhase } from "../tv/GrowTile";
 import { GRAD, Inicio } from "../tv/Inicio";
 import { MusicaFull } from "../tv/MusicaFull";
+import { PhoneListen } from "../tv/PhoneListen";
 import { Reposo } from "../tv/Reposo";
 import { Serie } from "../tv/Serie";
 import { WebReceta } from "../tv/WebReceta";
@@ -73,9 +74,11 @@ export const Scene2Tv = memo(function Scene2Tv({
   const home = grow === "hidden" || grow === "small" || grow === "full";
   const series = grow === "full" || grow === "gone";
   const pillOpen = done.has("you1");
+  const orb = orbState(SCENE2, done, finished);
   return (
     <>
       {series && <Serie playing={live} progress={0.32} />}
+      {series && <PhoneListen on={orb === "listen"} />}
       {home && <Inicio focus={0} />}
       <GrowTile phase={grow} title={t("tv.showTitle")} sub={t("tv.showMeta")} from={FROM_HOME} bg={FARO_BG} />
       <LiveActivity on={done.has("activity")} ring={ring} shifted={false} aside={pillOpen} />
@@ -83,7 +86,7 @@ export const Scene2Tv = memo(function Scene2Tv({
         open={pillOpen}
         turn={turns[second ? 1 : 0]}
         state={turnState(done, second ? 2 : 1)}
-        orb={orbState(SCENE2, done, finished)}
+        orb={orb}
         replayLabel={t("chat.replay")}
         animate={animate}
       />

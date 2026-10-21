@@ -240,6 +240,28 @@ describe("TrackA", () => {
     expect(ring()).toBeGreaterThan(inScene2);
   });
 
+  it("scene 2: the phone's orb lights up in a corner of the TV while you talk (you talk to the phone)", () => {
+    const chip = (done: string[], finished = false) => {
+      const { container, unmount } = render(
+        wrap(<Scene2Tv done={new Set(done)} finished={finished} animate={false} grow="gone" live={false} ring={1} />),
+      );
+      const el = container.querySelector('[data-testid="tv-phone-listen"]');
+      const on = el?.getAttribute("data-on");
+      unmount();
+      return on;
+    };
+    expect(chip([])).toBe("false");
+    expect(chip(["you1"])).toBe("true");
+    expect(chip(["you1", "tool1"])).toBe("false");
+    expect(chip(["you1", "tool1", "toolDone1", "jota1", "you2"])).toBe("true");
+    expect(chip(SCENE2.map((e) => e.id), true)).toBe("false");
+    // final frame without JS: there, at rest
+    const html = renderToString(
+      wrap(<Scene2Tv done={new Set(SCENE2.map((e) => e.id))} finished animate={false} grow="gone" live={false} ring={1} />),
+    );
+    expect(html).toMatch(/data-testid="tv-phone-listen"[^>]*data-on="false"|data-on="false"[^>]*data-testid="tv-phone-listen"/);
+  });
+
   it("scene 3: the activity moves out of the way once the recipe web is open", () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
     mockIO({ "1": { inView: false, bottom: -2000 }, "2": { inView: false, bottom: -10 }, "3": { inView: true, bottom: 900 } });
