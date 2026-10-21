@@ -51,24 +51,46 @@ export function firstEvents(events: ScriptEvent[], n: number): Set<string> {
   return new Set(events.slice(0, Math.max(0, n)).map((e) => e.id));
 }
 
-/** Reading along: a line animates while the scroll is less than this past its event; further on (a jump, or simply
- *  reading on) it is painted whole, so every answer is seen whole for a while before the next turn. */
+/** A jump: landing this far past the first event crossed paints the words whole. */
 export const STEP_MAX = 0.2;
 /** Faster than this (screens a second) the visitor is skimming: lines come out whole. */
 export const FAST = 2.5;
+/** How long a Jota line may animate past its event, at most, and how much before the next event it is whole. */
+export const JOTA_ANIM = 0.3;
+export const JOTA_WHOLE = 0.2;
+
+const isLine = (id: string) => id.startsWith("you") || id.startsWith("jota");
+
+/** Where line i (a «you» or «jota» event) has to be whole: your words by your tool card; Jota's answer .2 screen
+ *  before the next event and no later than .3 past its own, so it is read whole before the next turn.
+ *  Undefined for other events. */
+export function lineDeadline(events: ScriptEvent[], i: number): number | undefined {
+  const e = events[i];
+  if (!e || !isLine(e.id)) return undefined;
+  const next = events[i + 1];
+  if (e.id.startsWith("you")) {
+    const tool = events.find((x) => x.id === `tool${e.id.slice(3)}`);
+    return tool ? tool.pos : (next?.pos ?? e.pos + JOTA_ANIM);
+  }
+  return next ? Math.min(next.pos - JOTA_WHOLE, e.pos + JOTA_ANIM) : e.pos + JOTA_ANIM;
+}
+
+/** Whether the newest line among the first n events may still be animating at q (before its deadline). */
+export function stillReading(events: ScriptEvent[], n: number, q: number): boolean {
+  for (let i = Math.min(n, events.length) - 1; i >= 0; i--) {
+    if (isLine(events[i].id)) return q < (lineDeadline(events, i) ?? -Infinity);
+  }
+  return false;
+}
 
 /** Whether what just appeared animates its words: the scene moved forward (from prev to next events done) at a
- *  reading speed, and q is still close to the first event it crossed. Jumps (landing far past, the first measure
- *  with no layout) and scrolling back paint the words whole. */
+ *  reading speed, q is still close to the first event it crossed (not a jump: a restored scroll, the first measure
+ *  with no layout) and before the newest line's deadline. Scrolling back paints the words whole. */
 export function readsAlong(events: ScriptEvent[], prev: number, next: number, q: number, speed: number): boolean {
   if (next <= prev || prev < 0 || prev >= events.length) return false;
   if (speed > FAST) return false;
-  return q - events[prev].pos < STEP_MAX;
-}
-
-/** Whether the newest of the n events done is still close enough to animate (see STEP_MAX). */
-export function stillReading(events: ScriptEvent[], n: number, q: number): boolean {
-  return n >= 1 && n <= events.length && q - events[n - 1].pos < STEP_MAX;
+  if (q - events[prev].pos >= STEP_MAX) return false;
+  return stillReading(events, next, q);
 }
 
 /** What turn n has said so far. */
