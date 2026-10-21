@@ -1,8 +1,10 @@
 /** Spring-physics glass (port of frame() in jota-reposo-v2.html).
  *  body + halo follow the sheet's rectangle with one spring per edge; the corners wobble
  *  and an amplitude (kicked by speech, floored while listening/thinking) swells the orb.
- *  The rAF loop only exists between create and stop(); `calm` snaps with no wobble. */
-export type SpringGlass = { stop(): void; kick(a?: number): void };
+ *  The rAF loop only runs between create and stop() and not while paused (off screen); pause keeps
+ *  the springs where they are. `calm` (reduced motion) snaps to the sheet in one frame and stops,
+ *  and snaps again only when the sheet changes size. */
+export type SpringGlass = { stop(): void; kick(a?: number): void; pause(): void; resume(): void };
 
 type Rect = { l: number; t: number; r: number; b: number };
 const KEYS = ["l", "t", "r", "b"] as const;
@@ -11,9 +13,10 @@ export function createSpringGlass(
   sheet: HTMLElement,
   body: HTMLElement,
   halo: HTMLElement,
-  opts: { calm: boolean },
+  opts: { calm: boolean; paused?: boolean },
 ): SpringGlass {
   const calm = opts.calm;
+  let paused = !!opts.paused;
   const log = sheet.querySelector<HTMLElement>(".tv-log");
   const orbI = sheet.querySelector<HTMLElement>(".orbe i");
   let e: Rect | null = null;
@@ -39,7 +42,12 @@ export function createSpringGlass(
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
     last = now;
     const time = now / 1000;
+    raf = 0;
     const T = target();
+    if (calm) {
+      e = { ...T };
+      for (const k of KEYS) v[k] = 0;
+    }
     if (!e) e = { l: T.l + 20, t: T.t + 20, r: T.l + 20, b: T.t + 20 };
     const n = Math.max(1, Math.ceil(dt * 120));
     const h = dt / n;
@@ -64,7 +72,7 @@ export function createSpringGlass(
     if (!calm && amp < floor) amp = floor;
     const pill = sheet.dataset.form === "pill";
     const rt = pill ? 70 : s === "listen" || s === "think" ? 64 : 48;
-    rb += (rt - rb) * Math.min(1, dt * 4);
+    rb = calm ? rt : rb + (rt - rb) * Math.min(1, dt * 4);
     const mod = calm ? 0 : 1;
     const hh: string[] = [];
     const vz: string[] = [];
@@ -93,15 +101,35 @@ export function createSpringGlass(
         log.scrollTop = sh; // keep the latest words in view
       }
     }
-    raf = requestAnimationFrame(frame);
+    if (!calm) schedule();
   };
-  raf = requestAnimationFrame(frame);
+  function schedule() {
+    if (!raf && !stopped && !paused) raf = requestAnimationFrame(frame);
+  }
+  const cancel = () => {
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  };
+  // calm: one more snap whenever the sheet's size changes (text wrapping, fonts)
+  const ro = calm && typeof ResizeObserver !== "undefined" ? new ResizeObserver(() => schedule()) : null;
+  ro?.observe(sheet);
+  schedule();
 
   return {
     stop() {
       stopped = true;
-      if (raf) cancelAnimationFrame(raf);
-      raf = 0;
+      cancel();
+      ro?.disconnect();
+    },
+    pause() {
+      paused = true;
+      cancel();
+    },
+    resume() {
+      if (!paused) return;
+      paused = false;
+      last = performance.now(); // no jump for the time spent paused
+      schedule();
     },
     kick(a = 1) {
       if (!calm) amp = Math.min(1, amp + a * 0.4);

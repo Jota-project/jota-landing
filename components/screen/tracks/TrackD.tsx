@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { buttonClass } from "@/components/Button";
 import { mailtoHref } from "@/lib/contact";
-import { useReducedMotion, useTrackProgress } from "../hooks";
+import { useInView, useReducedMotion, useTrackProgress } from "../hooks";
 import { Reposo } from "../tv/Reposo";
 import { TvFrame } from "../tv/TvFrame";
 
@@ -41,6 +41,7 @@ export function TrackD() {
   const c = useTranslations("contact");
   const reduced = useReducedMotion();
   const track = useRef<HTMLDivElement>(null);
+  const view = useInView(track);
   // server / no-JS / reduced motion: the final frame, the TV at night
   const [perfil, setPerfil] = useState<Perfil>("noche");
 
@@ -61,7 +62,7 @@ export function TrackD() {
         {!reduced && <Progress track={track} onPerfil={setPerfil} />}
         <div className="tdk-in">
           <div className="tdk-tv">
-            <TvFrame>
+            <TvFrame paused={!view.inView}>
               <Reposo
                 layout="rotate"
                 perfil={reduced ? "noche" : perfil}

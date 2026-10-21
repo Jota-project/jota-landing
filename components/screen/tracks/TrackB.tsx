@@ -121,7 +121,8 @@ export function TrackB() {
 
   const playing = trackView.inView && !paused;
   return (
-    <div ref={track} className="tbk tb-live" data-sticky="true" data-phase={phase}>
+    // off screen every animation below stops: the series on the TV and the phone's ambient orbs
+    <div ref={track} className="tbk tb-live" data-sticky="true" data-phase={phase} data-paused={trackView.inView ? "false" : "true"}>
       <Progress track={track} onStep={setStep} />
       <div className="tb-grid">
         <div className="tb-sticky">

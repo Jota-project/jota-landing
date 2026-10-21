@@ -1,8 +1,11 @@
 "use client";
 
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { createContext, useLayoutEffect, useRef, type ReactNode } from "react";
 
 const W = 1920;
+
+/** True while the TV is off screen: what animates inside it with JS (the glass) stops. */
+export const PausedContext = createContext(false);
 
 /** 16:9 box that scales a fixed 1920×1080 canvas. CSS scales it with container units where it can;
  *  --s = width / 1920 (set before paint) is the fallback. The canvas is aria-hidden: what it says is
@@ -42,7 +45,7 @@ export function TvFrame({
       className={`tv-vp ${className}`.trim()}
     >
       <div className="tv-stage" aria-hidden="true">
-        {children}
+        <PausedContext.Provider value={paused}>{children}</PausedContext.Provider>
       </div>
       {overlay ? <div className="tv-over">{overlay}</div> : null}
     </div>

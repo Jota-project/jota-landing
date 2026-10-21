@@ -31,7 +31,10 @@ export function useInView(
         const e = entries[entries.length - 1];
         if (!e) return;
         const inView = e.isIntersecting;
-        const passed = !inView && e.boundingClientRect.bottom < 0;
+        // above the root. With a root margin its top is not the viewport's (e.g. -50% → mid-screen), and an
+        // element leaving upwards stops intersecting with its bottom right on that line
+        const b = e.boundingClientRect.bottom;
+        const passed = !inView && (e.rootBounds ? b <= e.rootBounds.top : b < 0);
         setState((s) => (s.inView === inView && s.passed === passed ? s : { inView, passed }));
       },
       { threshold, rootMargin },

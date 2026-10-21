@@ -29,7 +29,7 @@ const wrap = (ui: ReactNode) => (
 // Words paints each word in its own span (no space nodes)
 const flat = (t: string | null | undefined) => (t ?? "").replace(/\s/g, "");
 
-type Geo = { inView: boolean; bottom: number };
+type Geo = { inView: boolean; bottom: number; rootTop?: number };
 /** IntersectionObserver that reports a fixed geometry per scene marker (data-scene). */
 function mockIO(scenes: Record<string, Geo>) {
   class IO {
@@ -38,10 +38,10 @@ function mockIO(scenes: Record<string, Geo>) {
       this.cb = cb;
     }
     observe(el: Element) {
-      const scene = (el as HTMLElement).dataset.scene;
-      const g = (scene && scenes[scene]) || { inView: true, bottom: 800 };
+      const scene = (el as HTMLElement).dataset.scene ?? "_";
+      const g = scenes[scene] || { inView: true, bottom: 800 };
       this.cb(
-        [{ target: el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom } } as unknown as IntersectionObserverEntry],
+        [{ target: el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
         this as unknown as IntersectionObserver,
       );
     }
@@ -64,7 +64,7 @@ function mockMovableIO(start: Record<string, Geo>) {
     const scene = (o.el as HTMLElement).dataset.scene;
     const g = (scene && scenes[scene]) || { inView: true, bottom: 800 };
     o.cb(
-      [{ target: o.el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom } } as unknown as IntersectionObserverEntry],
+      [{ target: o.el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
       o.io as IntersectionObserver,
     );
   };
@@ -193,6 +193,28 @@ describe("TrackA", () => {
     expect(tv.querySelector(".tv-stage")).toHaveAttribute("aria-hidden", "true");
     fireEvent.click(replay);
     expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
+  });
+
+  it("leaving the track past scene 3 keeps scene 3 on the TV (does not flip back to scene 1)", () => {
+    // the scene markers use a zero-height root across the middle of the viewport (rootBounds.top = innerHeight/2)
+    const mid = 450;
+    const io = mockMovableIO({
+      "1": { inView: false, bottom: -2000, rootTop: mid },
+      "2": { inView: false, bottom: -10, rootTop: mid },
+      "3": { inView: true, bottom: 900, rootTop: mid },
+    });
+    const { container } = render(wrap(<TrackA />));
+    const ta = container.querySelector(".ta")!;
+    expect(ta).toHaveAttribute("data-active", "3");
+    // s3 crosses the middle line on its way up: not intersecting, its bottom right at the line
+    act(() =>
+      io.move({
+        "1": { inView: false, bottom: -3000, rootTop: mid },
+        "2": { inView: false, bottom: -1000, rootTop: mid },
+        "3": { inView: false, bottom: mid, rootTop: mid },
+      }),
+    );
+    expect(ta).toHaveAttribute("data-active", "3");
   });
 
   it("the activity ring keeps counting down from scene 2 into scene 3", () => {
@@ -400,6 +422,21 @@ describe("TrackC / MoreList / TrackD", () => {
       expect(s.s7.items[i].icon).toBeTruthy();
       expect(li.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     });
+  });
+
+  it("TrackD pauses its TV off screen", () => {
+    mockIO({ "8": { inView: false, bottom: 3000 } });
+    render(wrap(<TrackD />));
+    expect(screen.getByTestId("tv-frame")).toHaveAttribute("data-paused", "true");
+  });
+
+  it("TrackB pauses the TV and the phone's ambient orbs off screen", () => {
+    mockIO({ _: { inView: false, bottom: 3000 } });
+    const { container } = render(wrap(<TrackB />));
+    // [data-paused=true] pauses every animation below it (the phone's .mn-orb included)
+    const root = container.querySelector(".tbk")!;
+    expect(root).toHaveAttribute("data-paused", "true");
+    expect(root.querySelector(".mn-orb")).not.toBeNull();
   });
 
   it("TrackD CTAs use the contact mailto links", () => {

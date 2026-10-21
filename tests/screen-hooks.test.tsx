@@ -142,6 +142,27 @@ describe("useInView", () => {
   });
 });
 
+describe("useInView passed with a root margin", () => {
+  it("counts an element that left above a shrunken root as passed (bottom at the root's top)", () => {
+    const el = document.createElement("div");
+    const ref = { current: el };
+    const { result } = renderHook(() => useInView(ref, { rootMargin: "-50% 0px -50% 0px" }));
+    act(() =>
+      ioCbs[0]([
+        { isIntersecting: false, boundingClientRect: { bottom: 450 } as DOMRectReadOnly, rootBounds: { top: 450 } as DOMRectReadOnly },
+      ]),
+    );
+    expect(result.current).toEqual({ inView: false, passed: true });
+    // still below the middle line: not passed
+    act(() =>
+      ioCbs[0]([
+        { isIntersecting: false, boundingClientRect: { bottom: 1400 } as DOMRectReadOnly, rootBounds: { top: 450 } as DOMRectReadOnly },
+      ]),
+    );
+    expect(result.current).toEqual({ inView: false, passed: false });
+  });
+});
+
 describe("useReducedMotion", () => {
   it("follows the media query", () => {
     const { result } = renderHook(() => useReducedMotion());

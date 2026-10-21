@@ -6,6 +6,7 @@ import { Orb } from "./Orb";
 import { ToolCard } from "./ToolCard";
 import { Words } from "./Words";
 import { createSpringGlass, type SpringGlass } from "./glass";
+import { PausedContext } from "./TvFrame";
 
 /** Swells the glass and the orb (no-op outside a Glass). */
 export const KickContext = createContext<(a: number) => void>(() => {});
@@ -81,16 +82,25 @@ export function Glass({
   const halo = useRef<HTMLDivElement>(null);
   const glass = useRef<SpringGlass | null>(null);
   const kick = useCallback((a: number) => glass.current?.kick(a), []);
+  // off screen (the TV is paused) the glass loop stops; it keeps its springs for when it comes back
+  const paused = useContext(PausedContext);
+  const pausedRef = useRef(paused);
 
   useEffect(() => {
     if (!open || !sheet.current || !body.current || !halo.current) return;
-    const g = createSpringGlass(sheet.current, body.current, halo.current, { calm: reduced });
+    const g = createSpringGlass(sheet.current, body.current, halo.current, { calm: reduced, paused: pausedRef.current });
     glass.current = g;
     return () => {
       g.stop();
       glass.current = null;
     };
   }, [open, reduced]);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+    if (paused) glass.current?.pause();
+    else glass.current?.resume();
+  }, [paused]);
 
   return (
     <div className="tv-glass" data-form={form} data-open={open ? "true" : "false"}>
