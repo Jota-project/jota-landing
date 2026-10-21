@@ -3,12 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "../hooks";
 
+/** Reading pace (ms between words): what you say, and Jota's answer, a little slower so it can be read. */
+export const YOU_GAP = 240;
+export const JOTA_GAP = 320;
+
 /** Words that fade in with a blur. play=false (or reduced motion) paints them all.
  *  onWord is called as each word appears (kept in a ref so it never restarts the run). */
 export function Words({
   text,
   play,
-  gap = 230,
+  gap = JOTA_GAP,
   onWord,
 }: {
   text: string;

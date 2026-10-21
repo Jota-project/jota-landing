@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, type ReactNo
 import { useReducedMotion } from "../hooks";
 import { Orb } from "./Orb";
 import { ToolCard } from "./ToolCard";
-import { Words } from "./Words";
+import { JOTA_GAP, Words, YOU_GAP } from "./Words";
 import { createSpringGlass, type SpringGlass } from "./glass";
 import { PausedContext } from "./TvFrame";
 
@@ -41,7 +41,7 @@ export function TurnView({
     <div className="tv-tn">
       {state.you && (
         <p className="tv-u">
-          <Words text={turn.you} play={active} gap={110} />
+          <Words text={turn.you} play={active} gap={YOU_GAP} />
         </p>
       )}
       {turn.tool && state.tool !== "none" && (
@@ -55,7 +55,7 @@ export function TurnView({
       )}
       {state.jota && (
         <p className="tv-j">
-          <Words text={turn.jota} play={active} onWord={sayWord} />
+          <Words text={turn.jota} play={active} gap={JOTA_GAP} onWord={sayWord} />
         </p>
       )}
     </div>
