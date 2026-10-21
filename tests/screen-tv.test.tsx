@@ -21,6 +21,14 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+const mockReduced = () =>
+  vi.stubGlobal("matchMedia", (q: string) => ({
+    matches: true,
+    media: q,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
+
 describe("TvFrame", () => {
   it("scales to its width", () => {
     let cb: ResizeObserverCallback = () => {};
@@ -54,7 +62,7 @@ describe("Reposo", () => {
     expect(screen.getByText(es.screen.tv.song)).toBeInTheDocument();
   });
 
-  it("rotates its layout every 10 s and keeps the talk layout fixed", () => {
+  it("rotates its layout every 10 s", () => {
     vi.useFakeTimers();
     const { container } = wrap(<Reposo layout="rotate" perfil="dia" />);
     const hora = () => container.querySelector<HTMLElement>(".z-hora")!.style.transform;
@@ -64,12 +72,59 @@ describe("Reposo", () => {
     });
     expect(hora()).not.toBe(first);
   });
+
+  it("keeps the talk layout fixed", () => {
+    vi.useFakeTimers();
+    const { container } = wrap(<Reposo layout="talk" perfil="dia" />);
+    const root = container.querySelector(".tv-reposo")!;
+    const hora = () => container.querySelector<HTMLElement>(".z-hora")!.style.transform;
+    const first = hora();
+    act(() => {
+      vi.advanceTimersByTime(10700);
+    });
+    expect(root).toHaveAttribute("data-layout", "talk");
+    expect(hora()).toBe(first);
+  });
+
+  it("does not stay dimmed when switching to talk mid-leave", () => {
+    vi.useFakeTimers();
+    const ui = (layout: "rotate" | "talk") => (
+      <NextIntlClientProvider locale="es" messages={es}>
+        <Reposo layout={layout} perfil="dia" />
+      </NextIntlClientProvider>
+    );
+    const { container, rerender } = render(ui("rotate"));
+    act(() => {
+      vi.advanceTimersByTime(10200);
+    });
+    expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-leaving", "true");
+    rerender(ui("talk"));
+    expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-leaving", "false");
+  });
+
+  it("does not rotate with reduced motion", () => {
+    vi.useFakeTimers();
+    mockReduced();
+    const { container } = wrap(<Reposo layout="rotate" perfil="dia" />);
+    const hora = () => container.querySelector<HTMLElement>(".z-hora")!.style.transform;
+    const first = hora();
+    act(() => {
+      vi.advanceTimersByTime(30000);
+    });
+    expect(hora()).toBe(first);
+  });
 });
 
 describe("Words", () => {
   it("renders all words when not playing", () => {
     const { container } = wrap(<Words text="En la Costa da Morte" play={false} />);
     expect(container.querySelectorAll(".tv-w.in")).toHaveLength(5);
+  });
+
+  it("paints all words with reduced motion even while playing", () => {
+    mockReduced();
+    const { container } = wrap(<Words text="uno dos tres" play />);
+    expect(container.querySelectorAll(".tv-w.in")).toHaveLength(3);
   });
 
   it("reveals words one by one while playing", () => {

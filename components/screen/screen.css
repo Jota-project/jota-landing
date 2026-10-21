@@ -142,7 +142,7 @@
 .jscreen .tv-w.in{opacity:1;filter:none}
 
 /* ---------- Pausa y movimiento reducido ---------- */
-.jscreen [data-paused="true"] *{animation-play-state:paused}
+.jscreen [data-paused="true"] *,.jscreen [data-paused="true"] *::before,.jscreen [data-paused="true"] *::after{animation-play-state:paused}
 @media (prefers-reduced-motion: reduce){
   .jscreen .luz,.jscreen .eq i,.jscreen .orbe,.jscreen .orbe::after,.jscreen .tv-spin{animation:none}
   .jscreen .eq i{transform:scaleY(.6)}

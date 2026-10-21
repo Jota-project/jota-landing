@@ -54,6 +54,7 @@ export function Reposo({
     return () => {
       clearTimeout(a);
       clearTimeout(b);
+      setLeaving(false);
     };
   }, [layout, reduced]);
 
