@@ -10,6 +10,10 @@ import { Words } from "@/components/screen/tv/Words";
 import { KickContext, TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
 import { TrackB, digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
 import { TvB } from "@/components/screen/tracks/ScenesB";
+import { TrackC } from "@/components/screen/tracks/TrackC";
+import { NIGHT_AT, TrackD, perfilAt } from "@/components/screen/tracks/TrackD";
+import { MoreList } from "@/components/screen/MoreList";
+import { CONTACT_EMAIL, mailtoHref } from "@/lib/contact";
 import { MandoPair } from "@/components/screen/phone/MandoPair";
 import { MandoRemote } from "@/components/screen/phone/MandoRemote";
 
@@ -242,5 +246,77 @@ describe("TrackB", () => {
       expect(html).toContain(text);
     }
     expect(html).toContain('data-sticky="true"');
+  });
+});
+
+describe("TrackC / MoreList / TrackD", () => {
+  const reduce = () =>
+    vi.stubGlobal("matchMedia", (q: string) => ({ matches: true, media: q, addEventListener() {}, removeEventListener() {} }));
+
+  it("TrackC marks the installer as coming soon", () => {
+    const { container } = render(wrap(<TrackC />));
+    expect(screen.getByTestId("soon")).toHaveTextContent(s.s6.soon);
+    const svg = container.querySelector("svg")!;
+    expect(svg).toHaveAttribute("role", "img");
+    expect(svg).toHaveAttribute("aria-label", s.s6.alt);
+    expect(svg.querySelectorAll("text")).toHaveLength(8);
+    for (const k of ["listen", "think", "answer", "gateway"] as const) expect(svg.textContent).toContain(s.s6[k]);
+    for (const l of [s.s6.line1, s.s6.line2, s.s6.network]) expect(container.textContent).toContain(l);
+  });
+
+  it("TrackC renders readable text and the full drawing without JS", () => {
+    const html = renderToString(wrap(<TrackC />));
+    expect(html).toContain('id="s6"');
+    for (const l of [s.s6.line1, s.s6.line2, s.s6.soon, s.s6.network]) expect(html).toContain(l);
+    expect(html).toContain('data-sticky="true"');
+  });
+
+  it("TrackC reduced motion: no sticky, drawing finished", () => {
+    reduce();
+    const { container } = render(wrap(<TrackC />));
+    const track = container.querySelector("#s6")!;
+    expect(track).toHaveAttribute("data-sticky", "false");
+    expect((track as HTMLElement).style.getPropertyValue("--p")).toBe("1");
+  });
+
+  it("MoreList renders five items", () => {
+    const { container } = render(wrap(<MoreList />));
+    const items = container.querySelectorAll("li");
+    expect(items).toHaveLength(5);
+    items.forEach((li, i) => {
+      expect(li.textContent).toContain(s.s7.items[i].title);
+      expect(li.textContent).toContain(s.s7.items[i].body);
+      expect(li.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    });
+  });
+
+  it("TrackD CTAs use the contact mailto links", () => {
+    const { container } = render(wrap(<TrackD />));
+    const links = [...container.querySelectorAll("#s8 a")] as HTMLAnchorElement[];
+    const byText = (txt: string) => links.find((a) => a.textContent === txt)!;
+    expect(byText(s.s8.ctaWaitlist).getAttribute("href")).toBe(mailtoHref(es.contact.waitlistSubject));
+    expect(byText(s.s8.ctaTalk).getAttribute("href")).toBe(mailtoHref(es.contact.emailSubject));
+    expect(byText(s.s8.ctaWaitlist).getAttribute("href")).toMatch(new RegExp(`^mailto:${CONTACT_EMAIL}\\?subject=`));
+    expect(container.querySelector("a button")).toBeNull();
+    expect(container.querySelector('a[href="/"]')).toHaveTextContent(s.s8.back);
+    expect(container.textContent).toContain(s.s8.headline);
+    expect(container.textContent).toContain(s.s8.line);
+  });
+
+  it("TrackD turns evening into night by progress", () => {
+    expect(perfilAt(0)).toBe("tarde");
+    expect(perfilAt(NIGHT_AT - 0.01)).toBe("tarde");
+    expect(perfilAt(1)).toBe("noche");
+  });
+
+  it("TrackD: server render shows the TV at night; reduced motion has no sticky", () => {
+    const html = renderToString(wrap(<TrackD />));
+    expect(html).toContain('data-perfil="noche"');
+    expect(html).toContain(s.s8.headline);
+    reduce();
+    mockIO({});
+    const { container } = render(wrap(<TrackD />));
+    expect(container.querySelector("#s8")).toHaveAttribute("data-sticky", "false");
+    expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-perfil", "noche");
   });
 });

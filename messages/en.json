@@ -147,7 +147,16 @@
       "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
       "line2": "J-Screen provides the screen; J-Gateway listens, thinks and answers you.",
       "soon": "Coming soon: a script and a guided install.",
-      "network": "All on your network. Away from home, over a secure connection."
+      "network": "All on your network. Away from home, over a secure connection.",
+      "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; J-Gateway listens, thinks and answers, and talks to your phone.",
+      "pc": "Mini PC or laptop",
+      "hdmi": "HDMI",
+      "tv": "Your TV",
+      "gateway": "J-Gateway",
+      "listen": "Listens",
+      "think": "Thinks",
+      "answer": "Answers",
+      "phone": "Your phone"
     },
     "s7": {
       "title": "More things it already does",

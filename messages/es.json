@@ -147,7 +147,16 @@
       "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
       "line2": "J-Screen pone la pantalla; J-Gateway escucha, piensa y te contesta.",
       "soon": "Muy pronto: un script y una instalación guiada.",
-      "network": "Todo en tu red. Fuera de casa, con conexión segura."
+      "network": "Todo en tu red. Fuera de casa, con conexión segura.",
+      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; J-Gateway escucha, piensa y contesta, y habla con tu móvil.",
+      "pc": "Mini PC o portátil",
+      "hdmi": "HDMI",
+      "tv": "Tu tele",
+      "gateway": "J-Gateway",
+      "listen": "Escucha",
+      "think": "Piensa",
+      "answer": "Contesta",
+      "phone": "Tu móvil"
     },
     "s7": {
       "title": "Más cosas que ya hace",

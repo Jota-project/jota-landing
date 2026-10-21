@@ -1,11 +1,12 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import "@/components/screen/screen.css";
-import { Button } from "@/components/Button";
-import { CONTACT_EMAIL } from "@/components/sections/Contact";
+import "@/components/screen/screen-end.css";
+import { MoreList } from "@/components/screen/MoreList";
 import { TrackA } from "@/components/screen/tracks/TrackA";
 import { TrackB } from "@/components/screen/tracks/TrackB";
+import { TrackC } from "@/components/screen/tracks/TrackC";
+import { TrackD } from "@/components/screen/tracks/TrackD";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -25,58 +26,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function JotaScreenPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("screen");
-  const c = await getTranslations("contact");
-  const items = t.raw("s7.items") as { title: string; body: string }[];
 
-  const mail = (subject: string) =>
-    `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
-
-  // Scenes 1–3 are tramo A, 4–5 tramo B; the rest are static text until later tasks replace
-  // them with tracks. Every scene keeps its id and its captions as real text.
+  // Tramos A–D are sticky tracks (scenes 1–6 and 8); scene 7 is a plain list. Every scene keeps
+  // its id and its captions as real text. The page opens and closes on linen (TrackD ends there).
   return (
     <main className="jscreen">
       <TrackA />
 
       <div className="bg-[#211b2a] text-linen">
         <TrackB />
-        <section id="s6" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
-          <p>{t("s6.line1")}</p>
-          <p>{t("s6.line2")}</p>
-          <p className="text-sm">{t("s6.soon")}</p>
-          <p className="text-sm">{t("s6.network")}</p>
-        </section>
-        <section id="s7" className="mx-auto w-full max-w-5xl px-6 py-16">
-          <h2 className="font-display text-2xl">{t("s7.title")}</h2>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-            {items.map((item) => (
-              <li key={item.title}>
-                <h3 className="font-medium">{item.title}</h3>
-                <p className="text-sm opacity-80">{item.body}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-        <section id="s8" className="mx-auto w-full max-w-5xl px-6 py-16">
-          <h2 className="font-display text-3xl md:text-5xl">{t("s8.headline")}</h2>
-          <p className="mt-4">{t("s8.line")}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <a href={mail(c("waitlistSubject"))}>
-              <Button variant="primary">{t("s8.ctaWaitlist")}</Button>
-            </a>
-            <a href={mail(c("emailSubject"))}>
-              <Button variant="ghost" className="!text-linen">
-                {t("s8.ctaTalk")}
-              </Button>
-            </a>
-          </div>
-        </section>
-      </div>
-
-      <div className="mx-auto w-full max-w-5xl px-6 py-10">
-        <Link href="/" className="text-sm text-malva underline-offset-4 hover:underline">
-          {t("s8.back")}
-        </Link>
+        <TrackC />
+        <MoreList />
+        <TrackD />
       </div>
     </main>
   );

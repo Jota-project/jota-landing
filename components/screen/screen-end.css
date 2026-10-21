@@ -1,0 +1,60 @@
+/* Tramos C y D y escena 7 de /jota-screen. Mismas reglas que screen.css:
+   --p lo escribe useTrackProgress; sin JS el fotograma es el final (var(--p,1));
+   con movimiento reducido no hay sticky (data-sticky=false) y --p vale 1. */
+
+/* ---------- Tramo C · qué necesitas (escena 6) ---------- */
+.jscreen .tck{position:relative;height:240svh;color:var(--color-linen)}
+.jscreen .tck[data-sticky=false]{height:auto}
+.jscreen .tck-in{position:sticky;top:0;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:2rem;max-width:64rem;margin:0 auto;padding:5rem 1.5rem 2rem}
+.jscreen .tck[data-sticky=false] .tck-in{position:static;min-height:0;padding:4rem 1.5rem}
+.jscreen:not([data-hydrated]) .tck{height:auto}
+.jscreen:not([data-hydrated]) .tck-in{position:static;min-height:0;padding:4rem 1.5rem}
+.jscreen .tck-svg{display:block;width:100%;max-height:calc(100svh - 17rem);height:auto;font:400 20px var(--font-inter),"Inter",system-ui,sans-serif}
+.jscreen .tck-s path{stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,(var(--p,1) - var(--a,0))/var(--w,.1),1))}
+.jscreen .tck-hl{stroke:var(--color-malva-soft)}
+.jscreen .tck-t text{opacity:clamp(0,(var(--p,1) - var(--a,0))*12,1)}
+.jscreen .tck-t .tck-acc{fill:var(--color-malva-soft)}
+.jscreen .tck-t .tck-b{font-weight:500;font-size:22px}
+.jscreen .tck-copy{display:grid;gap:.75rem;font-size:1.25rem;line-height:1.4}
+.jscreen .tck-copy p{margin:0}
+.jscreen .tck-chipline{display:flex}
+.jscreen .tck-chip{display:inline-block;border:1.5px solid var(--color-malva-soft);color:var(--color-malva-soft);border-radius:9999px;padding:.3rem .9rem;font-size:.875rem;line-height:1.3}
+.jscreen .tck-net{font-size:.875rem;opacity:.75}
+.jscreen[data-hydrated] .tck[data-sticky=true] .tck-chip{opacity:clamp(0,(var(--p,0) - .85)*12,1)}
+
+/* ---------- Escena 7 · más cosas ---------- */
+.jscreen .more{max-width:64rem;margin:0 auto;padding:5rem 1.5rem;color:var(--color-linen)}
+.jscreen .more-title{margin:0;font:400 clamp(1.5rem,3vw,2.25rem)/1.15 var(--font-fraunces),"Fraunces",serif}
+.jscreen .more-grid{list-style:none;margin:2.5rem 0 0;padding:0;display:grid;gap:2rem 2.5rem;grid-template-columns:1fr}
+@media (min-width:640px){.jscreen .more-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1024px){.jscreen .more-grid{grid-template-columns:repeat(3,1fr)}}
+.jscreen .more-item h3{margin:.75rem 0 .25rem;font-size:1.0625rem;font-weight:500}
+.jscreen .more-item p{margin:0;font-size:.9375rem;line-height:1.5;opacity:.8}
+.jscreen .more-ic{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:.875rem;background:rgba(246,243,240,.07);color:var(--color-malva-soft)}
+.jscreen .more-ic svg{width:1.5rem;height:1.5rem}
+
+/* ---------- Tramo D · cierre (escena 8) ---------- */
+.jscreen .tdk{position:relative;height:220svh;color:var(--color-linen)}
+.jscreen .tdk[data-sticky=false]{height:auto}
+.jscreen .tdk-in{position:sticky;top:0;min-height:100svh;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;max-width:64rem;margin:0 auto;padding:5rem 1.5rem 2rem}
+.jscreen .tdk[data-sticky=false] .tdk-in{position:static;min-height:0;padding:4rem 1.5rem}
+.jscreen:not([data-hydrated]) .tdk{height:auto}
+.jscreen:not([data-hydrated]) .tdk-in{position:static;min-height:0;padding:4rem 1.5rem}
+/* la tele se aleja: solo transform; el perfil tarde→noche lo cambia Reposo por el valor discreto */
+.jscreen .tdk-tv{width:min(100%,calc((100svh - 18rem)*16/9));transform:scale(calc(1 - .3*var(--p,1)));transform-origin:50% 100%;will-change:transform}
+.jscreen .tdk-copy{text-align:center;display:grid;justify-items:center;gap:1rem}
+.jscreen .tdk-copy h2{margin:0;font:400 clamp(2rem,5vw,3.5rem)/1.1 var(--font-fraunces),"Fraunces",serif}
+.jscreen .tdk-copy p{margin:0;font-size:1.25rem;line-height:1.4;opacity:.85}
+.jscreen .tdk-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-top:.75rem}
+.jscreen .tdk-ghost{color:var(--color-linen);border-color:rgba(246,243,240,.4)}
+.jscreen .tdk-ghost:hover{color:var(--color-malva-soft);border-color:var(--color-malva-soft)}
+.jscreen[data-hydrated] .tdk[data-sticky=true] .tdk-copy{opacity:clamp(0,(var(--p,0) - .3)*5,1);transform:translateY(calc((1 - clamp(0,(var(--p,0) - .3)*5,1))*12px))}
+/* de Dusk a lino antes del pie; el enlace de vuelta ya está sobre lino */
+.jscreen .tdk-fade{height:8rem;background:linear-gradient(to bottom,#211b2a,var(--color-linen))}
+.jscreen .tdk-back{background:var(--color-linen);padding:1rem 1.5rem 3rem;text-align:center}
+.jscreen .tdk-back a{font-size:.875rem;color:var(--color-malva);text-underline-offset:4px}
+.jscreen .tdk-back a:hover{text-decoration:underline}
+
+@media (prefers-reduced-motion: reduce){
+  .jscreen .tck-t text,.jscreen .tdk-copy{transition:none}
+}

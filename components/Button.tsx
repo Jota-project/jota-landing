@@ -19,6 +19,11 @@ const variants: Record<Variant, string> = {
     "bg-transparent text-malva px-0 py-0 rounded-none underline-offset-4 hover:underline focus-visible:outline-malva",
 };
 
+/** Class string of a button, for real <a> elements that must look like one. */
+export function buttonClass(variant: Variant = "primary", className = ""): string {
+  return `${base} ${variants[variant]} ${className}`.trim();
+}
+
 export function Button({
   variant = "primary",
   className = "",
@@ -27,7 +32,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`${base} ${variants[variant]} ${className}`.trim()}
+      className={buttonClass(variant, className)}
       {...rest}
     >
       {children}

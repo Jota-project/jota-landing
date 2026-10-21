@@ -1,18 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/Button";
-
-export const CONTACT_EMAIL = "alfonsogarrelopez@gmail.com";
+import { CONTACT_EMAIL, mailtoHref } from "@/lib/contact";
 
 export async function Contact() {
   const t = await getTranslations("contact");
 
-  const primaryHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    t("emailSubject"),
-  )}`;
-  const waitlistHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    t("waitlistSubject"),
-  )}`;
+  const primaryHref = mailtoHref(t("emailSubject"));
+  const waitlistHref = mailtoHref(t("waitlistSubject"));
 
   return (
     <Section
