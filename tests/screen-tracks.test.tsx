@@ -389,6 +389,14 @@ describe("TrackA", () => {
     expect(container.querySelector("section#s3")).toHaveAttribute("data-dark", "true");
   });
 
+  it("hydrated, before the layout is measured, the opening stays on linen (no flash of dusk)", () => {
+    mockIO({ "1": { inView: true, bottom: 900 }, "2": { inView: false, bottom: 3000 }, "3": { inView: false, bottom: 6000 } });
+    const { container } = render(wrap(<TrackA />));
+    const ta = container.querySelector(".ta") as HTMLElement;
+    expect(ta).toHaveAttribute("data-dark", "false");
+    expect(ta.style.getPropertyValue("--p1")).toBe("0");
+  });
+
   it("TrackA renders static frames without JS-driven state", () => {
     const html = renderToString(wrap(<TrackA />));
     expect(html).toContain(s.s1.headline);

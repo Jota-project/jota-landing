@@ -40,10 +40,13 @@ export function growAt(d: number): GrowPhase {
 }
 
 /** The opening (--p1, 0–1): the TV grows and the linen turns dusk over scene 1, eased in and out, done by the time
- *  scene 2 takes the TV (90 % of the way there). Measured, so it does not depend on the track's length. */
+ *  scene 2 takes the TV (90 % of the way there). Measured, so it does not depend on the track's length; 0 until
+ *  the layout is measured. */
 export function openingAt(p: number, geo: Geo): number {
+  // no layout yet (first frame): still at the start, linen; never a flash of dusk
+  if (geo.viewH <= 0 || geo.height <= 0) return 0;
   const end = (geo.top - geo.viewH / 2) * 0.9;
-  if (geo.viewH <= 0 || end <= 0) return 1;
+  if (end <= 0) return 1;
   const scroll = p * Math.max(0, geo.trackH - geo.viewH);
   const x = Math.min(1, Math.max(0, scroll / end));
   return x * x * (3 - 2 * x);

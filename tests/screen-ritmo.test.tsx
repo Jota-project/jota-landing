@@ -150,7 +150,9 @@ describe("scroll-driven phases", () => {
         last = v;
       }
     }
-    expect(openingAt(0.5, { trackH: 0, viewH: 0, top: 0, height: 0 })).toBe(1);
+    // first frame, nothing measured yet: linen, no flash of dusk
+    expect(openingAt(0, { trackH: 0, viewH: 0, top: 0, height: 0 })).toBe(0);
+    expect(openingAt(0.5, { trackH: 0, viewH: 0, top: 0, height: 0 })).toBe(0);
   });
 
   it("track B: each remote phase and the code get more scroll", () => {
