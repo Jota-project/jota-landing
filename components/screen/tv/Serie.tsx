@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 
-/** Series frame (demo .s-video): dusk sea, low sun, title and progress bar. */
-export function Serie({ playing, progress }: { playing: boolean; progress: number }) {
+/** Series frame (demo .s-video): dusk sea, low sun, title and progress bar. `drive`: a CSS expression for the bar
+ *  (0–1) that follows the scroll through custom properties; `progress` is its value when they are not set. */
+export function Serie({ playing, progress, drive }: { playing: boolean; progress: number; drive?: string }) {
   const t = useTranslations("screen.tv");
   const p = Math.min(Math.max(progress, 0), 1);
   return (
@@ -14,7 +15,7 @@ export function Serie({ playing, progress }: { playing: boolean; progress: numbe
         {t("showTitle")} · {t("showMeta")}
       </div>
       <div className="prog">
-        <b style={{ transform: `scaleX(${p})` }} />
+        <b data-testid="tv-serie-bar" style={{ transform: `scaleX(${drive ?? p})` }} />
       </div>
     </div>
   );

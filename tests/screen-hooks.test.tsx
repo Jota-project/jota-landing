@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, renderHook } from "@testing-library/react";
-import { StrictMode } from "react";
-import { useInView, useReducedMotion, useScript, useTrackProgress } from "@/components/screen/hooks";
+import { useInView, useReducedMotion, useTrackProgress } from "@/components/screen/hooks";
+import { FAST, STEP_MAX, eventsDone, firstEvents, readsAlong } from "@/components/screen/tracks/scriptsA";
 
 type IOCb = (entries: Partial<IntersectionObserverEntry>[]) => void;
 let ioCbs: IOCb[] = [];
@@ -39,91 +39,6 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers();
   vi.unstubAllGlobals();
-});
-
-const evs = [
-  { at: 0, id: "a" },
-  { at: 500, id: "b" },
-];
-
-describe("useScript", () => {
-  it("fires events in order", () => {
-    const { result } = renderHook(() => useScript(evs, { play: true, skip: false }));
-    expect([...result.current.done]).toEqual(["a"]);
-    expect(result.current.finished).toBe(false);
-    act(() => void vi.advanceTimersByTime(500));
-    expect([...result.current.done]).toEqual(["a", "b"]);
-    expect(result.current.finished).toBe(true);
-  });
-
-  it("does not replay when play toggles again", () => {
-    const { result, rerender } = renderHook(({ play }) => useScript(evs, { play, skip: false }), {
-      initialProps: { play: true },
-    });
-    act(() => void vi.advanceTimersByTime(500));
-    rerender({ play: false });
-    rerender({ play: true });
-    expect(result.current.done.size).toBe(2);
-    expect(result.current.finished).toBe(true);
-  });
-
-  it("skip jumps to final state", () => {
-    const { result, rerender } = renderHook(({ skip }) => useScript(evs, { play: true, skip }), {
-      initialProps: { skip: false },
-    });
-    rerender({ skip: true });
-    expect([...result.current.done].sort()).toEqual(["a", "b"]);
-    expect(result.current.finished).toBe(true);
-    expect(vi.getTimerCount()).toBe(0);
-  });
-
-  it("behaves like skip under reduced motion", () => {
-    mqMatches = true;
-    const { result } = renderHook(() => useScript(evs, { play: false, skip: false }));
-    expect(result.current.done.size).toBe(2);
-    expect(result.current.finished).toBe(true);
-  });
-
-  it("returns a new Set each time done changes", () => {
-    const { result } = renderHook(() => useScript(evs, { play: true, skip: false }));
-    const first = result.current.done;
-    act(() => void vi.advanceTimersByTime(500));
-    expect(result.current.done).not.toBe(first);
-  });
-
-  it("replay restarts", () => {
-    const { result } = renderHook(() => useScript(evs, { play: true, skip: false }));
-    act(() => void vi.advanceTimersByTime(500));
-    act(() => result.current.replay());
-    expect([...result.current.done]).toEqual(["a"]);
-    expect(result.current.finished).toBe(false);
-    act(() => void vi.advanceTimersByTime(500));
-    expect(result.current.finished).toBe(true);
-  });
-
-  it("plays to the end under StrictMode", () => {
-    const { result } = renderHook(() => useScript(evs, { play: true, skip: false }), {
-      wrapper: StrictMode,
-    });
-    act(() => void vi.advanceTimersByTime(500));
-    expect([...result.current.done].sort()).toEqual(["a", "b"]);
-    expect(result.current.finished).toBe(true);
-  });
-
-  it("replay under skip keeps the final state", () => {
-    const { result } = renderHook(() => useScript(evs, { play: true, skip: true }));
-    act(() => result.current.replay());
-    expect(result.current.done.size).toBe(2);
-    expect(result.current.finished).toBe(true);
-    expect(vi.getTimerCount()).toBe(0);
-  });
-
-  it("clears timers on unmount", () => {
-    const { unmount } = renderHook(() => useScript(evs, { play: true, skip: false }));
-    expect(vi.getTimerCount()).toBe(1);
-    unmount();
-    expect(vi.getTimerCount()).toBe(0);
-  });
 });
 
 describe("useInView", () => {
@@ -194,5 +109,51 @@ describe("useTrackProgress", () => {
     const t = vi.getTimerCount();
     act(() => void vi.advanceTimersByTime(100));
     expect(vi.getTimerCount()).toBe(t);
+  });
+});
+
+describe("eventsDone", () => {
+  const evs = [
+    { pos: 0.2, id: "a" },
+    { pos: 0.5, id: "b" },
+    { pos: 1.1, id: "c" },
+  ];
+  it("is every event whose position has been passed (the position itself counts)", () => {
+    expect([...eventsDone(evs, -1)]).toEqual([]);
+    expect([...eventsDone(evs, 0.19)]).toEqual([]);
+    expect([...eventsDone(evs, 0.2)]).toEqual(["a"]);
+    expect([...eventsDone(evs, 0.7)]).toEqual(["a", "b"]);
+    expect([...eventsDone(evs, 1.1)]).toEqual(["a", "b", "c"]);
+    expect([...eventsDone(evs, 99)]).toEqual(["a", "b", "c"]);
+  });
+  it("goes both ways: scrolling back takes events off", () => {
+    const down = [0, 0.3, 0.6, 1.2].map((q) => eventsDone(evs, q).size);
+    const up = [1.2, 0.6, 0.3, 0].map((q) => eventsDone(evs, q).size);
+    expect(down).toEqual([0, 1, 2, 3]);
+    expect(up).toEqual([3, 2, 1, 0]);
+  });
+  it("firstEvents(n) is the same set as eventsDone at the n-th position", () => {
+    for (let n = 0; n <= evs.length; n++) {
+      const q = n === 0 ? 0 : evs[n - 1].pos;
+      expect([...firstEvents(evs, n)]).toEqual([...eventsDone(evs, q)]);
+    }
+  });
+  it("reads along (animates) only on a forward step at reading speed, close to the event", () => {
+    expect(readsAlong(evs, 0, 1, 0.25, 0.4)).toBe(true);
+    expect(readsAlong(evs, 1, 2, 0.5, 0.4)).toBe(true);
+    // two close events crossed in one frame still read along
+    const close = [
+      { pos: 0.5, id: "tool" },
+      { pos: 0.56, id: "music" },
+    ];
+    expect(readsAlong(close, 0, 2, 0.58, 0.4)).toBe(true);
+    // landing far past the event (restored scroll, an anchor)
+    expect(readsAlong(evs, 0, 1, 0.2 + STEP_MAX + 0.01, 0.4)).toBe(false);
+    expect(readsAlong(evs, 0, 3, 1.2, 0.4)).toBe(false);
+    // skimming
+    expect(readsAlong(evs, 0, 1, 0.25, FAST + 0.1)).toBe(false);
+    // scrolling back, or no change
+    expect(readsAlong(evs, 2, 1, 0.4, 0.4)).toBe(false);
+    expect(readsAlong(evs, 1, 1, 0.4, 0.4)).toBe(false);
   });
 });

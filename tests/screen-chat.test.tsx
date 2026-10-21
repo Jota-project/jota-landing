@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { GlassPanel, type Turn, type TurnState } from "@/components/screen/tv/GlassPanel";
 import { ChatPill } from "@/components/screen/tv/ChatPill";
 import { createSpringGlass } from "@/components/screen/tv/glass";
@@ -22,7 +22,7 @@ describe("GlassPanel", () => {
   it("shows only the said parts", () => {
     const states: TurnState[] = [{ you: true, tool: "run", jota: false }];
     const { container } = render(
-      <GlassPanel open turns={[turn("1")]} states={states} orb="think" replayLabel="Repetir" />,
+      <GlassPanel open turns={[turn("1")]} states={states} orb="think" />,
     );
     expect(flat(container.querySelector(".tv-u"))).toBe("Pregunta1");
     expect(screen.getByText("Herramienta 1")).toBeInTheDocument();
@@ -32,15 +32,11 @@ describe("GlassPanel", () => {
     expect(screen.queryByRole("button", { name: "Repetir" })).toBeNull();
   });
 
-  it("replay button calls onReplay", () => {
-    const onReplay = vi.fn();
+  it("the finished panel has no Repetir button (scrolling back up replays it)", () => {
     const states: TurnState[] = [{ you: true, tool: "done", jota: true }];
-    const { container } = render(
-      <GlassPanel open turns={[turn("1")]} states={states} orb="idle" onReplay={onReplay} replayLabel="Repetir" />,
-    );
+    const { container } = render(<GlassPanel open turns={[turn("1")]} states={states} orb="idle" />);
     expect(flat(container.querySelector(".tv-j"))).toBe("Respuesta1");
-    fireEvent.click(screen.getByRole("button", { name: "Repetir" }));
-    expect(onReplay).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("button")).toBeNull();
   });
 });
 
@@ -52,7 +48,7 @@ describe("ChatPill", () => {
         turn={turn("1")}
         state={{ you: true, tool: "done", jota: true }}
         orb="idle"
-        replayLabel="Repetir"
+       
       />,
     );
     expect(flat(container.querySelector(".tv-u"))).toBe("Pregunta1");
@@ -62,7 +58,7 @@ describe("ChatPill", () => {
         turn={turn("2")}
         state={{ you: true, tool: "none", jota: false }}
         orb="listen"
-        replayLabel="Repetir"
+       
       />,
     );
     expect(container.querySelectorAll(".tv-tn")).toHaveLength(1);
@@ -151,7 +147,7 @@ describe("createSpringGlass", () => {
     const states: TurnState[] = [{ you: true, tool: "done", jota: true }];
     const ui = (paused: boolean) => (
       <TvFrame paused={paused}>
-        <GlassPanel open turns={[turn("1")]} states={states} orb="idle" replayLabel="Repetir" />
+        <GlassPanel open turns={[turn("1")]} states={states} orb="idle" />
       </TvFrame>
     );
     const { rerender } = render(ui(true));

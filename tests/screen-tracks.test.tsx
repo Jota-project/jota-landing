@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import es from "../messages/es.json";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { TrackA, GROW_END, HOLD_LINE, growAt, scrolledIn } from "@/components/screen/tracks/TrackA";
+import { TrackA, GROW_END, growAt, scrolledIn } from "@/components/screen/tracks/TrackA";
 import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
@@ -29,8 +29,7 @@ const wrap = (ui: ReactNode) => (
 // Words paints each word in its own span (no space nodes)
 const flat = (t: string | null | undefined) => (t ?? "").replace(/\s/g, "");
 
-/** band: what the hold band observer (rootMargin −HOLD_LINE … −HOLD_LINE) sees; defaults to inView. */
-type Geo = { inView: boolean; bottom: number; rootTop?: number; band?: boolean };
+type Geo = { inView: boolean; bottom: number; rootTop?: number };
 /** IntersectionObserver that reports a fixed geometry per scene marker (data-scene). */
 function mockIO(scenes: Record<string, Geo>) {
   class IO {
@@ -59,26 +58,23 @@ function mockIO(scenes: Record<string, Geo>) {
 
 /** Like mockIO, but the geometry can change later (the reader scrolls to another scene). */
 function mockMovableIO(start: Record<string, Geo>) {
-  const seen: { el: Element; cb: IntersectionObserverCallback; io: unknown; band: boolean }[] = [];
+  const seen: { el: Element; cb: IntersectionObserverCallback; io: unknown }[] = [];
   let scenes = start;
   const fire = (o: (typeof seen)[number]) => {
     const scene = (o.el as HTMLElement).dataset.scene;
     const g = (scene && scenes[scene]) || { inView: true, bottom: 800 };
-    const hit = o.band ? (g.band ?? g.inView) : g.inView;
     o.cb(
-      [{ target: o.el, isIntersecting: hit, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
+      [{ target: o.el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom }, rootBounds: g.rootTop === undefined ? null : { top: g.rootTop } } as unknown as IntersectionObserverEntry],
       o.io as IntersectionObserver,
     );
   };
   class IO {
     cb: IntersectionObserverCallback;
-    band: boolean;
-    constructor(cb: IntersectionObserverCallback, opts?: IntersectionObserverInit) {
+    constructor(cb: IntersectionObserverCallback) {
       this.cb = cb;
-      this.band = (opts?.rootMargin ?? "").startsWith(`-${HOLD_LINE * 100}%`);
     }
     observe(el: Element) {
-      const o = { el, cb: this.cb, io: this, band: this.band };
+      const o = { el, cb: this.cb, io: this };
       seen.push(o);
       fire(o);
     }
@@ -99,6 +95,61 @@ function mockMovableIO(start: Record<string, Geo>) {
   };
 }
 
+/** A desktop layout of tramo A (900px screen; s1 130, s2 300, s3 320svh) scrolled by hand: rects follow the
+ *  scroll, the middle-line observers see the scenes cross, one animation frame runs per step and the clock
+ *  moves on 400 ms (a reading pace). */
+function scrollHarness() {
+  const VH = 900;
+  const H = { s1: 1.3 * VH, s2: 3 * VH, s3: 3.2 * VH };
+  const top = { s1: 0, s2: H.s1, s3: H.s1 + H.s2 };
+  const trackH = H.s1 + H.s2 + H.s3;
+  let y = 0;
+  let now = 1000;
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
+  vi.stubGlobal("innerHeight", VH);
+  const scenes = () => {
+    const g: Record<string, Geo> = {};
+    (["s1", "s2", "s3"] as const).forEach((id, i) => {
+      const t = top[id] - y;
+      const b = t + H[id];
+      g[String(i + 1)] = { inView: t <= VH / 2 && b > VH / 2, bottom: b, rootTop: VH / 2 };
+    });
+    return g;
+  };
+  const io = mockMovableIO(scenes());
+  let frames: FrameRequestCallback[] = [];
+  vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+    frames.push(cb);
+    return frames.length;
+  });
+  const clock = vi.spyOn(performance, "now").mockImplementation(() => now);
+  const rect = vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+    const el = this as HTMLElement;
+    const box = (t: number, h: number) => ({ top: t, bottom: t + h, height: h, left: 0, right: 0, width: 0, x: 0, y: t }) as DOMRect;
+    if (el.classList.contains("ta")) return box(-y, trackH);
+    if (el.id === "s2" || el.id === "s3" || el.id === "s1") return box(top[el.id as "s1"] - y, H[el.id as "s1"]);
+    return box(0, 0);
+  });
+  const go = (to: number) => {
+    y = to;
+    now += 400;
+    act(() => io.move(scenes()));
+    act(() => {
+      const run = frames;
+      frames = [];
+      run.forEach((f) => f(now));
+    });
+  };
+  return {
+    toQ2: (q: number) => go(top.s2 - VH / 2 + q * VH),
+    toQ3: (q: number) => go(top.s3 - VH / 2 + q * VH),
+    restore() {
+      clock.mockRestore();
+      rect.mockRestore();
+    },
+  };
+}
+
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.useRealTimers();
@@ -113,7 +164,7 @@ describe("scriptsA", () => {
       "you1", "tool1", "music", "toolDone1", "jota1", "you2", "tool2", "grow", "web", "toolDone2", "jota2",
     ]);
     for (const sc of [SCENE2, SCENE3]) {
-      const at = sc.map((e) => e.at);
+      const at = sc.map((e) => e.pos);
       expect([...at].sort((a, b) => a - b)).toEqual(at);
     }
   });
@@ -177,49 +228,6 @@ describe("TrackA", () => {
     expect(tv.querySelector(".tv-act")).toHaveTextContent(s.tv.activityTime);
   });
 
-  it("plays scene 2 to its final frame inside the TV and offers Repetir", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    mockIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
-    const { container } = render(wrap(<TrackA />));
-    const tv = screen.getByTestId("tv-frame");
-    expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
-    act(() => {
-      vi.advanceTimersByTime(30000);
-    });
-    expect(screen.getByTestId("tv-serie")).toBeInTheDocument();
-    expect(flat(tv.querySelector(".tv-glass[data-form=pill]")?.textContent)).toContain(flat(s.chat.series2Jota));
-    expect(tv.querySelector('.tv-act[data-on="true"]')).not.toBeNull();
-    // the second caption entered with the activity
-    expect(container.querySelector('section#s2 [data-phase="2"]')).toHaveAttribute("data-on", "true");
-    // Repetir is a real button outside the aria-hidden canvas, so assistive tech reaches it
-    const replay = screen.getByRole("button", { name: s.chat.replay });
-    expect(replay.closest('[aria-hidden="true"]')).toBeNull();
-    expect(tv.querySelector(".tv-stage")).toHaveAttribute("aria-hidden", "true");
-    fireEvent.click(replay);
-    expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
-  });
-
-  it("Repetir stays (inert) while the scene replays, so focus is not lost; it sits above the series bar", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    mockIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
-    render(wrap(<TrackA />));
-    act(() => {
-      vi.advanceTimersByTime(30000);
-    });
-    const replay = screen.getByRole("button", { name: s.chat.replay });
-    expect(replay).toHaveAttribute("data-lift", "true");
-    replay.focus();
-    fireEvent.click(replay);
-    const during = screen.getByRole("button", { name: s.chat.replay });
-    expect(during).toBe(replay);
-    expect(during).toHaveAttribute("aria-disabled", "true");
-    expect(document.activeElement).toBe(during);
-    act(() => {
-      vi.advanceTimersByTime(30000);
-    });
-    expect(screen.getByRole("button", { name: s.chat.replay })).not.toHaveAttribute("aria-disabled", "true");
-  });
-
   it("leaving the track past scene 3 keeps scene 3 on the TV (does not flip back to scene 1)", () => {
     // the scene markers use a zero-height root across the middle of the viewport (rootBounds.top = innerHeight/2)
     const mid = 450;
@@ -240,55 +248,6 @@ describe("TrackA", () => {
       }),
     );
     expect(ta).toHaveAttribute("data-active", "3");
-  });
-
-  it("a playing scene keeps the TV until the next one really covers the screen, then jumps to its end", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
-    const { container } = render(wrap(<TrackA />));
-    const ta = container.querySelector(".ta")!;
-    act(() => void vi.advanceTimersByTime(4000));
-    // scene 3 crosses mid-screen, but scene 2 is still in the middle band: it keeps playing on the TV
-    act(() =>
-      io.move({
-        "1": { inView: false, bottom: -2000 },
-        "2": { inView: false, bottom: 400, band: true },
-        "3": { inView: true, bottom: 6000 },
-      }),
-    );
-    expect(ta).toHaveAttribute("data-active", "2");
-    expect(screen.getByTestId("tv-serie")).toBeInTheDocument();
-    const said = () => flat(container.querySelector("section#s2")!.textContent);
-    expect(said()).not.toContain(flat(s.chat.series2Jota));
-    act(() => void vi.advanceTimersByTime(1000));
-    expect(ta).toHaveAttribute("data-active", "2");
-    // scene 3 now covers three quarters of the screen: scene 2 jumps to its end, scene 3 takes the TV
-    act(() =>
-      io.move({
-        "1": { inView: false, bottom: -2000 },
-        "2": { inView: false, bottom: 100, band: false },
-        "3": { inView: true, bottom: 6000 },
-      }),
-    );
-    expect(ta).toHaveAttribute("data-active", "3");
-    expect(said()).toContain(flat(s.chat.series2Jota));
-    // the new scene fades in on the TV
-    expect(container.querySelector(".ta-scr")).toHaveAttribute("data-fade", "true");
-  });
-
-  it("a scene that finished hands the TV over at mid-screen, as before", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
-    const { container } = render(wrap(<TrackA />));
-    act(() => void vi.advanceTimersByTime(30000));
-    act(() =>
-      io.move({
-        "1": { inView: false, bottom: -2000 },
-        "2": { inView: false, bottom: 400, band: true },
-        "3": { inView: true, bottom: 6000 },
-      }),
-    );
-    expect(container.querySelector(".ta")).toHaveAttribute("data-active", "3");
   });
 
   it("the activity ring keeps counting down from scene 2 into scene 3", () => {
@@ -336,17 +295,90 @@ describe("TrackA", () => {
     expect(html).toMatch(/data-testid="tv-phone-listen"[^>]*data-on="false"|data-on="false"[^>]*data-testid="tv-phone-listen"/);
   });
 
-  it("scene 3: the activity moves out of the way once the recipe web is open", () => {
-    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
-    mockIO({ "1": { inView: false, bottom: -2000 }, "2": { inView: false, bottom: -10 }, "3": { inView: true, bottom: 900 } });
+  it("scene 2 follows the scroll both ways: each line at its place, the activity and caption 2 last", () => {
+    const sc = scrollHarness();
+    const { container } = render(wrap(<TrackA />));
+    const ta = container.querySelector(".ta")!;
+    const pill = () => flat(screen.getByTestId("tv-frame").querySelector(".tv-glass[data-form=pill]")?.textContent);
+    const cap2 = () => container.querySelector('section#s2 [data-phase="2"]')!.getAttribute("data-on");
+    const act2 = () => screen.getByTestId("tv-frame").querySelector('.tv-act[data-on="true"]');
+    sc.toQ2(0.9);
+    expect(ta).toHaveAttribute("data-active", "2");
+    expect(pill()).toContain(flat(s.chat.series1Jota));
+    expect(pill()).not.toContain(flat(s.chat.series2You));
+    expect(act2()).toBeNull();
+    expect(cap2()).toBe("false");
+    sc.toQ2(SCENE2[SCENE2.length - 1].pos + 0.01);
+    expect(pill()).toContain(flat(s.chat.series2Jota));
+    expect(act2()).not.toBeNull();
+    expect(cap2()).toBe("true");
+    // back up: the activity, the second turn and caption 2 go again
+    sc.toQ2(0.5);
+    expect(ta).toHaveAttribute("data-active", "2");
+    expect(pill()).toContain(flat(s.chat.series1You));
+    expect(pill()).not.toContain(flat(s.chat.series1Jota));
+    expect(act2()).toBeNull();
+    expect(cap2()).toBe("false");
+    // and before you1, the pill is closed again over the tile
+    sc.toQ2(0.3);
+    expect(screen.getByTestId("tv-frame").querySelector(".tv-glass[data-form=pill]")).toHaveAttribute("data-open", "false");
+    sc.restore();
+  });
+
+  it("a line said while reading along animates its words; a jump paints them whole", () => {
+    const sc = scrollHarness();
     render(wrap(<TrackA />));
-    const tv = screen.getByTestId("tv-frame");
-    expect(tv.querySelector('.ta-act[data-web="true"]')).toBeNull();
-    act(() => {
-      vi.advanceTimersByTime(30000);
-    });
+    const jota = () => screen.getByTestId("tv-frame").querySelectorAll(".tv-glass[data-form=pill] .tv-j .tv-w");
+    const lit = () => screen.getByTestId("tv-frame").querySelectorAll(".tv-glass[data-form=pill] .tv-j .tv-w.in").length;
+    // landing straight on scene 2 (a restored scroll): whole
+    sc.toQ2(1.0);
+    expect(jota().length).toBeGreaterThan(2);
+    expect(lit()).toBe(jota().length);
+    // back before jota1, then a small step at reading speed onto it: word by word
+    sc.toQ2(0.8);
+    expect(jota()).toHaveLength(0);
+    sc.toQ2(0.87);
+    expect(jota().length).toBeGreaterThan(2);
+    expect(lit()).toBeLessThan(jota().length);
+    act(() => void vi.advanceTimersByTime(20000));
+    expect(lit()).toBe(jota().length);
+    // a jump over the second turn: its answer is whole at once
+    sc.toQ2(SCENE2[SCENE2.length - 1].pos + 0.01);
+    expect(lit()).toBe(jota().length);
+    sc.restore();
+  });
+
+  it("scene 3 follows the scroll: music, then the recipe web; back up, the web goes", () => {
+    const sc = scrollHarness();
+    const { container } = render(wrap(<TrackA />));
+    const tv = () => screen.getByTestId("tv-frame");
+    sc.toQ3(0.7);
+    expect(container.querySelector(".ta")).toHaveAttribute("data-active", "3");
+    expect(tv().querySelector(".tv-musica")).not.toBeNull();
+    expect(screen.queryByTestId("tv-web")).toBeNull();
+    sc.toQ3(2.1);
     expect(screen.getByTestId("tv-web")).toBeInTheDocument();
-    expect(tv.querySelector('.ta-act[data-web="true"]')).not.toBeNull();
+    expect(tv().querySelector('.ta-act[data-web="true"]')).not.toBeNull();
+    expect(container.querySelector('section#s3 [data-phase="2"]')).toHaveAttribute("data-on", "true");
+    sc.toQ3(1.6);
+    expect(screen.queryByTestId("tv-web")).toBeNull();
+    sc.toQ3(0.3);
+    expect(tv().querySelector(".tv-musica")).toBeNull();
+    expect(container.querySelector('section#s3 [data-phase="2"]')).toHaveAttribute("data-on", "false");
+    sc.restore();
+  });
+
+  it("writes the scroll into the scenes (--q2, --q3) for the bars, and draws the track line", () => {
+    const sc = scrollHarness();
+    const { container } = render(wrap(<TrackA />));
+    const ta = container.querySelector(".ta") as HTMLElement;
+    sc.toQ2(1.5);
+    expect(Number(ta.style.getPropertyValue("--q2"))).toBeCloseTo(1.5, 1);
+    expect(Number(ta.style.getPropertyValue("--q3"))).toBe(0);
+    sc.toQ3(1);
+    expect(Number(ta.style.getPropertyValue("--q3"))).toBeCloseTo(1, 1);
+    expect(container.querySelector(".ta-tv .ta-meter")).not.toBeNull();
+    sc.restore();
   });
 
   it("the growing tile has the gradient of «El faro» on Inicio", () => {
@@ -359,9 +391,9 @@ describe("TrackA", () => {
   it("growAt follows scene 2 on desktop and mobile heights", () => {
     // svh in px, scene heights (svh) and the TV block above the scenes on mobile (px)
     const layouts = [
-      { vh: 900, s: [160, 550, 590], above: 0 },
-      { vh: 812, s: [120, 550, 590], above: 210 },
-      { vh: 667, s: [120, 550, 590], above: 210 },
+      { vh: 900, s: [130, 300, 320], above: 0 },
+      { vh: 812, s: [120, 300, 320], above: 210 },
+      { vh: 667, s: [120, 300, 320], above: 210 },
     ];
     for (const { vh, s: [h1, h2, h3], above } of layouts) {
       const u = vh / 100;

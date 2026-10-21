@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useTranslations } from "next-intl";
-import { useInView, useReducedMotion, useScript, useTrackProgress } from "../hooks";
+import { useInView, useReducedMotion, useTrackProgress } from "../hooks";
 import { TvFrame } from "../tv/TvFrame";
-import { ReplayButton } from "../tv/GlassPanel";
 import type { GrowPhase } from "../tv/GrowTile";
 import { Scene1Tv, Scene2Tv, Scene3Tv } from "./ScenesA";
-import { SCENE2, SCENE3 } from "./scriptsA";
+import { SCENE2, SCENE3, eventsDone, firstEvents, readsAlong } from "./scriptsA";
 
 type Scene = 1 | 2 | 3;
 const ALL2 = new Set(SCENE2.map((e) => e.id));
@@ -15,11 +14,11 @@ const ALL3 = new Set(SCENE3.map((e) => e.id));
 // a horizontal line across the middle of the viewport decides the active scene
 const MID = { rootMargin: "-50% 0px -50% 0px" };
 
-/** Where scene 2 sits in the track (px): track height, viewport height, top and height of #s2. */
+/** Where a scene sits in the track (px): track height, viewport height, top and height of its section. */
 export type Geo = { trackH: number; viewH: number; top: number; height: number };
 
-/** Screens scrolled since scene 2's top crossed the middle of the viewport (when it becomes active), from the
- *  track progress p and the layout. Works for any heights; with no layout yet it is far past the grow. */
+/** Screens scrolled since a scene's top crossed the middle of the viewport (when it takes the TV), from the track
+ *  progress p and the layout. Works for any heights; with no layout yet it is far past the scene's end. */
 export function scrolledIn(p: number, geo: Geo): number {
   if (geo.height <= 0 || geo.viewH <= 0) return 99;
   const scroll = p * Math.max(0, geo.trackH - geo.viewH);
@@ -54,14 +53,9 @@ export function openingAt(p: number, geo: Geo): number {
   return x * x * (3 - 2 * x);
 }
 
-/** A playing scene keeps the TV until the next one covers all but this fraction of the screen. */
-export const HOLD_LINE = 0.25;
-// a scene still «there» while it crosses the band between HOLD_LINE and 1 − HOLD_LINE of the viewport
-const BAND = { rootMargin: `-${HOLD_LINE * 100}% 0px -${HOLD_LINE * 100}% 0px` };
-
 const NO_GEO: Geo = { trackH: 0, viewH: 0, top: 0, height: 0 };
 
-/** Measures scene 2 inside the track (on mount and whenever the track resizes). */
+/** Measures a scene inside the track (on mount and whenever the track resizes). */
 function useGeo(track: RefObject<HTMLElement | null>, scene: RefObject<HTMLElement | null>): Geo {
   const [geo, setGeo] = useState<Geo>(NO_GEO);
   useEffect(() => {
@@ -88,29 +82,68 @@ function useGeo(track: RefObject<HTMLElement | null>, scene: RefObject<HTMLEleme
   return geo;
 }
 
-/** Leaf that owns the per-frame progress (and --p), so only discrete changes reach the track. */
+/** What the track lifts from the scroll: the tile's phase, how many events of each script are done and whether the
+ *  newest ones were read along (their words animate). */
+export type StepA = { grow: GrowPhase; n2: number; n3: number; a2: boolean; a3: boolean };
+
+/** Screens a second over the last SPEED_WINDOW ms, from the positions seen (t in ms) and the time now. */
+export const SPEED_WINDOW = 300;
+export function speedOf(samples: { t: number; q: number }[], now: number, q: number): number {
+  let base = samples[0];
+  for (const s of samples) if (s.t <= now - SPEED_WINDOW) base = s;
+  if (!base) return 0;
+  return Math.abs(q - base.q) / (SPEED_WINDOW / 1000);
+}
+
+const clamp = (v: number, hi: number) => Math.min(hi, Math.max(0, v));
+
+/** Leaf that owns the per-frame progress (and --p, --p1, --q2, --q3), so only discrete steps reach the track. */
 function Progress({
   track,
   scene2,
-  onGrow,
+  scene3,
+  onStep,
 }: {
   track: RefObject<HTMLElement | null>;
   scene2: RefObject<HTMLElement | null>;
-  onGrow: (g: GrowPhase) => void;
+  scene3: RefObject<HTMLElement | null>;
+  onStep: (s: StepA) => void;
 }) {
   const p = useTrackProgress(track);
-  const geo = useGeo(track, scene2);
-  const g = growAt(scrolledIn(p, geo));
-  const p1 = openingAt(p, geo);
+  const geo2 = useGeo(track, scene2);
+  const geo3 = useGeo(track, scene3);
+  const q2 = scrolledIn(p, geo2);
+  const q3 = scrolledIn(p, geo3);
+  const grow = growAt(q2);
+  const n2 = eventsDone(SCENE2, q2).size;
+  const n3 = eventsDone(SCENE3, q3).size;
+  const p1 = openingAt(p, geo2);
   // the text switches ink → linen once, when the dusk layer passes half
   const dark = p1 >= 0.5;
-  useEffect(() => onGrow(g), [g, onGrow]);
+  const samples = useRef<{ t: number; q: number }[]>([]);
+  const last = useRef<StepA>({ grow: "hidden", n2: -1, n3: -1, a2: false, a3: false });
   useEffect(() => {
-    track.current?.style.setProperty("--p1", String(p1));
-  }, [p1, track]);
-  useEffect(() => {
-    track.current?.setAttribute("data-dark", dark ? "true" : "false");
-  }, [dark, track]);
+    const el = track.current;
+    if (el) {
+      el.style.setProperty("--p1", String(p1));
+      el.setAttribute("data-dark", dark ? "true" : "false");
+      // screens into scenes 2 and 3, for what follows the scroll inside them (the series and song bars)
+      el.style.setProperty("--q2", String(clamp(q2, 4)));
+      el.style.setProperty("--q3", String(clamp(q3, 4)));
+    }
+    const now = typeof performance === "undefined" ? Date.now() : performance.now();
+    const seen = samples.current;
+    const speed = speedOf(seen, now, q2);
+    seen.push({ t: now, q: q2 });
+    while (seen.length > 2 && seen[1].t <= now - SPEED_WINDOW) seen.shift();
+    const L = last.current;
+    const a2 = n2 === L.n2 ? L.a2 : readsAlong(SCENE2, L.n2, n2, q2, speed);
+    const a3 = n3 === L.n3 ? L.a3 : readsAlong(SCENE3, L.n3, n3, q3, speed);
+    if (grow !== L.grow || n2 !== L.n2 || n3 !== L.n3 || a2 !== L.a2 || a3 !== L.a3) {
+      last.current = { grow, n2, n3, a2, a3 };
+      onStep(last.current);
+    }
+  }, [track, p1, dark, q2, q3, grow, n2, n3, onStep]);
   return null;
 }
 
@@ -125,7 +158,8 @@ function Transcript({ lines }: { lines: string[] }) {
   );
 }
 
-/** Tramo A · scenes 1–3: one sticky TV from the idle screen to the series and the glass panel. */
+/** Tramo A · scenes 1–3: one sticky TV from the idle screen to the series and the glass panel. The conversations of
+ *  scenes 2 and 3 follow the scroll: each event has its place in the scene, both ways. */
 export function TrackA() {
   const t = useTranslations("screen");
   const reduced = useReducedMotion();
@@ -137,38 +171,18 @@ export function TrackA() {
   const v2 = useInView(r2, MID);
   const v3 = useInView(r3, MID);
   const trackView = useInView(track);
-  const [grow, setGrow] = useState<GrowPhase>("hidden");
+  const [step, setStep] = useState<StepA>({ grow: "hidden", n2: 0, n3: 0, a2: false, a3: false });
   const [ring, setRing] = useState(1);
-  const [replaying, setReplaying] = useState<Scene | null>(null);
 
   useEffect(() => {
     track.current?.closest(".jscreen")?.setAttribute("data-hydrated", "");
   }, []);
 
-  const b2 = useInView(r2, BAND);
-  const b3 = useInView(r3, BAND);
-  const nominal: Scene = v3.inView ? 3 : v2.inView ? 2 : v1.inView ? 1 : v3.passed ? 3 : v2.passed ? 2 : 1;
-
-  // a scene plays once when it becomes active; leaving it (either way) jumps to its final state, but only once
-  // it has really gone: while its script is still playing it keeps the TV until the next scene covers all but
-  // HOLD_LINE of the screen (it left the middle band), so a slow reader sees it to the end
-  const [started, setStarted] = useState({ 2: false, 3: false });
-  const [fin, setFin] = useState({ 2: false, 3: false });
-  const holds2 = started[2] && !fin[2] && b2.inView;
-  const holds3 = started[3] && !fin[3] && b3.inView;
-  const active: Scene = nominal !== 2 && holds2 ? 2 : nominal !== 3 && holds3 ? 3 : nominal;
-  // the script starts as the tile fills the TV (no dead scroll waiting for it to fade into the series)
-  const ready2 = grow === "full" || grow === "gone";
-  const play2 = active === 2 && ready2;
-  const play3 = active === 3;
-  if ((play2 && !started[2]) || (play3 && !started[3])) {
-    setStarted({ 2: started[2] || play2, 3: started[3] || play3 });
-  }
-  const skip2 = active !== 2 && (started[2] || active > 2);
-  const skip3 = active !== 3 && started[3];
-  const s2 = useScript(SCENE2, { play: play2, skip: skip2 });
-  const s3 = useScript(SCENE3, { play: play3, skip: skip3 });
-  if (fin[2] !== s2.finished || fin[3] !== s3.finished) setFin({ 2: s2.finished, 3: s3.finished });
+  const active: Scene = v3.inView ? 3 : v2.inView ? 2 : v1.inView ? 1 : v3.passed ? 3 : v2.passed ? 2 : 1;
+  const done2 = useMemo(() => firstEvents(SCENE2, step.n2), [step.n2]);
+  const done3 = useMemo(() => firstEvents(SCENE3, step.n3), [step.n3]);
+  const finished2 = step.n2 >= SCENE2.length;
+  const finished3 = step.n3 >= SCENE3.length;
   // a new scene fades in over the black of the TV (not on the first frame)
   const [shown, setShown] = useState<Scene>(active);
   const [fade, setFade] = useState(false);
@@ -176,17 +190,10 @@ export function TrackA() {
     setShown(active);
     setFade(true);
   }
-  // once started or skipped, scene 2 always shows its series (never back to Inicio)
-  // the tile has given way to the series once while scene 2 was on the TV
-  const [grown, setGrown] = useState(false);
-  if (!grown && active === 2 && grow === "gone") setGrown(true);
-  // once started, the tile goes on growing to its end (it never shrinks back to Inicio); once grown, finished or
-  // skipped, scene 2 always shows its series
-  const final2 = reduced || grown || s2.finished || active > 2;
-  const grow2: GrowPhase = final2 ? "gone" : started[2] ? (grow === "gone" ? "gone" : "full") : grow;
+  const grow2: GrowPhase = reduced ? "gone" : step.grow;
 
   // the activity ring counts down from its birth in scene 2, through scene 3, while the track is on screen
-  const born = s2.done.has("activity");
+  const born = done2.has("activity");
   if (!born && ring !== 1) setRing(1);
   const counting = born && trackView.inView && !reduced;
   useEffect(() => {
@@ -197,14 +204,14 @@ export function TrackA() {
 
   const say = (done: Set<string>, pairs: [string, string][]) =>
     pairs.filter(([id]) => done.has(id)).map(([, line]) => line);
-  const lines2 = say(s2.done, [
+  const lines2 = say(reduced ? ALL2 : done2, [
     ["you1", t("chat.series1You")],
     ["jota1", t("chat.series1Jota")],
     ["you2", t("chat.series2You")],
     ["jota2", t("chat.series2Jota")],
     ["activity", `${t("tv.activityLabel")} · ${t("tv.activityTime")}`],
   ]);
-  const lines3 = say(s3.done, [
+  const lines3 = say(reduced ? ALL3 : done3, [
     ["you1", t("chat.jazzYou")],
     ["jota1", t("chat.jazzJota")],
     ["you2", t("chat.recipeYou")],
@@ -216,9 +223,9 @@ export function TrackA() {
     if (scene === 2)
       return (
         <Scene2Tv
-          done={staticFrame ? ALL2 : s2.done}
-          finished={staticFrame || s2.finished}
-          animate={!staticFrame && play2 && !s2.finished}
+          done={staticFrame ? ALL2 : done2}
+          finished={staticFrame || finished2}
+          animate={!staticFrame && step.a2}
           ring={staticFrame ? 1 : ring}
           grow={staticFrame ? "gone" : grow2}
           live={!staticFrame && active === 2 && trackView.inView}
@@ -226,11 +233,11 @@ export function TrackA() {
       );
     return (
       <Scene3Tv
-        done={staticFrame ? ALL3 : s3.done}
-        finished={staticFrame || s3.finished}
-        animate={!staticFrame && play3 && !s3.finished}
+        done={staticFrame ? ALL3 : done3}
+        finished={staticFrame || finished3}
+        animate={!staticFrame && step.a3}
         ring={staticFrame ? 1 : ring}
-        activity={staticFrame || s2.done.has("activity")}
+        activity={staticFrame || born}
       />
     );
   };
@@ -254,24 +261,6 @@ export function TrackA() {
     </>
   );
 
-  // Repetir: a real button over the TV, outside its aria-hidden canvas, once the active scene has finished.
-  // While that scene replays it stays, inert, so the focus is not lost.
-  const script = active === 2 ? s2 : active === 3 ? s3 : null;
-  if (replaying !== null && (replaying !== active || !!script?.finished)) setReplaying(null);
-  const busy = replaying !== null && replaying === active;
-  const replay =
-    script && (script.finished || busy) ? (
-      <ReplayButton
-        label={t("chat.replay")}
-        busy={busy}
-        lift={active === 2}
-        onClick={() => {
-          setReplaying(active);
-          script.replay();
-        }}
-      />
-    ) : null;
-
   if (reduced) {
     // reduced motion: no sticky, one still frame per scene with its text
     return (
@@ -291,16 +280,18 @@ export function TrackA() {
 
   return (
     <div ref={track} className="ta" data-sticky="true" data-active={active}>
-      <Progress track={track} scene2={r2} onGrow={setGrow} />
+      <Progress track={track} scene2={r2} scene3={r3} onStep={setStep} />
       <i className="ta-dusk" aria-hidden="true" />
       <div className="ta-grid">
         <div className="ta-tv">
           <div className="ta-tv-in">
-            <TvFrame paused={!trackView.inView} overlay={replay}>
+            <TvFrame paused={!trackView.inView}>
               <div key={active} className="ta-scr" data-fade={fade ? "true" : "false"}>
                 {tv(active)}
               </div>
             </TvFrame>
+            {/* a fine line under the TV that follows the scroll through the track */}
+            <i className="ta-meter" aria-hidden="true" />
           </div>
         </div>
         <section id="s1" ref={r1} data-scene="1" className="ta-scene">
@@ -308,13 +299,13 @@ export function TrackA() {
         </section>
         <section id="s2" ref={r2} data-scene="2" className="ta-scene">
           <div className="ta-cap">
-            {caption(2, s2.done.has("activity"))}
+            {caption(2, done2.has("activity"))}
             <Transcript lines={lines2} />
           </div>
         </section>
         <section id="s3" ref={r3} data-scene="3" className="ta-scene">
           <div className="ta-cap">
-            {caption(3, s3.done.has("jota1"))}
+            {caption(3, done3.has("jota1"))}
             <Transcript lines={lines3} />
           </div>
         </section>

@@ -12,8 +12,8 @@ import { Serie } from "../tv/Serie";
 import { TvFrame } from "../tv/TvFrame";
 import { CODE, FLY_FROM, FLY_SPAN, Flyers, PhoneB, REST, TvB, type PhaseB } from "./ScenesB";
 
-/** Track progress (0–1) → phase. Scenes are 300/300svh tall (span 500svh): each zone of the remote gets
- *  ~.12 (.6 screen); the caption handoff (s5 reaching mid-screen) lands at p = .5, just after the pairing at .49;
+/** Track progress (0–1) → phase. Scenes are 240/240svh tall (span 380svh): each zone of the remote gets
+ *  ~.12 (~.45 screen); the caption handoff (s5 reaching mid-screen) lands at p = .5, just after the pairing at .49;
  *  the digits fly from .51 to .83 and the roles come at .86. */
 export function phaseOf(p: number): PhaseB {
   if (p < 0.14) return "trackpad";
@@ -132,6 +132,8 @@ export function TrackB() {
               <TvFrame paused={!trackView.inView}>
                 <TvB phase={phase} playing={playing} />
               </TvFrame>
+              {/* a fine line under the TV that follows the scroll through the track */}
+              <i className="tb-meter" aria-hidden="true" />
             </div>
             <div className="tb-phone">
               <PhoneB phase={phase} digits={digits} playing={playing} />

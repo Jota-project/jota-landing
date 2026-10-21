@@ -1,32 +1,26 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { act, render } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
+import { NextIntlClientProvider } from "next-intl";
+import type { ReactNode } from "react";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import es from "../messages/es.json";
 import en from "../messages/en.json";
-import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
+import { READ_GAP, SAY_GAP, SCENE2, SCENE3, type ScriptEvent } from "@/components/screen/tracks/scriptsA";
+import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { JOTA_GAP, YOU_GAP } from "@/components/screen/tv/Words";
 import { TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
-import { GROW_END, GROW_FULL, HOLD_LINE, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
-import { FLY_FROM, FLY_SPAN } from "@/components/screen/tracks/ScenesB";
+import { GROW_END, GROW_FULL, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
+import { FLY_FROM, FLY_SPAN, TvB } from "@/components/screen/tracks/ScenesB";
 import { digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
 
 afterEach(() => {
   vi.useRealTimers();
 });
 
-type ChatKey = keyof typeof es.screen.chat;
-const words = (t: string) => t.split(" ").filter(Boolean).length;
-/** The longer of es/en, so the pause holds in both languages. */
-const longest = (k: ChatKey) => Math.max(words(es.screen.chat[k]), words(en.screen.chat[k]));
-const at = (sc: { at: number; id: string }[], id: string) => sc.find((e) => e.id === id)!.at;
-/** When the last word of a line appears. */
-const lastWord = (start: number, k: ChatKey, gap: number) => start + (longest(k) - 1) * gap;
-
-const LINES: [typeof SCENE2, [ChatKey, ChatKey, ChatKey, ChatKey]][] = [
-  [SCENE2, ["series1You", "series1Jota", "series2You", "series2Jota"]],
-  [SCENE3, ["jazzYou", "jazzJota", "recipeYou", "recipeJota"]],
-];
+const pos = (sc: ScriptEvent[], id: string) => sc.find((e) => e.id === id)!.pos;
+const css = (f: string) => readFileSync(path.resolve(process.cwd(), "components/screen", f), "utf-8");
 
 describe("reading pace", () => {
   it("you speak at ≥200 ms a word, Jota at ≥300 ms", () => {
@@ -52,65 +46,145 @@ describe("reading pace", () => {
     expect(shown(".tv-j")).toBe(2);
   });
 
-  for (const [sc, [you1, jota1, you2, jota2]] of LINES) {
-    const name = sc === SCENE2 ? "scene 2" : "scene 3";
-    it(`${name}: tools wait for your words, ≥2.5 s to read each answer before the next turn`, () => {
-      // the tool card comes once you have finished speaking
-      expect(at(sc, "tool1")).toBeGreaterThanOrEqual(lastWord(at(sc, "you1"), you1, YOU_GAP) + 400);
-      expect(at(sc, "tool2")).toBeGreaterThanOrEqual(lastWord(at(sc, "you2"), you2, YOU_GAP) + 400);
-      // between Jota's answer and your next turn: the event gap and, more, a real pause after its last word
-      expect(at(sc, "you2") - at(sc, "jota1")).toBeGreaterThanOrEqual(2500);
-      expect(at(sc, "you2") - lastWord(at(sc, "jota1"), jota1, JOTA_GAP)).toBeGreaterThanOrEqual(2500);
-      expect(lastWord(at(sc, "jota2"), jota2, JOTA_GAP)).toBeGreaterThan(at(sc, "toolDone2"));
-    });
-  }
-
-  it("scene 2: ≥1.5 s after the last answer before the activity is born", () => {
-    expect(at(SCENE2, "activity") - lastWord(at(SCENE2, "jota2"), "series2Jota", JOTA_GAP)).toBeGreaterThanOrEqual(1500);
-  });
-
-  it("scene 3: the recipe web opens once the tile has grown (~1.3 s)", () => {
-    expect(at(SCENE3, "web") - at(SCENE3, "grow")).toBeGreaterThanOrEqual(1300);
-  });
-
-  it("the second caption comes ≥2 s into the scene (time to read the first)", () => {
-    // TrackA turns caption2 on with these events
-    expect(at(SCENE2, "activity")).toBeGreaterThanOrEqual(2000);
-    expect(at(SCENE3, "jota1")).toBeGreaterThanOrEqual(2000);
+  it("a line that appears while not reading along (a jump, scrolling back) comes out whole", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    const turn: Turn = { you: "uno dos tres cuatro", jota: "cinco seis siete ocho" };
+    const view = (jota: boolean, active: boolean) => (
+      <TurnView turn={turn} state={{ you: true, tool: "none", jota }} active={active} compact={false} />
+    );
+    const { container, rerender } = render(view(false, false));
+    const shown = (sel: string) => container.querySelectorAll(`${sel} .tv-w.in`).length;
+    expect(shown(".tv-u")).toBe(4);
+    // reading along again: what is already there is not typed again; the new line animates
+    rerender(view(true, true));
+    expect(shown(".tv-u")).toBe(4);
+    act(() => void vi.advanceTimersByTime(JOTA_GAP + 10));
+    expect(shown(".tv-j")).toBe(2);
+    expect(shown(".tv-u")).toBe(4);
+    // skimming on mid-line: it completes at once
+    rerender(view(true, false));
+    expect(shown(".tv-j")).toBe(4);
   });
 });
 
-describe("the scroll leaves time", () => {
-  const css = (f: string) => readFileSync(path.resolve(process.cwd(), "components/screen", f), "utf-8");
-  const a = css("screen-track-a.css");
-  const mobile = a.slice(a.indexOf("@media (max-width:1023px)"));
-  const h = (src: string, id: string) => Number(src.match(new RegExp(`#${id}\\.ta-scene\\{(?:grid-row:\\d;)?min-height:(\\d+)svh`))![1]) / 100;
-  // a calm reader: one screen every 2.5 s
-  const PACE = 2500;
-  const end2 = at(SCENE2, "activity");
-  const end3 = lastWord(at(SCENE3, "jota2"), "recipeJota", JOTA_GAP);
-
-  for (const [label, src] of [["desktop", a], ["mobile", mobile]] as const) {
-    it(`${label}: each script ends inside its scene at one screen every 2.5 s`, () => {
-      // scene 2 plays once the tile fills the TV and holds it until scene 3 covers all but HOLD_LINE of the screen
-      expect((h(src, "s2") - GROW_FULL + HOLD_LINE) * PACE).toBeGreaterThanOrEqual(end2);
-      // scene 3 starts at mid-screen; the TV leaves with the track's bottom (half a screen early), held until
-      // HOLD_LINE of it has gone
-      expect((h(src, "s3") - 0.5 + HOLD_LINE) * PACE).toBeGreaterThanOrEqual(end3);
+describe("the scroll drives the conversations", () => {
+  const SCRIPTS: [string, ScriptEvent[]][] = [
+    ["scene 2", SCENE2],
+    ["scene 3", SCENE3],
+  ];
+  for (const [name, sc] of SCRIPTS) {
+    it(`${name}: events in order, ~${SAY_GAP} screen you → tool → answer, ${READ_GAP} screen to read each answer`, () => {
+      const p = sc.map((e) => e.pos);
+      expect([...p].sort((x, y) => x - y)).toEqual(p);
+      for (const n of [1, 2]) {
+        expect(pos(sc, `tool${n}`) - pos(sc, `you${n}`)).toBeGreaterThanOrEqual(SAY_GAP - 1e-9);
+        expect(pos(sc, `jota${n}`) - pos(sc, `tool${n}`)).toBeGreaterThanOrEqual(SAY_GAP - 1e-9);
+        expect(pos(sc, `toolDone${n}`)).toBeGreaterThan(pos(sc, `tool${n}`));
+        expect(pos(sc, `toolDone${n}`)).toBeLessThan(pos(sc, `jota${n}`));
+      }
+      expect(pos(sc, "you2") - pos(sc, "jota1")).toBeGreaterThanOrEqual(READ_GAP - 1e-9);
+      // no stretch of a screen or more without a change
+      for (let i = 1; i < p.length; i++) expect(p[i] - p[i - 1]).toBeLessThan(0.5);
     });
   }
 
-  it("tracks B, C and D are longer: s4/s5 300svh, C and D 220svh", () => {
+  it("scene 2 starts over the tile once it fills the TV; the activity comes after time to read the last answer", () => {
+    expect(pos(SCENE2, "you1")).toBeGreaterThan(GROW_FULL);
+    expect(pos(SCENE2, "activity") - pos(SCENE2, "jota2")).toBeGreaterThanOrEqual(READ_GAP - 1e-9);
+  });
+
+  it("scene 3: the recipe web opens once the tile has grown (≥ .3 screen, ~1 s at a calm pace)", () => {
+    expect(pos(SCENE3, "web") - pos(SCENE3, "grow")).toBeGreaterThanOrEqual(0.3);
+  });
+
+  it("the second caption comes on with its event, half a screen or more into the scene", () => {
+    // TrackA turns caption2 on with these events
+    expect(pos(SCENE2, "activity")).toBeGreaterThanOrEqual(0.5);
+    expect(pos(SCENE3, "jota1")).toBeGreaterThanOrEqual(0.5);
+    expect(css("screen-track-a.css")).toMatch(/\.ta-cap \[data-phase\]\{transition:opacity \.6s ease,transform \.6s/);
+  });
+});
+
+describe("the tracks fit their script, and no more", () => {
+  const a = css("screen-track-a.css");
+  const mobile = a.slice(a.indexOf("@media (max-width:1023px)"));
+  const h = (src: string, id: string) => Number(src.match(new RegExp(`#${id}\\.ta-scene\\{(?:grid-row:\\d;)?min-height:(\\d+)svh`))![1]) / 100;
+  const end = (sc: ScriptEvent[]) => sc[sc.length - 1].pos + READ_GAP;
+
+  for (const [label, src] of [["desktop", a], ["mobile", mobile]] as const) {
+    it(`${label}: each script ends inside its scene with time to read it and some margin`, () => {
+      // scene 2 holds the TV from its top crossing mid-screen until scene 3's does: h2 screens
+      expect(h(src, "s2") - end(SCENE2)).toBeGreaterThanOrEqual(0.15);
+      // scene 3 takes the TV at mid-screen and the TV leaves with the track's bottom, half a screen early (on mobile
+      // the TV stays longer: this is the tighter bound)
+      expect(h(src, "s3") - 0.5 - end(SCENE3)).toBeGreaterThanOrEqual(0.15);
+      // and not much more: no long scroll with the script over
+      expect(h(src, "s2") - end(SCENE2)).toBeLessThanOrEqual(0.6);
+      expect(h(src, "s3") - 0.5 - end(SCENE3)).toBeLessThanOrEqual(0.6);
+    });
+  }
+
+  it("lengths: s1 130, s2 300, s3 320svh (mobile s1 120); B s4/s5 240; C and D 170svh", () => {
+    expect([h(a, "s1"), h(a, "s2"), h(a, "s3")]).toEqual([1.3, 3, 3.2]);
+    expect([h(mobile, "s1"), h(mobile, "s2"), h(mobile, "s3")]).toEqual([1.2, 3, 3.2]);
     const b = css("screen-track-b.css");
-    expect(b).toMatch(/#s4\.tb-scene\{grid-row:1;min-height:300svh\}/);
-    expect(b).toMatch(/#s5\.tb-scene\{grid-row:2;min-height:300svh\}/);
-    // mobile keeps the same length: each remote phase and the second caption need the same time
+    expect(b).toMatch(/#s4\.tb-scene\{grid-row:1;min-height:240svh\}/);
+    expect(b).toMatch(/#s5\.tb-scene\{grid-row:2;min-height:240svh\}/);
+    // mobile keeps the same length: each remote phase and the second caption need the same scroll
     const mb = b.slice(b.indexOf("@media (max-width:1023px)"));
-    expect(mb).toMatch(/#s4\.tb-scene\{min-height:300svh\}/);
-    expect(mb).toMatch(/#s5\.tb-scene\{min-height:300svh\}/);
-    const end = css("screen-end.css");
-    expect(end).toMatch(/\.jscreen \.tck\{position:relative;height:220svh/);
-    expect(end).toMatch(/\.jscreen \.tdk\{position:relative;height:220svh/);
+    expect(mb).toMatch(/#s4\.tb-scene\{min-height:240svh\}/);
+    expect(mb).toMatch(/#s5\.tb-scene\{min-height:240svh\}/);
+    const e = css("screen-end.css");
+    expect(e).toMatch(/\.jscreen \.tck\{position:relative;height:170svh/);
+    expect(e).toMatch(/\.jscreen \.tdk\{position:relative;height:170svh/);
+  });
+});
+
+describe("feedback while the TV is pinned", () => {
+  const a = css("screen-track-a.css");
+  const b = css("screen-track-b.css");
+  const wrap = (ui: ReactNode) => (
+    <NextIntlClientProvider locale="es" messages={es}>
+      {ui}
+    </NextIntlClientProvider>
+  );
+  const bar = (html: string) => html.match(/data-testid="tv-serie-bar"[^>]*style="([^"]*)"/)?.[1] ?? html.match(/style="([^"]*)"[^>]*data-testid="tv-serie-bar"/)?.[1];
+
+  it("the series bar follows the scroll in scene 2 (--q2) and in track B (--p)", () => {
+    const s2 = renderToString(wrap(<Scene2Tv done={new Set()} finished={false} animate={false} grow="gone" live={false} ring={1} />));
+    expect(bar(s2)).toMatch(/scaleX\(calc\(\.32 \+ [.\d]+\*var\(--q2,0\)\)\)/);
+    const tb = renderToString(wrap(<TvB phase="controls" playing={false} />));
+    expect(bar(tb)).toMatch(/scaleX\(calc\(\.32 \+ [.\d]+\*var\(--p,0\)\)\)/);
+  });
+
+  it("the song bar follows the scroll in scene 3 (--q3)", () => {
+    expect(a).toMatch(/\.ta \.tv-musica \.pr \.bar b\{transform:scaleX\(calc\(\.4 \+ [.\d]+\*var\(--q3,0\)\)\)\}/);
+  });
+
+  it("a fine line under the TV follows the scroll of tracks A and B (only once hydrated)", () => {
+    for (const [src, cls] of [[a, "ta-meter"], [b, "tb-meter"]] as const) {
+      expect(src).toMatch(new RegExp(`\\.${cls}::after\\{[^}]*transform:scaleX\\(var\\(--p,0\\)\\)`));
+      expect(src).toMatch(new RegExp(`\\.jscreen:not\\(\\[data-hydrated\\]\\) \\.${cls}\\{display:none\\}`));
+    }
+    // in track B it is absolute: it does not move the mobile layout
+    expect(b).toMatch(/\.tb-meter\{position:absolute/);
+  });
+});
+
+describe("no Repetir: scrolling back up replays", () => {
+  it("no replay button, label or hold line is left in the code or the messages", () => {
+    const hits: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = path.join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.(tsx?|css)$/.test(f) && /chat\.replay|ReplayButton|replayLabel|onReplay|tv-replay|HOLD_LINE|useScript/.test(readFileSync(p, "utf-8"))) hits.push(p);
+      }
+    };
+    walk(path.resolve(process.cwd(), "components/screen"));
+    expect(hits).toEqual([]);
+    expect("replay" in es.screen.chat).toBe(false);
+    expect("replay" in en.screen.chat).toBe(false);
   });
 });
 
@@ -160,7 +234,7 @@ describe("scroll-driven phases", () => {
     expect(openingAt(0.5, { trackH: 0, viewH: 0, top: 0, height: 0 })).toBe(0);
   });
 
-  it("track B: each remote phase and the code get more scroll", () => {
+  it("track B: each remote phase and the code get their share of the scroll", () => {
     expect(phaseOf(0)).toBe("trackpad");
     expect(phaseOf(0.13)).toBe("trackpad");
     expect(phaseOf(0.2)).toBe("controls");
@@ -169,11 +243,11 @@ describe("scroll-driven phases", () => {
     expect(phaseOf(0.5)).toBe("pair");
     expect(phaseOf(0.85)).toBe("pair");
     expect(phaseOf(0.9)).toBe("roles");
-    // with s4 = s5 = 300svh (span 500svh), s5 reaches mid-screen at p = .5: pairing starts just before
-    const handoff = (300 - 50) / (600 - 100);
+    // with s4 = s5 = 240svh (span 380svh), s5 reaches mid-screen at p = .5: pairing starts just before
+    const handoff = (240 - 50) / (480 - 100);
     expect(phaseOf(handoff - 0.02)).toBe("talk");
     expect(phaseOf(handoff)).toBe("pair");
-    // every remote phase gets ≥ .11 of the track (≥ .55 screen)
+    // every remote phase gets ≥ .11 of the track (≥ .4 screen)
     const len = (ph: string) => {
       let n = 0;
       for (let p = 0; p < 1; p += 0.001) if (phaseOf(p) === ph) n += 0.001;

@@ -26,7 +26,8 @@ export const TvB = memo(function TvB({ phase, playing }: { phase: PhaseB; playin
   const t = useTranslations("screen");
   return (
     <>
-      <Serie playing={playing && !pairing(phase)} progress={0.32} />
+      {/* its bar follows the scroll through the track (--p) */}
+      <Serie playing={playing && !pairing(phase)} progress={0.32} drive="calc(.32 + .1*var(--p,0))" />
       <div className="tb-cur" data-on={on(phase === "trackpad")} style={{ "--cx0": REST.x, "--cy0": REST.y } as CSSProperties}>
         <i />
       </div>

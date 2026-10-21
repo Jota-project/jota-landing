@@ -92,11 +92,17 @@
 .jscreen .tb-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
 .jscreen .tb-sticky{grid-column:2;grid-row:1 / span 2;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center}
 .jscreen .tb-stage{position:relative;width:100%;display:flex;align-items:center;gap:2rem}
-.jscreen .tb-tv{flex:1;min-width:0}
+.jscreen .tb-tv{position:relative;flex:1;min-width:0}
+/* la línea fina bajo la tele: avanza con el scroll del tramo (--p); absoluta, no mueve nada (ni en el móvil) */
+.jscreen .tb-meter{position:absolute;left:0;right:0;top:calc(100% + 1rem);height:2px;border-radius:1px;overflow:hidden;color:var(--color-linen)}
+.jscreen .tb-meter::before,.jscreen .tb-meter::after{content:"";position:absolute;inset:0;background:currentColor}
+.jscreen .tb-meter::before{opacity:.12}
+.jscreen .tb-meter::after{opacity:.45;transform-origin:left;transform:scaleX(var(--p,0))}
+.jscreen:not([data-hydrated]) .tb-meter{display:none}
 .jscreen .tb-phone{flex:none;width:min(14rem,28%,calc((100svh - 10rem)*390/844))}
 .jscreen .tb-scene{grid-column:1;min-width:0}
-.jscreen #s4.tb-scene{grid-row:1;min-height:300svh}
-.jscreen #s5.tb-scene{grid-row:2;min-height:300svh}
+.jscreen #s4.tb-scene{grid-row:1;min-height:240svh}
+.jscreen #s5.tb-scene{grid-row:2;min-height:240svh}
 .jscreen .tb-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
 .jscreen .tb-cap p{margin:0}
 .jscreen[data-hydrated] .tb-cap [data-on=false]{opacity:0;transform:translateY(8px)}
@@ -160,9 +166,11 @@
   .jscreen .tb-phone{position:absolute;right:.5rem;top:var(--tb-pht);width:26vw}
   /* aquí el móvil entra solo con opacidad: un desplazamiento lo bajaría sobre el texto */
   .jscreen[data-hydrated] .tb-live .tb-phone{transform:none}
-  /* lo mismo que en escritorio: cada zona del mando y el segundo texto necesitan el mismo tiempo */
-  .jscreen #s4.tb-scene{min-height:300svh}
-  .jscreen #s5.tb-scene{min-height:300svh}
+  /* lo mismo que en escritorio: cada zona del mando y el segundo texto necesitan el mismo recorrido */
+  .jscreen #s4.tb-scene{min-height:240svh}
+  .jscreen #s5.tb-scene{min-height:240svh}
+  /* la línea del tramo no pasa por debajo del móvil */
+  .jscreen .tb-meter{right:calc(26vw + 1rem);top:calc(100% + .3rem)}
   .jscreen .tb-cap{top:calc(4.5rem + var(--tb-low) + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
   .jscreen .tb-still .tb-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}
   .jscreen .tb-still .tb-cap{order:2}

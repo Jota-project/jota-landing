@@ -41,7 +41,7 @@ export function TurnView({
     <div className="tv-tn">
       {state.you && (
         <p className="tv-u">
-          <Words text={turn.you} play={active} gap={YOU_GAP} />
+          <Words key={turn.you} text={turn.you} play={active} gap={YOU_GAP} />
         </p>
       )}
       {turn.tool && state.tool !== "none" && (
@@ -55,7 +55,7 @@ export function TurnView({
       )}
       {state.jota && (
         <p className="tv-j">
-          <Words text={turn.jota} play={active} gap={JOTA_GAP} onWord={sayWord} />
+          <Words key={turn.jota} text={turn.jota} play={active} gap={JOTA_GAP} onWord={sayWord} />
         </p>
       )}
     </div>
@@ -68,13 +68,11 @@ export function Glass({
   form,
   orb,
   children,
-  footer,
 }: {
   open: boolean;
   form: "panel" | "pill";
   orb: OrbState;
   children: ReactNode;
-  footer?: ReactNode;
 }) {
   const reduced = useReducedMotion();
   const sheet = useRef<HTMLDivElement>(null);
@@ -112,36 +110,9 @@ export function Glass({
         </div>
         <div className="tv-log">
           <KickContext.Provider value={kick}>{children}</KickContext.Provider>
-          {footer}
         </div>
       </div>
     </div>
-  );
-}
-
-/** `busy`: the scene is replaying. The button stays (aria-disabled, not disabled) so it keeps the focus. */
-export function ReplayButton({
-  label,
-  onClick,
-  busy = false,
-  lift = false,
-}: {
-  label: string;
-  onClick: () => void;
-  busy?: boolean;
-  /** Sit above the series' progress bar. */
-  lift?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      className="tv-replay"
-      aria-disabled={busy ? "true" : undefined}
-      data-lift={lift ? "true" : undefined}
-      onClick={busy ? undefined : onClick}
-    >
-      {label}
-    </button>
   );
 }
 
@@ -150,16 +121,12 @@ export function GlassPanel({
   turns,
   states,
   orb,
-  onReplay,
-  replayLabel,
   animate = true,
 }: {
   open: boolean;
   turns: Turn[];
   states: TurnState[];
   orb: OrbState;
-  onReplay?: () => void;
-  replayLabel: string;
   /** false paints every word at once (final frames, no-JS render). */
   animate?: boolean;
 }) {
@@ -168,15 +135,8 @@ export function GlassPanel({
     return !!s && (s.you || s.tool !== "none" || s.jota);
   });
   const activeIdx = started.lastIndexOf(true);
-  const lastState = activeIdx >= 0 ? states[activeIdx] : undefined;
-  const finished = !!lastState?.jota && activeIdx === turns.length - 1;
   return (
-    <Glass
-      open={open}
-      form="panel"
-      orb={orb}
-      footer={finished && onReplay ? <ReplayButton label={replayLabel} onClick={onReplay} /> : null}
-    >
+    <Glass open={open} form="panel" orb={orb}>
       {turns.map((t, i) =>
         started[i] ? (
           <TurnView key={i} turn={t} state={states[i]} active={animate && i === activeIdx} compact={i !== activeIdx} />

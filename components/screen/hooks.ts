@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useState, type RefObject } from "react";
 
 const REDUCED_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -88,86 +88,4 @@ export function useTrackProgress(ref: RefObject<HTMLElement | null>): number {
     };
   }, [ref]);
   return p;
-}
-
-export type ScriptEvent = { at: number; id: string };
-
-export function useScript(
-  events: ScriptEvent[],
-  opts: { play: boolean; skip: boolean; speed?: number },
-): { done: Set<string>; finished: boolean; replay(): void } {
-  const reduced = useReducedMotion();
-  const skip = opts.skip || reduced;
-  const { play } = opts;
-  const speed = opts.speed && opts.speed > 0 ? opts.speed : 1;
-  const [done, setDone] = useState<Set<string>>(() => new Set());
-  const [finished, setFinished] = useState(false);
-  const eventsRef = useRef(events);
-  const speedRef = useRef(speed);
-  const skipRef = useRef(skip);
-  useEffect(() => {
-    skipRef.current = skip;
-    eventsRef.current = events;
-    speedRef.current = speed;
-  });
-  const started = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  const clear = useCallback(() => {
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-  }, []);
-
-  const run = useCallback(() => {
-    clear();
-    started.current = true;
-    const evs = eventsRef.current;
-    const fire = (id: string, last: boolean) => {
-      setDone((prev) => new Set(prev).add(id));
-      if (last) setFinished(true);
-    };
-    if (evs.length === 0) {
-      setFinished(true);
-      return;
-    }
-    evs.forEach((ev, i) => {
-      const last = i === evs.length - 1;
-      const delay = ev.at / speedRef.current;
-      if (delay <= 0) fire(ev.id, last);
-      else timers.current.push(setTimeout(() => fire(ev.id, last), delay));
-    });
-  }, [clear]);
-
-  useEffect(() => {
-    if (skip) {
-      clear();
-      started.current = true;
-      setDone(new Set(eventsRef.current.map((e) => e.id)));
-      setFinished(true);
-      return;
-    }
-    if (play && !started.current) run();
-  }, [skip, play, run, clear]);
-
-  useEffect(
-    () => () => {
-      clear();
-      started.current = false;
-    },
-    [clear],
-  );
-
-  const replay = useCallback(() => {
-    clear();
-    if (skipRef.current) {
-      setDone(new Set(eventsRef.current.map((e) => e.id)));
-      setFinished(true);
-      return;
-    }
-    setDone(new Set());
-    setFinished(false);
-    run();
-  }, [clear, run]);
-
-  return { done, finished, replay };
 }

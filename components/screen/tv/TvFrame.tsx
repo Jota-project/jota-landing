@@ -9,16 +9,14 @@ export const PausedContext = createContext(false);
 
 /** 16:9 box that scales a fixed 1920×1080 canvas. CSS scales it with container units where it can;
  *  --s = width / 1920 (set before paint) is the fallback. The canvas is aria-hidden: what it says is
- *  told in text beside it. `overlay` sits over the TV outside the canvas, for real controls. */
+ *  told in text beside it. */
 export function TvFrame({
   paused = false,
   className = "",
-  overlay,
   children,
 }: {
   paused?: boolean;
   className?: string;
-  overlay?: ReactNode;
   children?: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -47,7 +45,6 @@ export function TvFrame({
       <div className="tv-stage" aria-hidden="true">
         <PausedContext.Provider value={paused}>{children}</PausedContext.Provider>
       </div>
-      {overlay ? <div className="tv-over">{overlay}</div> : null}
     </div>
   );
 }

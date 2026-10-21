@@ -12,9 +12,9 @@
 /* una transición corta sobre lo que sigue al scroll alisa los saltos de la rueda del ratón sin retrasarlo */
 .jscreen .ta-tv-in{width:min(100%,calc((100svh - 8rem)*16/9));transform:scale(calc(.55 + .45*var(--p1)));will-change:transform;transition:transform .3s ease-out}
 .jscreen .ta-scene{grid-column:1;min-width:0}
-.jscreen #s1.ta-scene{grid-row:1;min-height:160svh}
-.jscreen #s2.ta-scene{grid-row:2;min-height:550svh}
-.jscreen #s3.ta-scene{grid-row:3;min-height:590svh}
+.jscreen #s1.ta-scene{grid-row:1;min-height:130svh}
+.jscreen #s2.ta-scene{grid-row:2;min-height:300svh}
+.jscreen #s3.ta-scene{grid-row:3;min-height:320svh}
 .jscreen .ta-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
 .jscreen .ta-sub{opacity:.8}
 .jscreen .ta-act{position:absolute;inset:0;pointer-events:none;transition:transform 1.1s var(--tv-ease)}
@@ -22,6 +22,15 @@
 .jscreen .ta-scr{position:absolute;inset:0}
 .jscreen .ta-scr[data-fade=true]{animation:ta-in .9s ease both}
 @keyframes ta-in{from{opacity:0}}
+/* la línea fina bajo la tele: avanza con el scroll de todo el tramo (--p), para que siempre se note que se avanza */
+.jscreen .ta-meter{position:relative;display:block;height:2px;margin-top:1rem;border-radius:1px;overflow:hidden}
+.jscreen .ta-meter::before,.jscreen .ta-meter::after{content:"";position:absolute;inset:0;background:currentColor}
+.jscreen .ta-meter::before{opacity:.12}
+.jscreen .ta-meter::after{opacity:.45;transform-origin:left;transform:scaleX(var(--p,0))}
+.jscreen:not([data-hydrated]) .ta-meter{display:none}
+/* la barra de la canción sigue al scroll de la escena 3 (--q3) y, con la web abierta, la galería sube un poco */
+.jscreen .ta .tv-musica .pr .bar b{transform:scaleX(calc(.4 + .05*var(--q3,0)))}
+.jscreen .ta .tv-web .gal{transform:translateY(calc((1.85 - var(--q3,1.85))*60px))}
 /* con la píldora abierta, la actividad se va a la esquina superior derecha del lienzo (no depende del ancho de la píldora) */
 .jscreen .ta-act[data-aside=true] .tv-act{left:auto;right:56px;transform:translateY(-24px)}
 .jscreen .ta-act[data-aside=true] .tv-act[data-on=true]{transform:none}
@@ -32,7 +41,7 @@
 .jscreen .ta-act[data-web=true] .tv-act[data-on=true]{transform:translateX(calc(-50% + 580px)) translateY(-60px) scale(.8)}
 /* las fases del texto solo se esconden con JS; sin JS se lee todo */
 .jscreen[data-hydrated] .ta-cap [data-on=false]{opacity:0;transform:translateY(8px)}
-.jscreen .ta-cap [data-phase]{transition:opacity .8s ease,transform .8s var(--tv-ease)}
+.jscreen .ta-cap [data-phase]{transition:opacity .6s ease,transform .6s var(--tv-ease)}
 /* Ruling 6: el cuerpo y el halo del cristal miden 0×0 sin rAF; la hoja lleva fondo estático */
 .jscreen:not([data-hydrated]) .tv-sheet{background:rgba(42,34,51,.92);border-radius:48px}
 @media (max-width:1023px){
@@ -40,10 +49,11 @@
   .jscreen .ta-grid{display:block;padding:0 1rem}
   .jscreen .ta-tv{top:4rem;height:auto;z-index:2;padding:.5rem 0}
   .jscreen .ta-tv-in{width:100%}
-  /* el guion dura lo mismo en el móvil: s2 y s3 no encogen (ver tests/screen-ritmo) */
+  /* el guion ocupa el mismo recorrido en el móvil: s2 y s3 no encogen (ver tests/screen-ritmo) */
   .jscreen #s1.ta-scene{min-height:120svh}
-  .jscreen #s2.ta-scene{min-height:550svh}
-  .jscreen #s3.ta-scene{min-height:590svh}
+  .jscreen #s2.ta-scene{min-height:300svh}
+  .jscreen #s3.ta-scene{min-height:320svh}
+  .jscreen .ta-meter{margin-top:.35rem}
   .jscreen .ta-cap{top:calc(4rem + (100vw - 2rem)*9/16 + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
 }
 /* movimiento reducido: una tele quieta por escena, sin sticky */

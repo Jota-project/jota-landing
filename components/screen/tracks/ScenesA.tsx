@@ -17,7 +17,7 @@ import { SCENE2, SCENE3, orbState, turnState } from "./scriptsA";
 export type SceneScript = {
   done: Set<string>;
   finished: boolean;
-  /** Words appear one by one only while the script really plays. */
+  /** Words appear one by one only while the visitor reads along (not after a jump or scrolling back). */
   animate: boolean;
   /** How much of the activity ring is left (1 = full); TrackA owns it so it keeps counting across scenes. */
   ring: number;
@@ -77,7 +77,8 @@ export const Scene2Tv = memo(function Scene2Tv({
   const orb = orbState(SCENE2, done, finished);
   return (
     <>
-      {series && <Serie playing={live} progress={0.32} />}
+      {/* its bar follows the scroll through scene 2 (--q2, screens into it) */}
+      {series && <Serie playing={live} progress={0.32} drive="calc(.32 + .05*var(--q2,0))" />}
       {series && <PhoneListen on={orb === "listen"} />}
       {home && <Inicio focus={0} />}
       <GrowTile phase={grow} title={t("tv.showTitle")} sub={t("tv.showMeta")} from={FROM_HOME} bg={FARO_BG} />
@@ -87,7 +88,6 @@ export const Scene2Tv = memo(function Scene2Tv({
         turn={turns[second ? 1 : 0]}
         state={turnState(done, second ? 2 : 1)}
         orb={orb}
-        replayLabel={t("chat.replay")}
         animate={animate}
       />
     </>
@@ -130,7 +130,6 @@ export const Scene3Tv = memo(function Scene3Tv({
         turns={turns}
         states={[turnState(done, 1), turnState(done, 2)]}
         orb={orbState(SCENE3, done, finished)}
-        replayLabel={t("chat.replay")}
         animate={animate}
       />
     </>
