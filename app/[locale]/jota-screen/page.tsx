@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import "@/components/screen/screen.css";
+import "@/components/screen/screen-tv.css";
+import "@/components/screen/screen-tv-screens.css";
+import "@/components/screen/screen-track-a.css";
+import "@/components/screen/screen-track-b.css";
 import "@/components/screen/screen-end.css";
 import { MoreList } from "@/components/screen/MoreList";
 import { TrackA } from "@/components/screen/tracks/TrackA";

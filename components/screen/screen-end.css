@@ -1,4 +1,4 @@
-/* Tramos C y D y escena 7 de /jota-screen. Mismas reglas que screen.css:
+/* Tramos C y D y escena 7 de /jota-screen. Mismas reglas que screen-track-a.css y screen-track-b.css:
    --p lo escribe useTrackProgress; sin JS el fotograma es el final (var(--p,1));
    con movimiento reducido no hay sticky (data-sticky=false) y --p vale 1. */
 

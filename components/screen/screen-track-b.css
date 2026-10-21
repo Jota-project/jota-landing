@@ -1,0 +1,160 @@
+/* Móvil, mando y tramo B de /jota-screen (escenas 4–5). */
+/* ---------- Móvil y mando (copia visual de remote/public/index.html + mando.css, sin lógica) ---------- */
+/* el lienzo del móvil mide 390×844 y escala con --ps (PhoneFrame) */
+.jscreen .ph-vp{--ps:.5;position:relative;width:100%;aspect-ratio:390/844;border-radius:calc(48px*var(--ps));overflow:hidden;background:var(--bg);pointer-events:none;
+  box-shadow:0 0 0 calc(9px*var(--ps)) #0e0b13,0 0 0 calc(10px*var(--ps)) rgba(246,243,240,.12),0 30px 70px rgba(0,0,0,.5)}
+.jscreen .ph-screen{position:absolute;left:0;top:0;width:390px;height:844px;transform:scale(var(--ps));transform-origin:0 0;overflow:hidden;color:var(--text);font:500 15px/1.3 var(--sans);-webkit-font-smoothing:antialiased}
+.jscreen .mn{position:absolute;inset:0;background:var(--bg);--ca:#3d6f8c;--cb:#7c6aae}
+.jscreen .mn-amb{position:absolute;inset:0;overflow:hidden}
+.jscreen .mn-orb{position:absolute;border-radius:50%;opacity:var(--orb)}
+.jscreen .mn-oa{left:calc(33% - 280px);top:calc(44% - 280px);width:560px;height:560px;background:radial-gradient(closest-side,var(--ca),transparent);animation:mn-orbA 61s linear infinite}
+.jscreen .mn-ob{left:calc(77% - 240px);top:calc(64% - 240px);width:480px;height:480px;background:radial-gradient(closest-side,var(--cb),transparent);animation:mn-orbB 83s linear infinite}
+@keyframes mn-orbA{from{transform:rotate(0deg) translateX(110px) rotate(0deg)}to{transform:rotate(360deg) translateX(110px) rotate(-360deg)}}
+@keyframes mn-orbB{from{transform:rotate(360deg) translateX(90px) rotate(-360deg)}to{transform:rotate(0deg) translateX(90px) rotate(0deg)}}
+@keyframes mn-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.jscreen .mn-app{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;padding:48px 20px 24px}
+.jscreen .mn-app>*{flex-shrink:0}
+.jscreen .mn-b{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;color:var(--text)}
+.jscreen .mn-b::before{content:"";position:absolute;inset:0;margin:auto;width:min(100%,56px);height:min(100%,56px);border-radius:999px;background:var(--halo);opacity:0;transform:scale(.55);transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.jscreen .mn-b>svg{position:relative;flex:none}
+.jscreen .mn-top{display:flex;align-items:flex-start;gap:12px}
+.jscreen .mn-ttl{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.jscreen .mn-nm{display:flex;align-items:center;gap:10px}
+.jscreen .mn-nm b{font:380 36px/1 var(--serif);font-variation-settings:"opsz" 144;letter-spacing:-.02em}
+.jscreen .mn-dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--status)}
+.jscreen .mn-sub{display:flex;align-items:center;gap:10px;min-width:0;font-size:15px;line-height:1.3}
+.jscreen .mn-thumb{width:26px;height:26px;border-radius:8px;flex:none;background:linear-gradient(135deg,var(--ca),var(--cb) 75%)}
+.jscreen .mn-t1{font-weight:500;white-space:nowrap}
+.jscreen .mn-t2{color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 0}
+.jscreen .mn-set{width:48px;height:48px;margin-right:-8px}
+.jscreen .mn-mid{flex:1 1 0!important;display:flex;gap:8px;min-height:0;margin-top:8px}
+.jscreen .mn-pad{position:relative;flex:1;min-width:0;border-radius:32px;background:var(--pad);overflow:hidden}
+/* el dedo: una capa del tamaño del trackpad desplazada --cx/--cy (0–1) de sí misma; el halo va en su esquina */
+.jscreen .mn-halo{position:absolute;inset:0;transform:translate(calc(var(--cx,var(--cx0))*100%),calc(var(--cy,var(--cy0))*100%))}
+.jscreen .mn-halo::before{content:"";position:absolute;left:-48px;top:-48px;width:96px;height:96px;border-radius:999px;background:radial-gradient(circle,rgba(195,183,227,.5) 0%,rgba(124,106,174,.14) 55%,rgba(124,106,174,0) 72%);opacity:0;transform:scale(.5);transition:opacity .25s ease,transform .35s var(--ease)}
+.jscreen .mn[data-focus=trackpad] .mn-halo::before{opacity:1;transform:none}
+.jscreen .mn-hint{position:absolute;left:24px;right:24px;bottom:26px;text-align:center;font-size:14px;line-height:1.5;color:var(--text-soft)}
+.jscreen .mn-vcol{width:64px;display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.jscreen .mn-vb{width:64px;height:64px}
+.jscreen .mn-vol{flex:1;position:relative;width:72px;min-height:56px;font:380 48px/1 var(--serif);font-variation-settings:"opsz" 144;font-variant-numeric:tabular-nums}
+.jscreen .mn-vn{position:absolute;left:0;right:0;top:50%;margin-top:-.5em;text-align:center}
+.jscreen .mn-mute{width:64px;height:56px;margin-top:6px}
+.jscreen .mn-nav{height:56px;display:flex;align-items:center}
+.jscreen .mn-nav .mn-b{flex:1;height:56px}
+.jscreen .mn-tip{position:absolute;bottom:calc(100% + 4px);left:50%;white-space:nowrap;padding:8px 14px;border-radius:14px;background:var(--surface-3);font-size:14px;font-weight:600;box-shadow:0 8px 24px var(--shadow);opacity:0;transform:translateX(-50%) translateY(6px);transition:opacity .3s ease,transform .4s var(--ease)}
+.jscreen .mn[data-focus=type] .mn-tip{opacity:1;transform:translateX(-50%)}
+.jscreen .mn[data-focus=type] .mn-nav .mn-b:nth-child(3)::before{opacity:1;transform:none}
+.jscreen .mn-play{height:88px;display:flex;align-items:center;justify-content:center;gap:40px}
+.jscreen .mn-sk{width:64px;height:64px}
+.jscreen .mn-pp{width:84px;height:84px;border-radius:999px;background:var(--accent);color:var(--on-accent);box-shadow:var(--play-shadow)}
+.jscreen .mn-pp::before{display:none}
+.jscreen .mn-apps{display:flex;justify-content:center;gap:4px}
+.jscreen .mn-acc{height:52px;padding:0 12px 0 8px;gap:8px;font-size:16px;font-weight:500}
+.jscreen .mn-logo{width:28px;height:28px;flex:none}
+.jscreen .mn-jota{width:100%;height:68px;border-radius:24px;display:flex;align-items:center;gap:14px;padding:0 6px}
+.jscreen .mn-orb2{display:block;width:46px;height:46px;border-radius:999px;flex-shrink:0;background:radial-gradient(circle at 35% 30%,#a99ad1 0%,#7c6aae 55%,#6e8cc4 120%);box-shadow:0 0 0 8px rgba(124,106,174,.14),0 0 36px rgba(124,106,174,.5);animation:mn-breathe 3.4s ease-in-out infinite}
+.jscreen .mn[data-focus=talk] .mn-orb2{box-shadow:0 0 0 14px rgba(124,106,174,.2),0 0 48px rgba(124,106,174,.65)}
+.jscreen .mn-jt{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.jscreen .mn-jt b{font:420 21px/1.1 var(--serif);font-variation-settings:"opsz" 72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jscreen .mn-jota>svg{flex:none}
+/* emparejar (#pairV) */
+.jscreen .mp{position:absolute;inset:0;background:var(--bg);display:grid;place-items:center;padding:24px}
+.jscreen .mp-pc{width:100%;text-align:center;display:grid;gap:14px}
+.jscreen .mp-lg{width:54px;height:54px;margin:0 auto;stroke:var(--accent-text);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.jscreen .mp-h{margin:0;font:380 32px/1.1 var(--serif);font-variation-settings:"opsz" 144;letter-spacing:-.015em}
+.jscreen .mp-p{margin:0;color:var(--text-soft);font-size:15.5px;line-height:1.4}
+.jscreen .mp-code{display:flex;justify-content:center;align-items:center;height:68px;border-radius:17px;border:1px solid var(--line);background:var(--surface);font-size:34px;font-variant-numeric:tabular-nums}
+.jscreen .mp[data-paired=true] .mp-code{border-color:var(--accent)}
+.jscreen .mp-d{width:56px;text-align:center;color:var(--text-faint)}
+.jscreen .mp-d[data-on=true]{color:var(--text)}
+.jscreen .mp-ok{margin:0;height:28px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--status);font-weight:600;font-size:17px;opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .6s var(--ease)}
+.jscreen .mp-ok[data-on=true]{opacity:1;transform:none}
+.jscreen .mp-ok svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* tres móviles pequeños con su rol */
+.jscreen .rc{display:flex;gap:1rem;list-style:none;padding:0;margin:1.25rem 0 0}
+.jscreen .rc-i{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:.35rem;text-align:center;font-size:.95rem;line-height:1.25}
+.jscreen .rc-ph{display:flex;flex-direction:column;align-items:center;gap:6px;width:3.4rem;aspect-ratio:390/844;padding-top:1.3rem;margin-bottom:.35rem;border-radius:.85rem;background:#2d2637;box-shadow:0 0 0 3px #0e0b13,0 0 0 4px rgba(246,243,240,.12),0 12px 28px rgba(0,0,0,.4)}
+.jscreen .rc-orb{width:1.3rem;height:1.3rem;border-radius:50%;margin-bottom:.3rem}
+.jscreen .rc-ln{width:60%;height:4px;border-radius:2px;background:rgba(246,243,240,.25)}
+.jscreen .rc-ln.rc-s{width:38%}
+.jscreen .rc-n{font-weight:600}
+.jscreen .rc-x{font-size:.8rem;opacity:.75}
+
+/* ---------- Tramo B (escenas 4–5) ---------- */
+/* --p (0–1) lo escribe useTrackProgress; de él salen el dedo y el cursor (--tp, --cx, --cy), lo que se teclea (--ty) y el vuelo de las cifras */
+.jscreen .tbk{position:relative}
+.jscreen .tb-live{--tp:clamp(0,calc(var(--p,0)/.15),1);--cx:calc(.22 + .5*var(--tp));--cy:calc(.7 - .36*var(--tp));--ty:clamp(0,calc((var(--p,0) - .31)/.1),1)}
+.jscreen .tb-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
+.jscreen .tb-sticky{grid-column:2;grid-row:1 / span 2;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center}
+.jscreen .tb-stage{position:relative;width:100%;display:flex;align-items:center;gap:2rem}
+.jscreen .tb-tv{flex:1;min-width:0}
+.jscreen .tb-phone{flex:none;width:min(14rem,28%,calc((100svh - 10rem)*390/844))}
+.jscreen .tb-scene{grid-column:1;min-width:0}
+.jscreen #s4.tb-scene{grid-row:1;min-height:220svh}
+.jscreen #s5.tb-scene{grid-row:2;min-height:200svh}
+.jscreen .tb-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
+.jscreen .tb-cap p{margin:0}
+.jscreen[data-hydrated] .tb-cap [data-on=false]{opacity:0;transform:translateY(8px)}
+.jscreen .tb-cap [data-step]{transition:opacity .6s ease,transform .6s ease}
+.jscreen .tb-layer{position:absolute;inset:0;transition:opacity .6s ease}
+.jscreen .tb-layer[data-on=false]{opacity:0}
+/* el móvil entra al empezar el tramo; cada fase enciende su zona del mando */
+.jscreen[data-hydrated] .tb-live .tb-phone{--pin:clamp(0,calc(var(--p,0)*25),1);opacity:var(--pin);transform:translateY(calc((1 - var(--pin))*10%))}
+.jscreen[data-hydrated] .tb-live .mn [data-z]{opacity:.38;transition:opacity .5s ease}
+.jscreen[data-hydrated] .tb-live .mn[data-focus=trackpad] [data-z=trackpad],
+.jscreen[data-hydrated] .tb-live .mn[data-focus=controls] [data-z=controls],
+.jscreen[data-hydrated] .tb-live .mn[data-focus=type] [data-z=type],
+.jscreen[data-hydrated] .tb-live .mn[data-focus=talk] [data-z=talk]{opacity:1}
+/* ecos en la tele (lienzo 1920×1080) */
+.jscreen .tb-cur{position:absolute;inset:0;transform:translate(calc(var(--cx,var(--cx0))*100%),calc(var(--cy,var(--cy0))*100%));opacity:0;transition:opacity .4s ease}
+.jscreen .tb-cur[data-on=true]{opacity:1}
+.jscreen .tb-cur i{position:absolute;left:-16px;top:-16px;width:32px;height:32px;border-radius:50%;background:rgba(246,243,240,.92);box-shadow:0 0 0 8px rgba(246,243,240,.16),0 8px 20px rgba(0,0,0,.45)}
+.jscreen .tb-osd{position:absolute;left:870px;top:450px;width:180px;height:180px;border-radius:50%;background:rgba(20,16,26,.55);display:grid;place-items:center;color:#fff;opacity:0;transform:scale(.9);transition:opacity .3s ease,transform .4s var(--tv-ease)}
+.jscreen .tb-osd[data-on=true]{opacity:1;transform:none}
+.jscreen .tb-osd svg{width:72px;height:72px}
+.jscreen .tb-search{position:absolute;left:510px;top:120px;width:900px;height:96px;border-radius:999px;background:#2a2433;box-shadow:var(--tv-shadow-float);display:flex;align-items:center;gap:24px;padding:0 40px;color:var(--tv-text);font:400 40px var(--tv-sans);opacity:0;transform:translateY(-16px);transition:opacity .4s ease,transform .6s var(--tv-ease)}
+.jscreen .tb-search[data-on=true]{opacity:1;transform:none}
+.jscreen .tb-search svg{width:40px;height:40px;flex:none;stroke:var(--tv-accent);fill:none;stroke-width:2;stroke-linecap:round}
+.jscreen .tb-search .tx{position:relative;overflow:hidden;white-space:nowrap;padding-right:8px}
+/* lo tecleado: una tapa con el cursor delante que se retira con --ty */
+.jscreen .tb-search .tx i{position:absolute;top:0;bottom:0;left:0;right:-4px;background:#2a2433;border-left:3px solid var(--tv-accent);transform:translateX(calc(var(--ty,1)*100%))}
+.jscreen .tb-listen{position:absolute;left:960px;top:64px;display:flex;align-items:center;gap:24px;height:120px;padding:0 48px 0 24px;border-radius:999px;background:rgba(42,34,51,.94);box-shadow:var(--tv-shadow-float);color:var(--tv-text);font:400 40px var(--tv-serif);white-space:nowrap;opacity:0;transform:translateX(-50%) translateY(-16px);transition:opacity .4s ease,transform .6s var(--tv-ease)}
+.jscreen .tb-listen[data-on=true]{opacity:1;transform:translateX(-50%)}
+.jscreen .tb-pair{position:absolute;inset:0;opacity:0;transition:opacity .6s ease}
+.jscreen .tb-pair[data-on=true]{opacity:1}
+/* las cifras vuelan de la tele al móvil: --f (0–1) por cifra, con un arco hacia arriba; se apagan al llenarse su casilla */
+.jscreen .tb-fly{position:absolute;inset:0;z-index:3;pointer-events:none}
+.jscreen .tb-fly span{position:absolute;display:grid;place-items:center;font-family:var(--tv-serif);font-weight:340;line-height:1;font-variant-numeric:tabular-nums;color:var(--tv-accent);will-change:transform,opacity;
+  --f:clamp(0,calc((var(--p,0) - var(--t0))/.075),1);
+  transform:translate(calc(var(--dx)*(1 - var(--f))),calc(var(--dy)*(1 - var(--f)))) scale(calc(var(--k) + (1 - var(--k))*var(--f)));
+  opacity:calc(min(1,var(--f)*40)*min(1,(1 - var(--f))*40))}
+/* arcos con sin() solo donde existe; si no, recorridos rectos (un sin() inválido dejaría transform en none) */
+@supports (width:calc(1px*sin(1deg))){
+  .jscreen .tb-live{--cy:calc(.7 - .36*var(--tp) - .14*sin(calc(var(--tp)*180deg)))}
+  .jscreen .tb-fly span{transform:translate(calc(var(--dx)*(1 - var(--f))),calc(var(--dy)*(1 - var(--f)) - 60px*sin(calc(var(--f)*180deg)))) scale(calc(var(--k) + (1 - var(--k))*var(--f)))}
+}
+/* sin JS (o antes de hidratar): sin tramo alto, todo a la vista */
+.jscreen:not([data-hydrated]) .tb-scene{min-height:0}
+.jscreen:not([data-hydrated]) .tb-cap{position:static;min-height:0;padding:3rem 0}
+.jscreen:not([data-hydrated]) .tb-sticky{position:relative;height:auto;padding:3rem 0}
+.jscreen:not([data-hydrated]) .tb-fly{display:none}
+/* movimiento reducido: una fila por escena, sin sticky */
+.jscreen .tb-still .tb-row{display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);gap:2rem 3rem;align-items:center;padding:4rem max(1.5rem,calc((100% - 81rem)/2))}
+.jscreen .tb-still .tb-row>*{min-width:0}
+.jscreen .tb-still .tb-cap{position:static;min-height:0}
+@media (max-width:767px){
+  /* la tele a lo ancho; el móvil, más pequeño, sobre su esquina inferior derecha; el texto debajo */
+  .jscreen .tb-grid{display:block;padding:0 1rem}
+  .jscreen .tb-sticky{top:4rem;height:auto;z-index:2;padding:.5rem 0 0;background:#211b2a}
+  .jscreen .tb-stage{display:block;padding-bottom:33vw}
+  .jscreen .tb-phone{position:absolute;right:.5rem;top:calc((100vw - 2rem)*9/16*.56);width:26vw}
+  .jscreen #s4.tb-scene{min-height:165svh}
+  .jscreen #s5.tb-scene{min-height:150svh}
+  .jscreen .tb-cap{top:calc(4.5rem + (100vw - 2rem)*9/16 + 33vw);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
+  .jscreen .tb-still .tb-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}
+  .jscreen .tb-still .tb-cap{order:2}
+}
+@media (prefers-reduced-motion: reduce){
+  .jscreen .mn-orb,.jscreen .mn-orb2,.jscreen .tbk .orbe{animation:none}
+  .jscreen .tb-cap [data-step],.jscreen .tb-layer,.jscreen .mn-b::before,.jscreen .mn-halo::before,.jscreen .mn-tip,.jscreen .mp-ok{transition:none}
+}
