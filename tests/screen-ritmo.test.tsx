@@ -11,7 +11,7 @@ import { READ_GAP, SAY_GAP, SCENE2, SCENE3, type ScriptEvent } from "@/component
 import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { JOTA_GAP, YOU_GAP } from "@/components/screen/tv/Words";
 import { TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
-import { GROW_END, GROW_FULL, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
+import { DARK_AT, GROW_END, GROW_FULL, duskAt, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
 import { FLY_FROM, FLY_SPAN, TvB } from "@/components/screen/tracks/ScenesB";
 import { digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
 
@@ -137,6 +137,50 @@ describe("the tracks fit their script, and no more", () => {
     const e = css("screen-end.css");
     expect(e).toMatch(/\.jscreen \.tck\{position:relative;height:170svh/);
     expect(e).toMatch(/\.jscreen \.tdk\{position:relative;height:170svh/);
+  });
+});
+
+describe("the opening keeps the text readable (linen → dusk)", () => {
+  const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const lum = (c: number[]) => {
+    const [r, g, b] = c.map((v) => {
+      const x = v / 255;
+      return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const contrast = (a: number[], b: number[]) => {
+    const [x, y] = [lum(a), lum(b)];
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  };
+  const mix = (a: number[], b: number[], t: number) => a.map((v, i) => v * (1 - t) + b[i] * t);
+  const g = readFileSync(path.resolve(process.cwd(), "app/globals.css"), "utf-8");
+  const linen = hex(g.match(/--color-linen:\s*(#[0-9a-fA-F]{6})/)![1]);
+  const ink = hex(g.match(/--color-ink:\s*(#[0-9a-fA-F]{6})/)![1]);
+  const a = css("screen-track-a.css");
+  const dusk = hex(a.match(/\.ta-dusk\{[^}]*background:(#[0-9a-fA-F]{6})/)![1]);
+
+  it("ink before DARK_AT, linen from it: ≥ 4.5:1 all the way (also the subhead at .8 opacity)", () => {
+    for (let p1 = 0; p1 <= 1.0001; p1 += 0.005) {
+      const bg = mix(linen, dusk, duskAt(p1));
+      const text = p1 >= DARK_AT ? linen : ink;
+      expect(contrast(text, bg), `p1 ${p1.toFixed(3)}`).toBeGreaterThanOrEqual(4.5);
+      expect(contrast(mix(bg, text, 0.8), bg), `subhead p1 ${p1.toFixed(3)}`).toBeGreaterThanOrEqual(4.5);
+    }
+    // the layer goes from linen to full dusk, never back
+    expect(duskAt(0)).toBe(0);
+    expect(duskAt(1)).toBeCloseTo(1);
+    let last = -1;
+    for (let p1 = 0; p1 <= 1; p1 += 0.01) {
+      expect(duskAt(p1)).toBeGreaterThanOrEqual(last);
+      last = duskAt(p1);
+    }
+  });
+
+  it("the layer follows --dk and neither it nor the text fades through the grey", () => {
+    expect(a).toMatch(/\.ta-dusk\{[^}]*opacity:var\(--dk,var\(--p1\)\)/);
+    expect(a).not.toMatch(/\.ta-dusk\{[^}]*transition/);
+    expect(a).not.toMatch(/\.jscreen \.ta\{[^}]*transition/);
   });
 });
 

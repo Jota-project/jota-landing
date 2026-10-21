@@ -2,12 +2,13 @@
 /* ---------- Tramo A (escenas 1–3) ---------- */
 /* --p (0–1) lo escribe useTrackProgress; --p1 es la apertura: la tele crece y el fondo pasa de lino a Dusk. Con JS
    --p1 lo escribe el tramo (openingAt: medido sobre la escena 1 y suavizado); esta fórmula es solo la de sin JS */
-.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:var(--color-ink);transition:color .8s ease}
-/* el texto cambia de tinta a lino de una vez, cuando el fondo ya es más Dusk que lino (data-dark lo pone el tramo) */
+.jscreen .ta{position:relative;--p1:min(1,calc(var(--p,0)*6));color:var(--color-ink)}
+/* el texto cambia de tinta a lino de una vez, en el mismo fotograma en que el fondo salta el gris (--dk, duskAt): sin
+   transiciones de color ni de opacidad, para que nunca haya tinta sobre gris (contraste ≥ 4,5:1 siempre) */
 .jscreen .ta[data-dark=true]{color:var(--color-linen)}
 /* sonda invisible de 100svh: la unidad en la que se miden las escenas (no innerHeight, que en iOS cambia con la barra) */
 .jscreen .ta-unit{position:absolute;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none}
-.jscreen .ta-dusk{position:absolute;inset:0;background:#211b2a;opacity:var(--p1);pointer-events:none;transition:opacity .3s ease-out}
+.jscreen .ta-dusk{position:absolute;inset:0;background:#211b2a;opacity:var(--dk,var(--p1));pointer-events:none}
 .jscreen .ta-grid{position:relative;display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);column-gap:3rem;max-width:84rem;margin:0 auto;padding:0 1.5rem}
 .jscreen .ta-tv{grid-column:2;grid-row:1 / span 3;align-self:start;position:sticky;top:0;height:100svh;padding-top:4rem;display:flex;align-items:center;justify-content:center}
 /* 4rem = la barra de navegación fija (h-16) */

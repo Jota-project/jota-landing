@@ -57,6 +57,15 @@ export function openingAt(p: number, geo: Geo): number {
   return x * x * (3 - 2 * x);
 }
 
+/** The text turns from ink to linen when the opening passes DARK_AT. Around it the dusk layer jumps: ≤ .3 before
+ *  (ink keeps ≥ 4.5:1, the .8 subhead too) and ≥ .72 from it (so does linen), never the muddy grey in between with
+ *  the wrong ink on it. */
+export const DARK_AT = 0.5;
+export function duskAt(p1: number): number {
+  const x = Math.min(1, Math.max(0, p1));
+  return x < DARK_AT ? 0.6 * x : 0.72 + 0.56 * (x - DARK_AT);
+}
+
 const NO_GEO: Geo = { trackH: 0, viewH: 0, top: 0, height: 0 };
 
 /** Measures a scene inside the track and the screen unit (its .ta-unit probe, 100svh tall), on mount and whenever
@@ -132,14 +141,15 @@ function Progress({
   const n2 = eventsDone(SCENE2, q2).size;
   const n3 = eventsDone(SCENE3, q3).size;
   const p1 = openingAt(p, geo2);
-  // the text switches ink → linen once, when the dusk layer passes half
-  const dark = p1 >= 0.5;
+  // the text switches ink → linen once, in the same frame as the dusk layer jumps past the grey
+  const dark = p1 >= DARK_AT;
   const samples = useRef<{ t: number; q: number }[]>([]);
   const last = useRef<StepA>({ grow: "hidden", n2: -1, n3: -1, a2: false, a3: false });
   useEffect(() => {
     const el = track.current;
     if (el) {
       el.style.setProperty("--p1", String(p1));
+      el.style.setProperty("--dk", String(duskAt(p1)));
       el.setAttribute("data-dark", dark ? "true" : "false");
       // screens into scenes 2 and 3, for what follows the scroll inside them (the series and song bars)
       el.style.setProperty("--q2", String(clamp(q2, 4)));
