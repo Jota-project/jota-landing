@@ -5,7 +5,8 @@
     "model": "Model",
     "team": "Team",
     "contact": "Contact",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "screen": "J-Screen"
   },
   "hero": {
     "eyebrow": "Personal agent with a voice",
@@ -49,7 +50,8 @@
     "card3": "Runs your inbox: summarizes it, flags what's urgent and drafts replies.",
     "card4": "Acts as your coding agent: reviews, reminds you of open tasks and stops a commit if something's left to check.",
     "card5": "Reminds you what's unfinished and picks up where you left off.",
-    "closing": "And because it's built on OpenClaw, what it can't do yet, you can teach it."
+    "closing": "And because it's built on OpenClaw, what it can't do yet, you can teach it.",
+    "screenLink": "See J-Screen"
   },
   "why": {
     "eyebrow": "Why now",
@@ -109,5 +111,119 @@
   "footer": {
     "tagline": "Jota — your agent, with a voice.",
     "rights": "All rights reserved."
+  },
+  "screen": {
+    "meta": {
+      "title": "J-Screen — You talk. The TV handles it.",
+      "description": "J-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
+    },
+    "s1": {
+      "headline": "You talk. The TV handles it.",
+      "subhead": "The TV you already own, turned into Jota's screen.",
+      "caption": "Your TV, when nobody's using it."
+    },
+    "s2": {
+      "caption1": "You're watching something. Jota answers up top, without pausing anything.",
+      "caption2": "And what it has pending stays in sight."
+    },
+    "s3": {
+      "caption1": "When there's screen to spare, you see everything it does.",
+      "caption2": "It opens websites, plays music, launches whatever you ask."
+    },
+    "s4": {
+      "caption1": "Nothing to install: it's a web page on your phone.",
+      "caption2": "Trackpad, keyboard, volume and Jota's voice."
+    },
+    "s5": {
+      "caption1": "A code on the TV and you're in.",
+      "caption2": "You, your family and your guests, each with their own place.",
+      "admin": "Admin",
+      "member": "Member",
+      "guest": "Guest",
+      "guestExpiry": "Expires in 24 h",
+      "paired": "Paired"
+    },
+    "s6": {
+      "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
+      "line2": "J-Screen provides the screen; J-Gateway listens, thinks and answers you.",
+      "soon": "Coming soon: a script and a guided install.",
+      "network": "All on your network. Away from home, over a secure connection."
+    },
+    "s7": {
+      "title": "More things it already does",
+      "items": [
+        {
+          "title": "Stage",
+          "body": "Jota puts presentations, tasks and alerts on top of any website."
+        },
+        {
+          "title": "Spotify Connect",
+          "body": "The TV is one more speaker. Optional."
+        },
+        {
+          "title": "Standby that follows your schedule",
+          "body": "It shifts from day to night."
+        },
+        {
+          "title": "Other agents",
+          "body": "Claude and others control it through MCP."
+        },
+        {
+          "title": "Jota Cloud or Jota Local",
+          "body": "You choose where it thinks."
+        }
+      ]
+    },
+    "s8": {
+      "headline": "It's not an idea. It already works.",
+      "line": "It works today in our living room; very soon, in yours.",
+      "ctaWaitlist": "Join the waitlist",
+      "ctaTalk": "Let's talk",
+      "back": "Back to the landing page"
+    },
+    "chat": {
+      "series1You": "Jota, where was this filmed?",
+      "series1Jota": "On the Costa da Morte, near Fisterra.",
+      "series2You": "Remind me in twenty minutes about dinner.",
+      "series2Jota": "Done, I'll remind you.",
+      "jazzYou": "Put on some calm jazz in the living room.",
+      "jazzJota": "On it. Calm jazz in the living room.",
+      "recipeYou": "Show me the vegetable paella recipe.",
+      "recipeJota": "Here it is.",
+      "toolWhere": "Looking up the place",
+      "toolTimer": "Setting the reminder",
+      "toolMusic": "Play in the Living room",
+      "toolMusicSub": "Spotify",
+      "toolWeb": "Open on the TV",
+      "toolWebSub": "Paella recipe",
+      "replay": "Replay"
+    },
+    "tv": {
+      "date": "Wednesday, October 21",
+      "weather": "18°",
+      "weatherDetail": "Partly cloudy",
+      "nowPlaying": "Now playing",
+      "song": "Blue in Green",
+      "artist": "Miles Davis",
+      "showTitle": "The Lighthouse",
+      "showMeta": "S1 · E3 · 48 min",
+      "continueWatching": "Continue watching",
+      "activityLabel": "Dinner",
+      "activityTime": "20:00",
+      "musicFrom": "From Spotify",
+      "upNext": "Up next",
+      "recipeSite": "easy-kitchen.com",
+      "recipeTitle": "Vegetable paella",
+      "opening": "Opening…",
+      "pairTitle": "Pairing code",
+      "pairHint": "Type it on your phone"
+    },
+    "remote": {
+      "room": "Living room",
+      "trackpadHint": "Swipe to move the cursor",
+      "type": "Type on the TV",
+      "talk": "Talk to Jota",
+      "volume": "Volume"
+    }
   }
 }

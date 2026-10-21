@@ -5,7 +5,8 @@
     "model": "Modelo",
     "team": "Equipo",
     "contact": "Contacto",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "screen": "J-Screen"
   },
   "hero": {
     "eyebrow": "Agente personal con voz",
@@ -49,7 +50,8 @@
     "card3": "Te lleva los correos: los resume, te avisa de lo urgente y redacta respuestas.",
     "card4": "Es tu agente de código: revisa, te recuerda tareas pendientes y te frena un commit si algo falta por mirar.",
     "card5": "Te recuerda lo que tienes a medias y retoma el hilo donde lo dejasteis.",
-    "closing": "Y como se apoya en OpenClaw, lo que hoy no hace, se le puede enseñar."
+    "closing": "Y como se apoya en OpenClaw, lo que hoy no hace, se le puede enseñar.",
+    "screenLink": "Ver J-Screen"
   },
   "why": {
     "eyebrow": "Por qué ahora",
@@ -109,5 +111,119 @@
   "footer": {
     "tagline": "Jota — tu agente, con voz.",
     "rights": "Todos los derechos reservados."
+  },
+  "screen": {
+    "meta": {
+      "title": "J-Screen — Le hablas. La tele se encarga.",
+      "description": "J-Screen convierte la tele que ya tienes en la pantalla de Jota: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
+    },
+    "s1": {
+      "headline": "Le hablas. La tele se encarga.",
+      "subhead": "La tele que ya tienes, convertida en la pantalla de Jota.",
+      "caption": "Tu tele, cuando nadie la usa."
+    },
+    "s2": {
+      "caption1": "Estás viendo algo. Jota contesta arriba, sin pausar nada.",
+      "caption2": "Y lo que tiene pendiente se queda a la vista."
+    },
+    "s3": {
+      "caption1": "Si sobra pantalla, ves todo lo que hace.",
+      "caption2": "Abre webs, pone música, lanza lo que le pidas."
+    },
+    "s4": {
+      "caption1": "Sin instalar nada: es una web en tu móvil.",
+      "caption2": "Trackpad, teclado, volumen y la voz de Jota."
+    },
+    "s5": {
+      "caption1": "Un código en la tele y listo.",
+      "caption2": "Tú, tu familia y tus invitados, cada uno con su sitio.",
+      "admin": "Admin",
+      "member": "Miembro",
+      "guest": "Invitado",
+      "guestExpiry": "Caduca en 24 h",
+      "paired": "Emparejado"
+    },
+    "s6": {
+      "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
+      "line2": "J-Screen pone la pantalla; J-Gateway escucha, piensa y te contesta.",
+      "soon": "Muy pronto: un script y una instalación guiada.",
+      "network": "Todo en tu red. Fuera de casa, con conexión segura."
+    },
+    "s7": {
+      "title": "Más cosas que ya hace",
+      "items": [
+        {
+          "title": "Escenario",
+          "body": "Jota pone presentaciones, tareas y avisos encima de cualquier web."
+        },
+        {
+          "title": "Spotify Connect",
+          "body": "La tele es un altavoz más. Opcional."
+        },
+        {
+          "title": "Reposo que sigue tu horario",
+          "body": "Cambia de día a noche."
+        },
+        {
+          "title": "Otros agentes",
+          "body": "Claude y otros la manejan por MCP."
+        },
+        {
+          "title": "Jota Cloud o Jota Local",
+          "body": "Tú eliges dónde piensa."
+        }
+      ]
+    },
+    "s8": {
+      "headline": "No es una idea. Ya funciona.",
+      "line": "Funciona hoy en nuestro salón; muy pronto, en el tuyo.",
+      "ctaWaitlist": "Apúntate a la lista de espera",
+      "ctaTalk": "Hablemos",
+      "back": "Volver a la landing"
+    },
+    "chat": {
+      "series1You": "Jota, ¿dónde se rodó esto?",
+      "series1Jota": "En la Costa da Morte, cerca de Fisterra.",
+      "series2You": "Avísame en veinte minutos para la cena.",
+      "series2Jota": "Hecho, te aviso.",
+      "jazzYou": "Pon algo tranquilo de jazz en el salón.",
+      "jazzJota": "Ahí va. Jazz tranquilo en el salón.",
+      "recipeYou": "Enséñame la receta de la paella de verduras.",
+      "recipeJota": "Aquí la tienes.",
+      "toolWhere": "Buscando el lugar",
+      "toolTimer": "Creando el aviso",
+      "toolMusic": "Reproducir en el Salón",
+      "toolMusicSub": "Spotify",
+      "toolWeb": "Abrir en la tele",
+      "toolWebSub": "Receta de paella",
+      "replay": "Repetir"
+    },
+    "tv": {
+      "date": "Miércoles, 21 de octubre",
+      "weather": "18°",
+      "weatherDetail": "Parcialmente nublado",
+      "nowPlaying": "Ahora suena",
+      "song": "Blue in Green",
+      "artist": "Miles Davis",
+      "showTitle": "El faro",
+      "showMeta": "T1 · E3 · 48 min",
+      "continueWatching": "Seguir viendo",
+      "activityLabel": "Cena",
+      "activityTime": "20:00",
+      "musicFrom": "Desde Spotify",
+      "upNext": "A continuación",
+      "recipeSite": "cocina-facil.es",
+      "recipeTitle": "Paella de verduras",
+      "opening": "Abriendo…",
+      "pairTitle": "Código de emparejamiento",
+      "pairHint": "Escríbelo en tu móvil"
+    },
+    "remote": {
+      "room": "Salón",
+      "trackpadHint": "Desliza para mover el cursor",
+      "type": "Escribir en la tele",
+      "talk": "Hablar con Jota",
+      "volume": "Volumen"
+    }
   }
 }

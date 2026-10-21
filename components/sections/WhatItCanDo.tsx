@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import { Section } from "@/components/Section";
 import { Card } from "@/components/Card";
 
@@ -63,6 +64,14 @@ export async function WhatItCanDo() {
           </Card>
         ))}
       </div>
+      <p className="mt-6">
+        <Link
+          href="/jota-screen"
+          className="text-sm font-semibold text-malva underline-offset-4 hover:underline"
+        >
+          {t("screenLink")} →
+        </Link>
+      </p>
       <p className="mt-6 max-w-[60ch] text-sm text-ink-soft italic">
         {t("closing")}
       </p>

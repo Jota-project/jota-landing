@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageToggle } from "./LanguageToggle";
 import { useTranslations } from "next-intl";
 
@@ -15,6 +15,8 @@ const links = [
 
 export function Nav() {
   const t = useTranslations("nav");
+  const pathname = usePathname();
+  const prefix = pathname === "/" ? "" : "/";
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export function Nav() {
     >
       <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-6 px-6">
         <Link
-          href="#hero"
+          href={`${prefix}#hero`}
           aria-label={t("skipToContent")}
           className="font-display text-xl font-medium text-ink"
         >
@@ -47,13 +49,21 @@ export function Nav() {
           {links.map((link) => (
             <li key={link.href}>
               <a
-                href={link.href}
+                href={`${prefix}${link.href}`}
                 className="text-sm text-ink-soft hover:text-malva transition-colors duration-150"
               >
                 {t(link.key)}
               </a>
             </li>
           ))}
+          <li>
+            <Link
+              href="/jota-screen"
+              className="text-sm text-ink-soft hover:text-malva transition-colors duration-150"
+            >
+              {t("screen")}
+            </Link>
+          </li>
         </ul>
         <LanguageToggle />
       </div>

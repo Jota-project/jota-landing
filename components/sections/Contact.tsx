@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/Button";
 
-const CONTACT_EMAIL = "alfonsogarrelopez@gmail.com";
+export const CONTACT_EMAIL = "alfonsogarrelopez@gmail.com";
 
 export async function Contact() {
   const t = await getTranslations("contact");
