@@ -10,7 +10,7 @@ import { RoleCards } from "../phone/RoleCards";
 import { PairCode } from "../tv/PairCode";
 import { Serie } from "../tv/Serie";
 import { TvFrame } from "../tv/TvFrame";
-import { CODE, FLY_FROM, FLY_SPAN, Flyers, PhoneB, TvB, type PhaseB } from "./ScenesB";
+import { CODE, FLY_FROM, FLY_SPAN, Flyers, PhoneB, REST, TvB, type PhaseB } from "./ScenesB";
 
 /** Track progress (0–1) → phase. Scenes are 220/200svh tall (span 320svh): the caption handoff
  *  (s4 leaving, s5 arriving at mid-screen) lands near p≈.53, just before the pairing at .55. */
@@ -95,7 +95,7 @@ export function TrackB() {
             </div>
             <div className="tb-phone">
               <PhoneFrame>
-                <MandoRemote focus="talk" cursor={{ x: 0.68, y: 0.34 }} playing={false} />
+                <MandoRemote focus="talk" cursor={REST} playing={false} />
               </PhoneFrame>
             </div>
           </div>
@@ -128,7 +128,7 @@ export function TrackB() {
           <div className="tb-stage">
             <div className="tb-tv">
               <TvFrame paused={!trackView.inView}>
-                <TvB phase={phase} digits={digits} playing={playing} />
+                <TvB phase={phase} playing={playing} />
               </TvFrame>
             </div>
             <div className="tb-phone">

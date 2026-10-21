@@ -9,6 +9,7 @@ import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
 import { KickContext, TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
 import { TrackB, digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
+import { TvB } from "@/components/screen/tracks/ScenesB";
 import { MandoPair } from "@/components/screen/phone/MandoPair";
 import { MandoRemote } from "@/components/screen/phone/MandoRemote";
 
@@ -181,6 +182,11 @@ describe("TrackB", () => {
     rerender(wrap(<MandoPair digits={4} code="4821" paired />));
     expect([...container.querySelectorAll("[data-slot]")].map((el) => el.textContent).join("")).toBe("4821");
     expect(container.textContent).toContain(s.s5.paired);
+  });
+
+  it("TvB shows the full code on the TV from the start of the pairing", () => {
+    const { container } = render(wrap(<TvB phase="pair" playing={false} />));
+    expect(container.querySelectorAll('[data-testid="tv-digit"][data-on="true"]')).toHaveLength(4);
   });
 
   it("TrackB maps progress to phases", () => {

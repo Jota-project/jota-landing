@@ -15,13 +15,14 @@ export const CODE = "4821";
 export const FLY_FROM = 0.55;
 export const FLY_SPAN = 0.075;
 // resting finger on the trackpad (and cursor on the TV) when nothing drives it
-const REST = { x: 0.68, y: 0.34 };
+export const REST = { x: 0.68, y: 0.34 };
 
 const on = (b: boolean) => (b ? "true" : "false");
 const pairing = (ph: PhaseB) => ph === "pair" || ph === "roles";
 
-/** The TV of tramo B: the series with each echo of the remote on top, then the pairing code. */
-export const TvB = memo(function TvB({ phase, digits, playing }: { phase: PhaseB; digits: number; playing: boolean }) {
+/** The TV of tramo B: the series with each echo of the remote on top, then the pairing code, shown in full
+ *  from the start (Ruling 7); its digits fly one by one to the phone. */
+export const TvB = memo(function TvB({ phase, playing }: { phase: PhaseB; playing: boolean }) {
   const t = useTranslations("screen");
   return (
     <>
@@ -50,7 +51,7 @@ export const TvB = memo(function TvB({ phase, digits, playing }: { phase: PhaseB
         <span>{t("remote.talk")}</span>
       </div>
       <div className="tb-pair" data-on={on(pairing(phase))}>
-        <PairCode code={CODE} visibleDigits={digits} />
+        <PairCode code={CODE} visibleDigits={CODE.length} />
       </div>
     </>
   );
@@ -75,7 +76,7 @@ type Flight = { x: number; y: number; w: number; h: number; dx: number; dy: numb
 
 /** The digits travelling from the TV to the phone. They live beside the TV (it clips its canvas) and are driven
  *  by --p: digit i flies from FLY_FROM + i·FLY_SPAN and fades as its slot on the phone fills. Positions are
- *  measured once the pairing starts and on resize. */
+ *  measured once the pairing starts and whenever the stage changes size; cleared when the pairing ends. */
 export function Flyers({ live }: { live: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [flights, setFlights] = useState<Flight[]>([]);
@@ -104,16 +105,18 @@ export function Flyers({ live }: { live: boolean }) {
         }),
       );
     };
-    // next frame: TvFrame and PhoneFrame rescale (--s, --ps) from their ResizeObservers first
+    // next frame: TvFrame and PhoneFrame rescale (--s, --ps) from their own ResizeObservers first
     let raf = requestAnimationFrame(measure);
     const later = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(measure);
     };
-    window.addEventListener("resize", later);
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(later);
+    ro?.observe(stage);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", later);
+      ro?.disconnect();
+      setFlights([]); // stale paths never come back on the next pairing
     };
   }, [live]);
   return (
