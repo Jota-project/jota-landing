@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import es from "../messages/es.json";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { TrackA, GROW_END, growAt, scrolledIn } from "@/components/screen/tracks/TrackA";
+import { TrackA, GROW_END, HOLD_LINE, growAt, scrolledIn } from "@/components/screen/tracks/TrackA";
 import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
@@ -29,7 +29,7 @@ const wrap = (ui: ReactNode) => (
 // Words paints each word in its own span (no space nodes)
 const flat = (t: string | null | undefined) => (t ?? "").replace(/\s/g, "");
 
-/** band: what the HOLD band observer (rootMargin -25% … -25%) sees; defaults to inView. */
+/** band: what the hold band observer (rootMargin −HOLD_LINE … −HOLD_LINE) sees; defaults to inView. */
 type Geo = { inView: boolean; bottom: number; rootTop?: number; band?: boolean };
 /** IntersectionObserver that reports a fixed geometry per scene marker (data-scene). */
 function mockIO(scenes: Record<string, Geo>) {
@@ -75,7 +75,7 @@ function mockMovableIO(start: Record<string, Geo>) {
     band: boolean;
     constructor(cb: IntersectionObserverCallback, opts?: IntersectionObserverInit) {
       this.cb = cb;
-      this.band = (opts?.rootMargin ?? "").startsWith("-25%");
+      this.band = (opts?.rootMargin ?? "").startsWith(`-${HOLD_LINE * 100}%`);
     }
     observe(el: Element) {
       const o = { el, cb: this.cb, io: this, band: this.band };
