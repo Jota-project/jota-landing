@@ -48,7 +48,6 @@ describe("ChatPill", () => {
         turn={turn("1")}
         state={{ you: true, tool: "done", jota: true }}
         orb="idle"
-       
       />,
     );
     expect(flat(container.querySelector(".tv-u"))).toBe("Pregunta1");
@@ -58,7 +57,6 @@ describe("ChatPill", () => {
         turn={turn("2")}
         state={{ you: true, tool: "none", jota: false }}
         orb="listen"
-       
       />,
     );
     expect(container.querySelectorAll(".tv-tn")).toHaveLength(1);
