@@ -197,6 +197,19 @@ describe("product page", () => {
     vi.unstubAllGlobals();
   });
 
+  it("metadata keeps the OG image and locale of each language", async () => {
+    const { generateMetadata } = await import("@/app/[locale]/jota-screen/page");
+    for (const [locale, img, og] of [
+      ["es", "/og-image.png", "es_ES"],
+      ["en", "/og-image-en.png", "en_US"],
+    ] as const) {
+      process.env.TEST_LOCALE = locale;
+      const m = await generateMetadata({ params: Promise.resolve({ locale }) });
+      expect(m.openGraph).toMatchObject({ locale: og, images: [{ url: img, width: 1200, height: 630 }] });
+      expect(m.twitter).toMatchObject({ card: "summary_large_image", images: [img] });
+    }
+  });
+
   it("language switch keeps the product page", async () => {
     // every value of es.screen that differs from its English counterpart
     const at = (obj: unknown, p: string) =>
