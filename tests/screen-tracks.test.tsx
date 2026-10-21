@@ -195,6 +195,27 @@ describe("TrackA", () => {
     expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
   });
 
+  it("Repetir stays (inert) while the scene replays, so focus is not lost; it sits above the series bar", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    mockIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
+    render(wrap(<TrackA />));
+    act(() => {
+      vi.advanceTimersByTime(30000);
+    });
+    const replay = screen.getByRole("button", { name: s.chat.replay });
+    expect(replay).toHaveAttribute("data-lift", "true");
+    replay.focus();
+    fireEvent.click(replay);
+    const during = screen.getByRole("button", { name: s.chat.replay });
+    expect(during).toBe(replay);
+    expect(during).toHaveAttribute("aria-disabled", "true");
+    expect(document.activeElement).toBe(during);
+    act(() => {
+      vi.advanceTimersByTime(30000);
+    });
+    expect(screen.getByRole("button", { name: s.chat.replay })).not.toHaveAttribute("aria-disabled", "true");
+  });
+
   it("leaving the track past scene 3 keeps scene 3 on the TV (does not flip back to scene 1)", () => {
     // the scene markers use a zero-height root across the middle of the viewport (rootBounds.top = innerHeight/2)
     const mid = 450;
@@ -517,6 +538,14 @@ describe("no-JS and CSS fallbacks", () => {
     const b = css("screen-track-b.css");
     expect(b).not.toMatch(/\.tb-fly span\{[^}]*--f:clamp[^}]*opacity:calc\(min/);
     expect(b).toMatch(/@supports \(opacity:min\(1,1\)\)\{[^@]*\.tb-fly span\{opacity:calc\(min/);
+  });
+
+  it("tracks C and D are short (~150svh); tablets get the one-column layout below 1024px", () => {
+    const end = css("screen-end.css");
+    expect(end).toMatch(/\.jscreen \.tck\{position:relative;height:150svh/);
+    expect(end).toMatch(/\.jscreen \.tdk\{position:relative;height:150svh/);
+    expect(css("screen-track-a.css")).toMatch(/@media \(max-width:1023px\)\{\s*\/\*[^*]*\*\/\s*\.jscreen \.ta-grid\{display:block/);
+    expect(css("screen-track-b.css")).toMatch(/@media \(max-width:1023px\)\{\s*\/\*[^*]*\*\/\s*\.jscreen \.tb-grid\{display:block/);
   });
 
   it("screen styles are split per area", () => {

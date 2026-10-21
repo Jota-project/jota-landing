@@ -119,9 +119,27 @@ export function Glass({
   );
 }
 
-export function ReplayButton({ label, onClick }: { label: string; onClick: () => void }) {
+/** `busy`: the scene is replaying. The button stays (aria-disabled, not disabled) so it keeps the focus. */
+export function ReplayButton({
+  label,
+  onClick,
+  busy = false,
+  lift = false,
+}: {
+  label: string;
+  onClick: () => void;
+  busy?: boolean;
+  /** Sit above the series' progress bar. */
+  lift?: boolean;
+}) {
   return (
-    <button type="button" className="tv-replay" onClick={onClick}>
+    <button
+      type="button"
+      className="tv-replay"
+      aria-disabled={busy ? "true" : undefined}
+      data-lift={lift ? "true" : undefined}
+      onClick={busy ? undefined : onClick}
+    >
       {label}
     </button>
   );

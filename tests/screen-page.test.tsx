@@ -177,7 +177,10 @@ describe("product page", () => {
     const { container: live, unmount } = await renderPage("es");
     const liveTracks = [...live.querySelectorAll("[data-sticky]")];
     expect(liveTracks).toHaveLength(4);
-    expect(liveTracks.filter((el) => el.getAttribute("data-sticky") === "true").length).toBeLessThanOrEqual(4);
+    // normal motion: the tracks are really sticky (at least one, at most four)
+    const sticky = liveTracks.filter((el) => el.getAttribute("data-sticky") === "true").length;
+    expect(sticky).toBeGreaterThanOrEqual(1);
+    expect(sticky).toBeLessThanOrEqual(4);
     unmount();
 
     reduce();
@@ -195,6 +198,15 @@ describe("product page", () => {
       }
     }
     vi.unstubAllGlobals();
+  });
+
+  it("no dead screen keys; the way back says home", () => {
+    for (const m of [es, en]) {
+      for (const k of ["nowPlaying", "musicFrom", "opening"]) expect(m.screen.tv).not.toHaveProperty(k);
+      expect(m.screen.remote).not.toHaveProperty("volume");
+    }
+    expect(es.screen.s8.back).toBe("Volver al inicio");
+    expect(en.screen.s8.back).toBe("Back to home");
   });
 
   it("metadata keeps the OG image and locale of each language", async () => {
@@ -230,5 +242,52 @@ describe("product page", () => {
       unmount();
     }
     vi.unstubAllGlobals();
+  });
+});
+
+describe("nav tone on /jota-screen", () => {
+  const box = (top: number, height: number) => () => ({ top, bottom: top + height, height }) as DOMRect;
+  function page() {
+    document.body.innerHTML = `
+      <div class="ta" data-dark="false"></div>
+      <div data-tone="dark"><div class="tdk-fade"></div><div class="tdk-back"></div></div>`;
+    const [ta, body, fade] = ["ta", "[data-tone]", "tdk-fade"].map((c) =>
+      document.querySelector(c.startsWith("[") ? c : `.${c}`)!,
+    ) as HTMLElement[];
+    return { ta, body, fade };
+  }
+
+  it("is dark over the dusk body and light on linen", async () => {
+    const { darkAt } = await import("@/components/screen/NavTone");
+    const { ta, body, fade } = page();
+    // top of the page: track A still on linen
+    ta.getBoundingClientRect = box(0, 5000);
+    body.getBoundingClientRect = box(5000, 9000);
+    fade.getBoundingClientRect = box(13000, 128);
+    expect(darkAt(document, 32)).toBe(false);
+    // track A turned dusk under the nav
+    ta.setAttribute("data-dark", "true");
+    expect(darkAt(document, 32)).toBe(true);
+    // in tracks B–D
+    ta.getBoundingClientRect = box(-5000, 5000);
+    body.getBoundingClientRect = box(-3000, 9000);
+    fade.getBoundingClientRect = box(5000, 128);
+    expect(darkAt(document, 32)).toBe(true);
+    // past the middle of the fade to linen (the way back and the footer)
+    fade.getBoundingClientRect = box(-100, 128);
+    expect(darkAt(document, 32)).toBe(false);
+  });
+
+  it("sets data-nav on <html> while mounted and removes it on leaving", async () => {
+    const { NavTone } = await import("@/components/screen/NavTone");
+    const { ta, body, fade } = page();
+    ta.setAttribute("data-dark", "true");
+    ta.getBoundingClientRect = box(-100, 5000);
+    body.getBoundingClientRect = box(4900, 9000);
+    fade.getBoundingClientRect = box(13000, 128);
+    const { unmount } = render(<NavTone />);
+    expect(document.documentElement).toHaveAttribute("data-nav", "dark");
+    unmount();
+    expect(document.documentElement).not.toHaveAttribute("data-nav");
   });
 });

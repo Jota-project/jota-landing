@@ -111,6 +111,7 @@ export function TrackA() {
   const trackView = useInView(track);
   const [grow, setGrow] = useState<GrowPhase>("hidden");
   const [ring, setRing] = useState(1);
+  const [replaying, setReplaying] = useState<Scene | null>(null);
 
   useEffect(() => {
     track.current?.closest(".jscreen")?.setAttribute("data-hydrated", "");
@@ -202,9 +203,23 @@ export function TrackA() {
     </>
   );
 
-  // Repetir: a real button over the TV, outside its aria-hidden canvas, once the active scene has finished
-  const replayScene = active === 2 && s2.finished ? s2.replay : active === 3 && s3.finished ? s3.replay : null;
-  const replay = replayScene ? <ReplayButton label={t("chat.replay")} onClick={replayScene} /> : null;
+  // Repetir: a real button over the TV, outside its aria-hidden canvas, once the active scene has finished.
+  // While that scene replays it stays, inert, so the focus is not lost.
+  const script = active === 2 ? s2 : active === 3 ? s3 : null;
+  if (replaying !== null && (replaying !== active || !!script?.finished)) setReplaying(null);
+  const busy = replaying !== null && replaying === active;
+  const replay =
+    script && (script.finished || busy) ? (
+      <ReplayButton
+        label={t("chat.replay")}
+        busy={busy}
+        lift={active === 2}
+        onClick={() => {
+          setReplaying(active);
+          script.replay();
+        }}
+      />
+    ) : null;
 
   if (reduced) {
     // reduced motion: no sticky, one still frame per scene with its text

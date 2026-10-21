@@ -193,7 +193,7 @@
       "line": "It works today in our living room; very soon, in yours.",
       "ctaWaitlist": "Join the waitlist",
       "ctaTalk": "Let's talk",
-      "back": "Back to the landing page"
+      "back": "Back to home"
     },
     "chat": {
       "series1You": "Jota, where was this filmed?",
@@ -216,7 +216,6 @@
       "date": "Wednesday, October 21",
       "weather": "18°",
       "weatherDetail": "Partly cloudy",
-      "nowPlaying": "Now playing",
       "song": "Blue in Green",
       "artist": "Miles Davis",
       "showTitle": "The Lighthouse",
@@ -224,11 +223,9 @@
       "continueWatching": "Continue watching",
       "activityLabel": "Dinner",
       "activityTime": "20:00",
-      "musicFrom": "From Spotify",
       "upNext": "Up next",
       "recipeSite": "cocinadecasa.example",
       "recipeTitle": "Vegetable paella",
-      "opening": "Opening…",
       "pairTitle": "Pairing code",
       "pairHint": "Type it on your phone",
       "hint": "You've time for two episodes before bed",
@@ -257,8 +254,7 @@
       "room": "Living room",
       "trackpadHint": "Swipe to move the cursor",
       "type": "Type on the TV",
-      "talk": "Talk to Jota",
-      "volume": "Volume"
+      "talk": "Talk to Jota"
     }
   }
 }

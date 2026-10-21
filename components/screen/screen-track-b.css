@@ -147,7 +147,7 @@
 .jscreen .tb-still .tb-row{display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);gap:2rem 3rem;align-items:center;padding:4rem max(1.5rem,calc((100% - 81rem)/2))}
 .jscreen .tb-still .tb-row>*{min-width:0}
 .jscreen .tb-still .tb-cap{position:static;min-height:0}
-@media (max-width:767px){
+@media (max-width:1023px){
   /* la tele a lo ancho; el móvil, más pequeño, sobre su esquina inferior derecha; el texto debajo */
   .jscreen .tb-grid{display:block;padding:0 1rem}
   .jscreen .tb-sticky{top:4rem;height:auto;z-index:2;padding:.5rem 0 0;background:#211b2a}

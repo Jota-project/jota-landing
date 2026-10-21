@@ -71,6 +71,12 @@
 .jscreen .tv-over{position:absolute;right:.75rem;bottom:.75rem;z-index:6;display:flex;gap:.5rem}
 .jscreen .tv-over .tv-replay{font:500 .8125rem/1 var(--tv-sans);color:var(--tv-text);padding:.45rem .85rem;background:rgba(29,24,37,.72);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 4px 14px rgba(0,0,0,.3)}
 .jscreen .tv-over .tv-replay:hover{background:rgba(45,38,55,.9)}
+.jscreen .tv-over .tv-replay[aria-disabled=true]{opacity:.55;cursor:default}
+/* sobre la barra de progreso de la serie (bottom 70–76 del lienzo de 1920) a cualquier tamaño */
+.jscreen .tv-over .tv-replay[data-lift=true]{margin-bottom:calc(100cqw*120/1920)}
+/* zona táctil de 24px como mínimo sin agrandar la pastilla */
+.jscreen .tv-over .tv-replay{position:relative}
+.jscreen .tv-over .tv-replay::after{content:"";position:absolute;left:0;right:0;top:50%;height:max(100%,24px);transform:translateY(-50%)}
 @media (max-width:767px){.jscreen .tv-over{right:.5rem;bottom:.5rem}.jscreen .tv-over .tv-replay{font-size:.6875rem;padding:.3rem .6rem}}
 
 /* ---------- Reposo v2 · Distribución 1, margen editorial ---------- */

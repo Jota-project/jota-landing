@@ -193,7 +193,7 @@
       "line": "Funciona hoy en nuestro salón; muy pronto, en el tuyo.",
       "ctaWaitlist": "Apúntate a la lista de espera",
       "ctaTalk": "Hablemos",
-      "back": "Volver a la landing"
+      "back": "Volver al inicio"
     },
     "chat": {
       "series1You": "Jota, ¿dónde se rodó esto?",
@@ -216,7 +216,6 @@
       "date": "Miércoles, 21 de octubre",
       "weather": "18°",
       "weatherDetail": "Parcialmente nublado",
-      "nowPlaying": "Ahora suena",
       "song": "Blue in Green",
       "artist": "Miles Davis",
       "showTitle": "El faro",
@@ -224,11 +223,9 @@
       "continueWatching": "Seguir viendo",
       "activityLabel": "Cena",
       "activityTime": "20:00",
-      "musicFrom": "Desde Spotify",
       "upNext": "A continuación",
       "recipeSite": "cocinadecasa.example",
       "recipeTitle": "Paella de verduras",
-      "opening": "Abriendo…",
       "pairTitle": "Código de emparejamiento",
       "pairHint": "Escríbelo en tu móvil",
       "hint": "Te da tiempo a dos episodios antes de dormir",
@@ -257,8 +254,7 @@
       "room": "Salón",
       "trackpadHint": "Desliza para mover el cursor",
       "type": "Escribir en la tele",
-      "talk": "Hablar con Jota",
-      "volume": "Volumen"
+      "talk": "Hablar con Jota"
     }
   }
 }

@@ -6,6 +6,7 @@ import "@/components/screen/screen-track-a.css";
 import "@/components/screen/screen-track-b.css";
 import "@/components/screen/screen-end.css";
 import { MoreList } from "@/components/screen/MoreList";
+import { NavTone } from "@/components/screen/NavTone";
 import { TrackA } from "@/components/screen/tracks/TrackA";
 import { TrackB } from "@/components/screen/tracks/TrackB";
 import { TrackC } from "@/components/screen/tracks/TrackC";
@@ -43,9 +44,10 @@ export default async function JotaScreenPage({ params }: Props) {
   // its id and its captions as real text. The page opens and closes on linen (TrackD ends there).
   return (
     <main className="jscreen">
+      <NavTone />
       <TrackA />
 
-      <div className="bg-[#211b2a] text-linen">
+      <div className="bg-[#211b2a] text-linen" data-tone="dark">
         <TrackB />
         <TrackC />
         <MoreList />

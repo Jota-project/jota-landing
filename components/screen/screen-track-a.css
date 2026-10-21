@@ -29,7 +29,7 @@
 .jscreen .ta-cap [data-phase]{transition:opacity .6s ease,transform .6s ease}
 /* Ruling 6: el cuerpo y el halo del cristal miden 0×0 sin rAF; la hoja lleva fondo estático */
 .jscreen:not([data-hydrated]) .tv-sheet{background:rgba(42,34,51,.92);border-radius:48px}
-@media (max-width:767px){
+@media (max-width:1023px){
   /* block, not grid: a sticky grid item would only stick inside its own row */
   .jscreen .ta-grid{display:block;padding:0 1rem}
   .jscreen .ta-tv{top:4rem;height:auto;z-index:2;padding:.5rem 0}
@@ -46,7 +46,7 @@
 .jscreen .ta-still .ta-row{display:grid;grid-template-columns:minmax(15rem,22rem) minmax(0,1fr);gap:2rem 3rem;align-items:center;padding:4rem max(1.5rem,calc((100% - 81rem)/2))}
 /* filas a todo lo ancho para que el fondo Dusk llegue a los bordes */
 .jscreen .ta-still .ta-cap{position:static;min-height:0}
-@media (max-width:767px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
+@media (max-width:1023px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
 @media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase]{transition:none}}
 /* sin JS (o antes de hidratar) el tramo mide lo mismo y es fijo igual: la tele enseña su fotograma de reposo
    y se lee todo el texto; así la restauración del scroll y las anclas caen en su sitio al hidratar */
