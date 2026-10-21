@@ -8,11 +8,14 @@ export function GrowTile({
   title,
   sub,
   from,
+  bg,
 }: {
   phase: GrowPhase;
   title: string;
   sub: string;
   from: { x: number; y: number; scale: number };
+  /** Background of the tile it grows from (CSS default otherwise). */
+  bg?: string;
 }) {
   const full = phase === "full" || phase === "gone";
   return (
@@ -21,6 +24,7 @@ export function GrowTile({
       data-testid="tv-grow"
       data-phase={phase}
       style={{
+        background: bg,
         transform: full ? "none" : `translate(${from.x}px,${from.y}px) scale(${from.scale})`,
         borderRadius: full ? 0 : 116,
         opacity: phase === "small" || phase === "full" ? 1 : 0,

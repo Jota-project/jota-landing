@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 
 const W = 390;
 
-/** Phone box (390×844, 48px corners, no fake status bar) that scales its canvas with --ps = width / 390. */
+/** Phone box (390×844, 48px corners, no fake status bar). CSS scales its canvas with container units where it
+ *  can; --ps = width / 390 (set before paint) is the fallback and also sizes the frame. */
 export function PhoneFrame({ className = "", children }: { className?: string; children?: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
     const fit = (w: number) => {

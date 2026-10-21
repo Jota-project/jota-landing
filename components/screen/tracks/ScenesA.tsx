@@ -1,12 +1,12 @@
 "use client";
 
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { useTranslations } from "next-intl";
 import { ActivityPill } from "../tv/ActivityPill";
 import { ChatPill } from "../tv/ChatPill";
 import { GlassPanel, type Turn } from "../tv/GlassPanel";
 import { GrowTile, type GrowPhase } from "../tv/GrowTile";
-import { Inicio } from "../tv/Inicio";
+import { GRAD, Inicio } from "../tv/Inicio";
 import { MusicaFull } from "../tv/MusicaFull";
 import { Reposo } from "../tv/Reposo";
 import { Serie } from "../tv/Serie";
@@ -18,26 +18,34 @@ export type SceneScript = {
   finished: boolean;
   /** Words appear one by one only while the script really plays. */
   animate: boolean;
-  onReplay: () => void;
+  /** How much of the activity ring is left (1 = full); TrackA owns it so it keeps counting across scenes. */
+  ring: number;
 };
 
 // «El faro» is the focused first tile of «Seguir viendo» (left 96, top 572, 396×223, focus scale 1.06)
 const FROM_HOME = { x: 84, y: 555, scale: 0.2186 };
+const FARO_BG = `linear-gradient(135deg,${GRAD[0][0]},${GRAD[0][1]})`;
 // the recipe tile grows from the free area left of the glass panel
 const FROM_PANEL = { x: 420, y: 420, scale: 0.2 };
 
-/** Live activity «Cena · 20:00»; while `live`, its ring counts down. */
-function LiveActivity({ on, live, shifted, aside }: { on: boolean; live: boolean; shifted: boolean; aside: boolean }) {
+/** Live activity «Cena · 20:00». `aside`: beside the top pill (top right corner); `web`: below the web bar. */
+function LiveActivity({
+  on,
+  ring,
+  shifted,
+  aside,
+  web = false,
+}: {
+  on: boolean;
+  ring: number;
+  shifted: boolean;
+  aside: boolean;
+  web?: boolean;
+}) {
   const t = useTranslations("screen.tv");
-  const [left, setLeft] = useState(1);
-  useEffect(() => {
-    if (!on || !live) return;
-    const id = setInterval(() => setLeft((v) => Math.max(0.55, v - 0.008)), 1000);
-    return () => clearInterval(id);
-  }, [on, live]);
   return (
-    <div className="ta-act" data-aside={aside ? "true" : "false"}>
-      <ActivityPill on={on} label={t("activityLabel")} time={t("activityTime")} progress={on ? left : 1} shifted={shifted} />
+    <div className="ta-act" data-aside={aside ? "true" : "false"} data-web={web ? "true" : "false"}>
+      <ActivityPill on={on} label={t("activityLabel")} time={t("activityTime")} progress={on ? ring : 1} shifted={shifted} />
     </div>
   );
 }
@@ -52,7 +60,7 @@ export const Scene2Tv = memo(function Scene2Tv({
   done,
   finished,
   animate,
-  onReplay,
+  ring,
   grow,
   live,
 }: SceneScript & { grow: GrowPhase; live: boolean }) {
@@ -69,14 +77,13 @@ export const Scene2Tv = memo(function Scene2Tv({
     <>
       {series && <Serie playing={live} progress={0.32} />}
       {home && <Inicio focus={0} />}
-      <GrowTile phase={grow} title={t("tv.showTitle")} sub={t("tv.showMeta")} from={FROM_HOME} />
-      <LiveActivity on={done.has("activity")} live={live} shifted={false} aside={pillOpen} />
+      <GrowTile phase={grow} title={t("tv.showTitle")} sub={t("tv.showMeta")} from={FROM_HOME} bg={FARO_BG} />
+      <LiveActivity on={done.has("activity")} ring={ring} shifted={false} aside={pillOpen} />
       <ChatPill
         open={pillOpen}
         turn={turns[second ? 1 : 0]}
         state={turnState(done, second ? 2 : 1)}
         orb={orbState(SCENE2, done, finished)}
-        onReplay={onReplay}
         replayLabel={t("chat.replay")}
         animate={animate}
       />
@@ -89,7 +96,7 @@ export const Scene3Tv = memo(function Scene3Tv({
   done,
   finished,
   animate,
-  onReplay,
+  ring,
   activity,
 }: SceneScript & { activity: boolean }) {
   const t = useTranslations("screen");
@@ -112,13 +119,12 @@ export const Scene3Tv = memo(function Scene3Tv({
       {done.has("music") ? <MusicaFull compact /> : <Reposo layout={open ? "talk" : "rotate"} perfil="tarde" />}
       {done.has("web") && <WebReceta loading={!done.has("toolDone2")} />}
       <GrowTile phase={grow} title={t("tv.recipeTitle")} sub={t("tv.recipeSite")} from={FROM_PANEL} />
-      <LiveActivity on={activity} live={false} shifted={open} aside={false} />
+      <LiveActivity on={activity} ring={ring} shifted={open} aside={false} web={done.has("web")} />
       <GlassPanel
         open={open}
         turns={turns}
         states={[turnState(done, 1), turnState(done, 2)]}
         orb={orbState(SCENE3, done, finished)}
-        onReplay={onReplay}
         replayLabel={t("chat.replay")}
         animate={animate}
       />

@@ -56,13 +56,22 @@
 }
 
 /* ---------- Lienzo 1920×1080 ---------- */
-.jscreen .tv-vp{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:24px;background:#000;--s:.5}
+.jscreen .tv-vp{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:24px;background:#000;--s:.5;container-type:inline-size}
 .jscreen .tv-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;transform:scale(var(--s));
   /* perfil día (Reposo v2); en la tele manda esta paleta, no la del mando */
   --accent:#c3b7e3;--text:#ddd6d0;--ease:cubic-bezier(.32,.72,0,1);
   --base:#211b2a;--clock:#d9d1dc;--dsoft:#bab2c4;--dacc:#c3b7e3;--pillbg:#2a2433;--orb:.42;--mbase:#1a1420;
   background:var(--base);color:var(--text);overflow:hidden;font:400 16px/1.5 var(--sans);
   --la:#7c6aae;--lb:#6e8cc4;--sheet:#2a2233;--tint:.76;--br:.6;--t-main:#ddd6d0;--t-you:#c3b7e3;--t-soft:#d0c9d9}
+/* sin JS (y antes del primer efecto) la escala sale del ancho del marco: tan(atan2(a,b)) = a/b sin unidades */
+@supports (transform:scale(tan(atan2(1px,1px)))){
+  .jscreen .tv-stage{transform:scale(tan(atan2(100cqw,1920px)))}
+}
+/* controles reales sobre la tele, fuera del lienzo aria-hidden */
+.jscreen .tv-over{position:absolute;right:.75rem;bottom:.75rem;z-index:6;display:flex;gap:.5rem}
+.jscreen .tv-over .tv-replay{font:500 .8125rem/1 var(--tv-sans);color:var(--tv-text);padding:.45rem .85rem;background:rgba(29,24,37,.72);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 4px 14px rgba(0,0,0,.3)}
+.jscreen .tv-over .tv-replay:hover{background:rgba(45,38,55,.9)}
+@media (max-width:767px){.jscreen .tv-over{right:.5rem;bottom:.5rem}.jscreen .tv-over .tv-replay{font-size:.6875rem;padding:.3rem .6rem}}
 
 /* ---------- Reposo v2 · Distribución 1, margen editorial ---------- */
 .jscreen .tv-reposo{position:absolute;inset:0;overflow:hidden;pointer-events:none;

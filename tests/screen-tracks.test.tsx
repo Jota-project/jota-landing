@@ -4,7 +4,10 @@ import { renderToString } from "react-dom/server";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactNode } from "react";
 import es from "../messages/es.json";
-import { TrackA } from "@/components/screen/tracks/TrackA";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { TrackA, growAt, sceneProgress } from "@/components/screen/tracks/TrackA";
+import { Scene2Tv } from "@/components/screen/tracks/ScenesA";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { Words } from "@/components/screen/tv/Words";
 import { KickContext, TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
@@ -51,6 +54,45 @@ function mockIO(scenes: Record<string, Geo>) {
   vi.stubGlobal("IntersectionObserver", IO);
   vi.stubGlobal("requestAnimationFrame", () => 1);
   vi.stubGlobal("cancelAnimationFrame", () => {});
+}
+
+/** Like mockIO, but the geometry can change later (the reader scrolls to another scene). */
+function mockMovableIO(start: Record<string, Geo>) {
+  const seen: { el: Element; cb: IntersectionObserverCallback; io: unknown }[] = [];
+  let scenes = start;
+  const fire = (o: (typeof seen)[number]) => {
+    const scene = (o.el as HTMLElement).dataset.scene;
+    const g = (scene && scenes[scene]) || { inView: true, bottom: 800 };
+    o.cb(
+      [{ target: o.el, isIntersecting: g.inView, boundingClientRect: { bottom: g.bottom } } as unknown as IntersectionObserverEntry],
+      o.io as IntersectionObserver,
+    );
+  };
+  class IO {
+    cb: IntersectionObserverCallback;
+    constructor(cb: IntersectionObserverCallback) {
+      this.cb = cb;
+    }
+    observe(el: Element) {
+      const o = { el, cb: this.cb, io: this };
+      seen.push(o);
+      fire(o);
+    }
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  }
+  vi.stubGlobal("IntersectionObserver", IO);
+  vi.stubGlobal("requestAnimationFrame", () => 1);
+  vi.stubGlobal("cancelAnimationFrame", () => {});
+  return {
+    move(next: Record<string, Geo>) {
+      scenes = next;
+      seen.forEach(fire);
+    },
+  };
 }
 
 afterEach(() => {
@@ -145,9 +187,78 @@ describe("TrackA", () => {
     expect(tv.querySelector('.tv-act[data-on="true"]')).not.toBeNull();
     // the second caption entered with the activity
     expect(container.querySelector('section#s2 [data-phase="2"]')).toHaveAttribute("data-on", "true");
-    // the TV stage is aria-hidden (TvFrame), so the button is looked up with hidden: true
-    fireEvent.click(screen.getByRole("button", { name: s.chat.replay, hidden: true }));
+    // Repetir is a real button outside the aria-hidden canvas, so assistive tech reaches it
+    const replay = screen.getByRole("button", { name: s.chat.replay });
+    expect(replay.closest('[aria-hidden="true"]')).toBeNull();
+    expect(tv.querySelector(".tv-stage")).toHaveAttribute("aria-hidden", "true");
+    fireEvent.click(replay);
     expect(tv.querySelector('.tv-act[data-on="true"]')).toBeNull();
+  });
+
+  it("the activity ring keeps counting down from scene 2 into scene 3", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
+    const io = mockMovableIO({ "1": { inView: false, bottom: -10 }, "2": { inView: true, bottom: 1200 }, "3": { inView: false, bottom: 3000 } });
+    render(wrap(<TrackA />));
+    const ring = () => Number(screen.getByTestId("tv-frame").querySelector(".tv-act circle.r")!.getAttribute("style")!.match(/stroke-dashoffset:\s*([\d.]+)/)![1]);
+    act(() => {
+      vi.advanceTimersByTime(30000);
+    });
+    // the activity is born at the end of the script; then its ring counts down once a second
+    act(() => {
+      vi.advanceTimersByTime(10000);
+    });
+    const inScene2 = ring();
+    expect(inScene2).toBeGreaterThan(0);
+    act(() => io.move({ "1": { inView: false, bottom: -2000 }, "2": { inView: false, bottom: -10 }, "3": { inView: true, bottom: 900 } }));
+    expect(screen.getByTestId("tv-frame").querySelector('.tv-act[data-on="true"]')).not.toBeNull();
+    expect(ring()).toBeGreaterThanOrEqual(inScene2);
+    act(() => {
+      vi.advanceTimersByTime(10000);
+    });
+    expect(ring()).toBeGreaterThan(inScene2);
+  });
+
+  it("scene 3: the activity moves out of the way once the recipe web is open", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout", "setInterval", "clearInterval"] });
+    mockIO({ "1": { inView: false, bottom: -2000 }, "2": { inView: false, bottom: -10 }, "3": { inView: true, bottom: 900 } });
+    render(wrap(<TrackA />));
+    const tv = screen.getByTestId("tv-frame");
+    expect(tv.querySelector('.ta-act[data-web="true"]')).toBeNull();
+    act(() => {
+      vi.advanceTimersByTime(30000);
+    });
+    expect(screen.getByTestId("tv-web")).toBeInTheDocument();
+    expect(tv.querySelector('.ta-act[data-web="true"]')).not.toBeNull();
+  });
+
+  it("the growing tile has the gradient of «El faro» on Inicio", () => {
+    render(wrap(<Scene2Tv done={new Set()} finished={false} animate={false} grow="small" live={false} ring={1} />));
+    const tile = screen.getByTestId("tv-tile-0");
+    expect(tile).toHaveTextContent(s.tv.showTitle);
+    expect(screen.getByTestId("tv-grow").style.background).toBe(tile.style.background);
+  });
+
+  it("growAt follows scene 2 on desktop and mobile heights", () => {
+    // svh in px, scene heights (svh) and the TV block above the scenes on mobile (px)
+    const layouts = [
+      { vh: 900, s: [120, 260, 200], above: 0 },
+      { vh: 812, s: [90, 200, 150], above: 210 },
+      { vh: 667, s: [90, 200, 150], above: 210 },
+    ];
+    for (const { vh, s: [h1, h2, h3], above } of layouts) {
+      const u = vh / 100;
+      const geo = { trackH: above + (h1 + h2 + h3) * u, viewH: vh, top: above + h1 * u, height: h2 * u };
+      const span = geo.trackH - vh;
+      const atScroll = (y: number) => growAt(sceneProgress(y / span, geo));
+      // scene 2 becomes active when its top crosses the middle of the viewport
+      const active = geo.top - vh / 2;
+      expect(atScroll(active - 1)).toBe("hidden");
+      expect(atScroll(active + 0.06 * geo.height)).toBe("small");
+      expect(atScroll(active + 0.1 * geo.height)).toBe("full");
+      expect(atScroll(active + 0.2 * geo.height)).toBe("gone");
+    }
+    // no layout yet (jsdom, first frame): straight to the series
+    expect(growAt(sceneProgress(0, { trackH: 0, viewH: 800, top: 0, height: 0 }))).toBe("gone");
   });
 
   it("reduced motion: scene 1 on linen, scenes 2 and 3 on dusk", () => {
@@ -321,5 +432,37 @@ describe("TrackC / MoreList / TrackD", () => {
     expect(container.querySelector("#s8")).toHaveAttribute("data-sticky", "false");
     expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-perfil", "noche");
     expect(container.querySelector(".tv-reposo")).toHaveAttribute("data-layout", "rotate");
+  });
+});
+
+describe("no-JS and CSS fallbacks", () => {
+  const css = (f: string) => readFileSync(path.resolve(process.cwd(), "components/screen", f), "utf-8");
+  const all = () => ["screen-tv.css", "screen-tv-screens.css", "screen-track-a.css", "screen-track-b.css", "screen-end.css"].map(css).join("\n");
+
+  it("TV and phone canvases scale with container units, without JS", () => {
+    const tv = css("screen-tv.css");
+    expect(tv).toMatch(/\.tv-vp\{[^}]*container-type:inline-size/);
+    expect(tv).toMatch(/@supports[^{]*atan2[^{]*\{\s*\.jscreen \.tv-stage\{transform:scale\(tan\(atan2\(100cqw,1920px\)\)\)/);
+    const b = css("screen-track-b.css");
+    expect(b).toMatch(/\.ph-vp\{[^}]*container-type:inline-size/);
+    expect(b).toMatch(/@supports[^{]*atan2[^{]*\{[^@]*\.ph-screen\{[^}]*tan\(atan2\(100cqw,390px\)\)/);
+  });
+
+  it("sections keep their heights before hydration (no layout jump)", () => {
+    for (const rule of all().matchAll(/:not\(\[data-hydrated\]\)[^{]*\{([^}]*)\}/g)) {
+      expect(rule[1], rule[0]).not.toMatch(/min-height:0|height:auto/);
+    }
+  });
+
+  it("the flying digits only use min() where it exists", () => {
+    const b = css("screen-track-b.css");
+    expect(b).not.toMatch(/\.tb-fly span\{[^}]*--f:clamp[^}]*opacity:calc\(min/);
+    expect(b).toMatch(/@supports \(opacity:min\(1,1\)\)\{[^@]*\.tb-fly span\{opacity:calc\(min/);
+  });
+
+  it("screen styles are split per area", () => {
+    for (const f of ["screen-tv.css", "screen-tv-screens.css", "screen-track-a.css", "screen-track-b.css", "screen-end.css"]) {
+      expect(css(f).split("\n").length, f).toBeLessThan(300);
+    }
   });
 });

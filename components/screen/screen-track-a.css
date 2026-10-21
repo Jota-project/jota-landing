@@ -16,15 +16,17 @@
 .jscreen .ta-cap{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;gap:.75rem;font-size:1.25rem;line-height:1.4}
 .jscreen .ta-sub{opacity:.8}
 .jscreen .ta-act{position:absolute;inset:0;pointer-events:none;transition:transform .9s var(--tv-ease)}
-/* con la píldora abierta, la actividad se queda arriba a su derecha */
-.jscreen .ta-act[data-aside=true]{transform:translateX(740px)}
+/* con la píldora abierta, la actividad se va a la esquina superior derecha del lienzo (no depende del ancho de la píldora) */
+.jscreen .ta-act[data-aside=true] .tv-act{left:auto;right:56px;transform:translateY(-24px)}
+.jscreen .ta-act[data-aside=true] .tv-act[data-on=true]{transform:none}
+/* y la píldora no llega hasta ella aunque el texto sea largo */
+.jscreen .tv-stage:has(.ta-act[data-aside=true] .tv-act[data-on=true]) .tv-glass[data-form=pill] .tv-sheet{max-width:1000px}
+/* con la web abierta, la actividad se recoge en el hueco central de su barra (0–92px), sin tapar la navegación,
+   la dirección ni el título: de 600px a 1180px y al 80 %, solo con transform */
+.jscreen .ta-act[data-web=true] .tv-act[data-on=true]{transform:translateX(calc(-50% + 580px)) translateY(-60px) scale(.8)}
 /* las fases del texto solo se esconden con JS; sin JS se lee todo */
 .jscreen[data-hydrated] .ta-cap [data-on=false]{opacity:0;transform:translateY(8px)}
 .jscreen .ta-cap [data-phase]{transition:opacity .6s ease,transform .6s ease}
-/* sin JS (o antes de hidratar): sin tramo alto; la tele enseña su fotograma de reposo */
-.jscreen:not([data-hydrated]) .ta-scene{min-height:0}
-.jscreen:not([data-hydrated]) .ta-cap{position:static;min-height:0;padding:3rem 0}
-.jscreen:not([data-hydrated]) .ta-tv{height:auto;padding:3rem 0}
 /* Ruling 6: el cuerpo y el halo del cristal miden 0×0 sin rAF; la hoja lleva fondo estático */
 .jscreen:not([data-hydrated]) .tv-sheet{background:rgba(42,34,51,.92);border-radius:48px}
 @media (max-width:767px){
@@ -46,4 +48,11 @@
 .jscreen .ta-still .ta-cap{position:static;min-height:0}
 @media (max-width:767px){.jscreen .ta-still .ta-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}.jscreen .ta-still .ta-cap{order:2}}
 @media (prefers-reduced-motion: reduce){.jscreen .ta,.jscreen .ta-act,.jscreen .ta-cap [data-phase]{transition:none}}
-
+/* sin JS (o antes de hidratar) el tramo mide lo mismo y es fijo igual: la tele enseña su fotograma de reposo
+   y se lee todo el texto; así la restauración del scroll y las anclas caen en su sitio al hidratar */
+/* movimiento reducido antes de hidratar: ya sin tramo alto, como la versión quieta que viene después */
+@media (prefers-reduced-motion: reduce){
+  .jscreen :is(#s1,#s2,#s3).ta-scene{min-height:0}
+  .jscreen .ta-grid .ta-cap{position:static;min-height:0;padding:3rem 0}
+  .jscreen .ta-tv{position:relative;top:0;height:auto;padding:3rem 0}
+}

@@ -2,7 +2,8 @@
 
 import { useTranslations } from "next-intl";
 
-const GRAD: [string, string][] = [
+/** Gradients of the «Seguir viendo» tiles; the first one is «El faro». */
+export const GRAD: [string, string][] = [
   ["#3d5486", "#7c6aae"],
   ["#a0603f", "#5e3f6e"],
   ["#2f5f6e", "#3b2a6e"],
