@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import "@/components/screen/screen.css";
 import { Button } from "@/components/Button";
 import { CONTACT_EMAIL } from "@/components/sections/Contact";
+import { TrackA } from "@/components/screen/tracks/TrackA";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -30,27 +31,13 @@ export default async function JotaScreenPage({ params }: Props) {
   const mail = (subject: string) =>
     `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
 
-  // Static text scenes. Later tasks replace these with animated tracks; each
-  // scene keeps its id and its captions as real text.
+  // Scenes 1–3 are tramo A; the rest are static text until later tasks replace
+  // them with tracks. Every scene keeps its id and its captions as real text.
   return (
     <main className="jscreen">
-      <section id="s1" className="mx-auto w-full max-w-5xl px-6 py-16 md:py-24">
-        <h1 className="font-display text-4xl font-medium text-ink md:text-6xl">
-          {t("s1.headline")}
-        </h1>
-        <p className="mt-4 max-w-[48ch] text-lg text-ink-soft">{t("s1.subhead")}</p>
-        <p className="mt-6 text-ink-soft">{t("s1.caption")}</p>
-      </section>
+      <TrackA />
 
       <div className="bg-[#211b2a] text-linen">
-        <section id="s2" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
-          <p>{t("s2.caption1")}</p>
-          <p>{t("s2.caption2")}</p>
-        </section>
-        <section id="s3" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
-          <p>{t("s3.caption1")}</p>
-          <p>{t("s3.caption2")}</p>
-        </section>
         <section id="s4" className="mx-auto w-full max-w-5xl space-y-3 px-6 py-16">
           <p>{t("s4.caption1")}</p>
           <p>{t("s4.caption2")}</p>

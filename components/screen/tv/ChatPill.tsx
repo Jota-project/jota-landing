@@ -11,6 +11,7 @@ export function ChatPill({
   orb,
   onReplay,
   replayLabel,
+  animate = true,
 }: {
   open: boolean;
   turn: Turn;
@@ -18,6 +19,8 @@ export function ChatPill({
   orb: Parameters<typeof Orb>[0]["state"];
   onReplay?: () => void;
   replayLabel: string;
+  /** false paints every word at once (final frames, no-JS render). */
+  animate?: boolean;
 }) {
   return (
     <Glass
@@ -26,7 +29,7 @@ export function ChatPill({
       orb={orb}
       footer={state.jota && onReplay ? <ReplayButton label={replayLabel} onClick={onReplay} /> : null}
     >
-      <TurnView turn={turn} state={state} active compact />
+      <TurnView turn={turn} state={state} active={animate} compact />
     </Glass>
   );
 }

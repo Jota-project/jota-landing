@@ -1,14 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "../hooks";
 
-/** Words that fade in with a blur. play=false (or reduced motion) paints them all. */
-export function Words({ text, play, gap = 230 }: { text: string; play: boolean; gap?: number }) {
+/** Words that fade in with a blur. play=false (or reduced motion) paints them all.
+ *  onWord is called as each word appears (kept in a ref so it never restarts the run). */
+export function Words({
+  text,
+  play,
+  gap = 230,
+  onWord,
+}: {
+  text: string;
+  play: boolean;
+  gap?: number;
+  onWord?: () => void;
+}) {
   const words = text.split(" ").filter(Boolean);
   const reduced = useReducedMotion();
   const [n, setN] = useState(0);
   const len = words.length;
+  const onWordRef = useRef(onWord);
+  useEffect(() => {
+    onWordRef.current = onWord;
+  });
 
   useEffect(() => {
     if (!play || reduced) return;
@@ -17,6 +32,7 @@ export function Words({ text, play, gap = 230 }: { text: string; play: boolean; 
     const step = () => {
       i += 1;
       setN(i);
+      onWordRef.current?.();
       if (i < len) timer = setTimeout(step, gap);
     };
     timer = setTimeout(step, 0);
