@@ -359,9 +359,9 @@ describe("TrackA", () => {
   it("growAt follows scene 2 on desktop and mobile heights", () => {
     // svh in px, scene heights (svh) and the TV block above the scenes on mobile (px)
     const layouts = [
-      { vh: 900, s: [160, 620, 640], above: 0 },
-      { vh: 812, s: [120, 620, 640], above: 210 },
-      { vh: 667, s: [120, 620, 640], above: 210 },
+      { vh: 900, s: [160, 550, 590], above: 0 },
+      { vh: 812, s: [120, 550, 590], above: 210 },
+      { vh: 667, s: [120, 550, 590], above: 210 },
     ];
     for (const { vh, s: [h1, h2, h3], above } of layouts) {
       const u = vh / 100;

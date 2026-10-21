@@ -1,35 +1,35 @@
 import type { ScriptEvent } from "../hooks";
 import type { TurnState } from "../tv/GlassPanel";
 
-// Pace (see tests/screen-ritmo): your words go at YOU_GAP, Jota's at JOTA_GAP; a tool card comes ~.5 s after
-// your last word; the next turn waits ≥2.5 s after the last word of Jota's answer, so it can be read.
+// Pace (see tests/screen-ritmo): your words go at YOU_GAP, Jota's at JOTA_GAP; a tool card comes .4 s after
+// your last word and runs ~.7 s; the next turn waits ≥2.5 s after the last word of Jota's answer, so it can be read.
 
 /** Scene 2 · the series: two turns in the top pill, then the live activity is born (ms). */
 export const SCENE2: ScriptEvent[] = [
-  { at: 500, id: "you1" },
-  { at: 1900, id: "tool1" },
-  { at: 3000, id: "toolDone1" },
-  { at: 3400, id: "jota1" },
-  { at: 8200, id: "you2" },
-  { at: 10100, id: "tool2" },
-  { at: 11200, id: "toolDone2" },
-  { at: 11600, id: "jota2" },
-  { at: 14100, id: "activity" },
+  { at: 300, id: "you1" },
+  { at: 1660, id: "tool1" },
+  { at: 2360, id: "toolDone1" },
+  { at: 2760, id: "jota1" },
+  { at: 7500, id: "you2" },
+  { at: 9340, id: "tool2" },
+  { at: 10040, id: "toolDone2" },
+  { at: 10440, id: "jota2" },
+  { at: 12900, id: "activity" },
 ];
 
 /** Scene 3 · spare screen: music from the first turn, the recipe web from the second (ms). */
 export const SCENE3: ScriptEvent[] = [
-  { at: 500, id: "you1" },
-  { at: 2900, id: "tool1" },
-  { at: 3300, id: "music" },
-  { at: 4100, id: "toolDone1" },
-  { at: 4500, id: "jota1" },
-  { at: 9300, id: "you2" },
-  { at: 11700, id: "tool2" },
-  { at: 12100, id: "grow" },
-  { at: 13400, id: "web" },
-  { at: 13900, id: "toolDone2" },
-  { at: 14300, id: "jota2" },
+  { at: 300, id: "you1" },
+  { at: 2620, id: "tool1" },
+  { at: 3020, id: "music" },
+  { at: 3320, id: "toolDone1" },
+  { at: 3720, id: "jota1" },
+  { at: 8460, id: "you2" },
+  { at: 10780, id: "tool2" },
+  { at: 11180, id: "grow" },
+  { at: 12480, id: "web" },
+  { at: 12980, id: "toolDone2" },
+  { at: 13380, id: "jota2" },
 ];
 
 /** What turn n has said so far. */

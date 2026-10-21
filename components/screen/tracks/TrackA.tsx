@@ -26,7 +26,9 @@ export function scrolledIn(p: number, geo: Geo): number {
   return (scroll + geo.viewH / 2 - geo.top) / geo.viewH;
 }
 
-/** Screens into scene 2 at which the «El faro» tile has filled the TV and gives way to the series. */
+/** Screens into scene 2 at which the «El faro» tile starts filling the TV (and the script starts, over it), and at
+ *  which it has filled it and gives way to the series. */
+export const GROW_FULL = 0.25;
 export const GROW_END = 0.7;
 
 /** The «El faro» tile leaves Inicio, fills the TV and gives way to the series over scene 2's first screen,
@@ -34,7 +36,7 @@ export const GROW_END = 0.7;
  *  for .45 screen (~1.1 s at a calm pace), long enough for its 1.3 s grow (its curve has settled by then). */
 export function growAt(d: number): GrowPhase {
   if (d < 0.1) return "hidden";
-  if (d < 0.25) return "small";
+  if (d < GROW_FULL) return "small";
   if (d < GROW_END) return "full";
   return "gone";
 }
@@ -155,7 +157,8 @@ export function TrackA() {
   const holds2 = started[2] && !fin[2] && b2.inView;
   const holds3 = started[3] && !fin[3] && b3.inView;
   const active: Scene = nominal !== 2 && holds2 ? 2 : nominal !== 3 && holds3 ? 3 : nominal;
-  const ready2 = grow === "gone";
+  // the script starts as the tile fills the TV (no dead scroll waiting for it to fade into the series)
+  const ready2 = grow === "full" || grow === "gone";
   const play2 = active === 2 && ready2;
   const play3 = active === 3;
   if ((play2 && !started[2]) || (play3 && !started[3])) {
@@ -174,7 +177,13 @@ export function TrackA() {
     setFade(true);
   }
   // once started or skipped, scene 2 always shows its series (never back to Inicio)
-  const final2 = reduced || started[2] || active > 2;
+  // the tile has given way to the series once while scene 2 was on the TV
+  const [grown, setGrown] = useState(false);
+  if (!grown && active === 2 && grow === "gone") setGrown(true);
+  // once started, the tile goes on growing to its end (it never shrinks back to Inicio); once grown, finished or
+  // skipped, scene 2 always shows its series
+  const final2 = reduced || grown || s2.finished || active > 2;
+  const grow2: GrowPhase = final2 ? "gone" : started[2] ? (grow === "gone" ? "gone" : "full") : grow;
 
   // the activity ring counts down from its birth in scene 2, through scene 3, while the track is on screen
   const born = s2.done.has("activity");
@@ -211,7 +220,7 @@ export function TrackA() {
           finished={staticFrame || s2.finished}
           animate={!staticFrame && play2 && !s2.finished}
           ring={staticFrame ? 1 : ring}
-          grow={staticFrame || final2 ? "gone" : grow}
+          grow={staticFrame ? "gone" : grow2}
           live={!staticFrame && active === 2 && trackView.inView}
         />
       );

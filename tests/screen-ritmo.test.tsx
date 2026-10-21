@@ -7,7 +7,7 @@ import en from "../messages/en.json";
 import { SCENE2, SCENE3 } from "@/components/screen/tracks/scriptsA";
 import { JOTA_GAP, YOU_GAP } from "@/components/screen/tv/Words";
 import { TurnView, type Turn } from "@/components/screen/tv/GlassPanel";
-import { GROW_END, HOLD_LINE, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
+import { GROW_END, GROW_FULL, HOLD_LINE, growAt, openingAt, scrolledIn } from "@/components/screen/tracks/TrackA";
 import { FLY_FROM, FLY_SPAN } from "@/components/screen/tracks/ScenesB";
 import { digitsAt, phaseOf } from "@/components/screen/tracks/TrackB";
 
@@ -92,8 +92,8 @@ describe("the scroll leaves time", () => {
 
   for (const [label, src] of [["desktop", a], ["mobile", mobile]] as const) {
     it(`${label}: each script ends inside its scene at one screen every 2.5 s`, () => {
-      // scene 2 plays once the tile has grown and holds the TV until scene 3 covers all but HOLD_LINE of the screen
-      expect((h(src, "s2") - GROW_END + HOLD_LINE) * PACE).toBeGreaterThanOrEqual(end2);
+      // scene 2 plays once the tile fills the TV and holds it until scene 3 covers all but HOLD_LINE of the screen
+      expect((h(src, "s2") - GROW_FULL + HOLD_LINE) * PACE).toBeGreaterThanOrEqual(end2);
       // scene 3 starts at mid-screen; the TV leaves with the track's bottom (half a screen early), held until
       // HOLD_LINE of it has gone
       expect((h(src, "s3") - 0.5 + HOLD_LINE) * PACE).toBeGreaterThanOrEqual(end3);
@@ -115,6 +115,7 @@ describe("scroll-driven phases", () => {
     expect(growAt(-0.01)).toBe("hidden");
     expect(growAt(0.05)).toBe("hidden");
     expect(growAt(0.15)).toBe("small");
+    expect(growAt(GROW_FULL)).toBe("full");
     expect(growAt(0.4)).toBe("full");
     expect(growAt(GROW_END - 0.01)).toBe("full");
     expect(growAt(GROW_END)).toBe("gone");
