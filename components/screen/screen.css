@@ -150,3 +150,46 @@
   .jscreen .tv-tc{animation:none}
   .jscreen .tv-zone,.jscreen .tv-reposo,.jscreen .tv-act{transition:none}
 }
+
+/* ---------- Cristal (panel) y píldora ---------- */
+.jscreen .tv-glass{position:absolute;inset:0;pointer-events:none;--ease:cubic-bezier(.32,.72,0,1)}
+.jscreen .tv-halo{position:absolute;left:0;top:0;width:0;height:0;border-radius:48px;z-index:3;pointer-events:none;box-shadow:0 2px 6px rgba(10,6,16,.35),0 30px 70px -18px rgba(10,6,16,.6);transition:opacity .6s}
+.jscreen .tv-body{position:absolute;left:0;top:0;width:0;height:0;border-radius:48px;z-index:4;pointer-events:none;overflow:hidden;
+  background:rgba(42,34,51,.86);
+  background:color-mix(in srgb,var(--sheet) calc(var(--tint)*100%),transparent);
+  -webkit-backdrop-filter:blur(42px) saturate(1.7) brightness(var(--br,.5));backdrop-filter:blur(42px) saturate(1.7) brightness(var(--br,.5));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 0 0 .5px rgba(255,255,255,.08);transition:opacity .6s,background-color 1.2s}
+.jscreen .tv-body::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,color-mix(in srgb,var(--la) 12%,transparent),transparent 55%),linear-gradient(315deg,color-mix(in srgb,var(--lb) 10%,transparent),transparent 55%)}
+.jscreen .tv-body::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 38%,rgba(0,0,0,.10))}
+/* cerrado: invisible y sin backdrop-filter */
+.jscreen .tv-glass[data-open=false] :is(.tv-halo,.tv-body){opacity:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+.jscreen .tv-glass[data-open=false] .tv-sheet{visibility:hidden;transition:visibility 0s .6s}
+.jscreen .tv-sheet{position:absolute;z-index:5;display:flex;pointer-events:auto;transition:top .9s var(--ease),width .9s var(--ease)}
+.jscreen .tv-sheet>*{transition:opacity .6s .3s var(--ease)}
+.jscreen .tv-glass[data-open=false] .tv-sheet>*{opacity:0;transition:opacity .3s}
+.jscreen .tv-glass[data-form=panel] .tv-sheet{right:96px;top:90px;width:640px;max-height:900px;flex-direction:column;padding:34px 44px 40px;gap:22px}
+.jscreen .tv-glass[data-form=pill] .tv-sheet{left:0;right:0;margin:0 auto;top:48px;width:fit-content;min-width:880px;max-width:1120px;flex-direction:row;align-items:flex-start;gap:26px;padding:26px 46px 28px 30px}
+.jscreen .tv-hd{display:flex;align-items:center;gap:18px;flex:none}
+.jscreen .tv-glass[data-form=pill] .tv-hd{padding-top:6px}
+.jscreen .tv-log{display:flex;flex-direction:column;gap:36px;min-height:0;flex:1 1 auto;overflow:hidden}
+.jscreen .tv-log.over{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 56px);mask-image:linear-gradient(180deg,transparent 0,#000 56px)}
+.jscreen .tv-glass[data-form=pill] .tv-log{max-height:186px;gap:12px;justify-content:flex-end}
+.jscreen .tv-glass[data-form=pill] .tv-log.over{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 45%);mask-image:linear-gradient(180deg,transparent 0,#000 45%)}
+.jscreen .tv-tn{display:flex;flex-direction:column;gap:14px;transition:opacity .8s var(--ease)}
+.jscreen .tv-tn:not(:last-of-type) :is(.tv-u,.tv-j){color:#a39cad}
+.jscreen .tv-u{margin:0;font:380 32px/1.25 var(--tv-serif);font-variation-settings:'opsz' 72;color:var(--t-you)}
+.jscreen .tv-j{margin:0;font:380 44px/1.18 var(--tv-serif);font-variation-settings:'opsz' 144;color:var(--t-main);text-wrap:pretty}
+.jscreen .tv-glass[data-form=pill] .tv-u{font-size:30px}
+.jscreen .tv-glass[data-form=pill] .tv-j{font-size:40px}
+.jscreen .tv-glass[data-form=pill] .orbe{width:44px;height:44px}
+.jscreen .tv-glass[data-form=pill] .orbe[data-state=think]::after{animation-name:tv-sat2}
+@keyframes tv-sat2{to{transform:rotate(360deg) translateY(-28px)}}
+.jscreen .tv-replay{align-self:flex-start;appearance:none;border:0;cursor:pointer;font:500 22px/1 var(--tv-sans);color:var(--t-soft);
+  background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.14);padding:10px 20px;border-radius:999px;transition:background-color .2s}
+.jscreen .tv-replay:hover{background:rgba(255,255,255,.12)}
+.jscreen .tv-replay:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.jscreen .tv-stage{--tint:.97}}
+@media (prefers-contrast:more),(prefers-reduced-transparency:reduce),(forced-colors:active){.jscreen .tv-stage{--tint:.97}.jscreen .tv-body{-webkit-backdrop-filter:none;backdrop-filter:none}}
+/* viewport pequeño: fondo sólido translúcido en vez de backdrop-filter */
+@media (max-width:767px){.jscreen .tv-body{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(42,34,51,.94);background:color-mix(in srgb,var(--sheet) 94%,transparent)}}
+@media (prefers-reduced-motion: reduce){.jscreen .tv-tn,.jscreen .tv-sheet,.jscreen .tv-sheet>*{transition:none}}
