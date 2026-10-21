@@ -382,6 +382,7 @@ describe("TrackA", () => {
     sc.toQ3(1);
     expect(Number(ta.style.getPropertyValue("--q3"))).toBeCloseTo(1, 1);
     expect(container.querySelector(".ta-tv .ta-meter")).not.toBeNull();
+    expect(container.querySelector(".ta > .ta-unit")).not.toBeNull();
     sc.restore();
   });
 

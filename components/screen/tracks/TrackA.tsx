@@ -14,15 +14,19 @@ const ALL3 = new Set(SCENE3.map((e) => e.id));
 // a horizontal line across the middle of the viewport decides the active scene
 const MID = { rootMargin: "-50% 0px -50% 0px" };
 
-/** Where a scene sits in the track (px): track height, viewport height, top and height of its section. */
-export type Geo = { trackH: number; viewH: number; top: number; height: number };
+/** Where a scene sits in the track (px): track height, viewport height, top and height of its section, and the
+ *  screen unit (100svh in px, measured on a probe; the viewport height when it is missing). The sections are in svh,
+ *  so q is counted in svh: on iOS, with the toolbar collapsed, innerHeight is taller than 100svh and changes as the
+ *  toolbar moves, but a scene still measures its svh length and q does not jump. */
+export type Geo = { trackH: number; viewH: number; top: number; height: number; unit?: number };
 
 /** Screens scrolled since a scene's top crossed the middle of the viewport (when it takes the TV), from the track
  *  progress p and the layout. Works for any heights; with no layout yet it is far past the scene's end. */
 export function scrolledIn(p: number, geo: Geo): number {
   if (geo.height <= 0 || geo.viewH <= 0) return 99;
   const scroll = p * Math.max(0, geo.trackH - geo.viewH);
-  return (scroll + geo.viewH / 2 - geo.top) / geo.viewH;
+  const unit = geo.unit && geo.unit > 0 ? geo.unit : geo.viewH;
+  return (scroll + geo.viewH / 2 - geo.top) / unit;
 }
 
 /** Screens into scene 2 at which the «El faro» tile starts filling the TV (and the script starts, over it), and at
@@ -55,7 +59,8 @@ export function openingAt(p: number, geo: Geo): number {
 
 const NO_GEO: Geo = { trackH: 0, viewH: 0, top: 0, height: 0 };
 
-/** Measures a scene inside the track (on mount and whenever the track resizes). */
+/** Measures a scene inside the track and the screen unit (its .ta-unit probe, 100svh tall), on mount and whenever
+ *  the track, the probe or the window resize. */
 function useGeo(track: RefObject<HTMLElement | null>, scene: RefObject<HTMLElement | null>): Geo {
   const [geo, setGeo] = useState<Geo>(NO_GEO);
   useEffect(() => {
@@ -65,15 +70,24 @@ function useGeo(track: RefObject<HTMLElement | null>, scene: RefObject<HTMLEleme
     const measure = () => {
       const a = el.getBoundingClientRect();
       const b = s2.getBoundingClientRect();
-      const next = { trackH: a.height, viewH: window.innerHeight, top: b.top - a.top, height: b.height };
+      const u = probe?.getBoundingClientRect().height ?? 0;
+      const next: Geo = { trackH: a.height, viewH: window.innerHeight, top: b.top - a.top, height: b.height, unit: u };
       setGeo((g) =>
-        g.trackH === next.trackH && g.viewH === next.viewH && g.top === next.top && g.height === next.height ? g : next,
+        g.trackH === next.trackH &&
+        g.viewH === next.viewH &&
+        g.top === next.top &&
+        g.height === next.height &&
+        g.unit === next.unit
+          ? g
+          : next,
       );
     };
+    const probe = el.querySelector<HTMLElement>(":scope > .ta-unit");
     measure();
     window.addEventListener("resize", measure);
     const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
     ro?.observe(el);
+    if (probe) ro?.observe(probe);
     return () => {
       window.removeEventListener("resize", measure);
       ro?.disconnect();
@@ -282,6 +296,8 @@ export function TrackA() {
   return (
     <div ref={track} className="ta" data-sticky="true" data-active={active}>
       <Progress track={track} scene2={r2} scene3={r3} onStep={setStep} />
+      {/* 100svh, hidden: the unit the scenes are measured in */}
+      <i className="ta-unit" aria-hidden="true" />
       <i className="ta-dusk" aria-hidden="true" />
       <div className="ta-grid">
         <div className="ta-tv">

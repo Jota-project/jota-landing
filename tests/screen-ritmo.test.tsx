@@ -209,6 +209,30 @@ describe("scroll-driven phases", () => {
     expect(scrolledIn(0, { trackH: 0, viewH: 0, top: 0, height: 0 })).toBeGreaterThan(GROW_END);
   });
 
+  it("a scene measures its svh length in screens whatever innerHeight is (iOS toolbar collapsed or not)", () => {
+    const svh = 800;
+    for (const viewH of [800, 904, 860]) {
+      // s1 130, s2 300, s3 320svh
+      const geo = { trackH: 7.5 * svh, viewH, top: 1.3 * svh, height: 3 * svh, unit: svh };
+      const span = geo.trackH - viewH;
+      // scene 2 takes the TV when its top reaches mid-screen, scene 3 when its own does
+      const at2 = (geo.top - viewH / 2) / span;
+      const at3 = (geo.top + geo.height - viewH / 2) / span;
+      expect(scrolledIn(at2, geo)).toBeCloseTo(0);
+      expect(scrolledIn(at3, geo)).toBeCloseTo(3);
+      // so every event lands at the same scroll, in svh, toolbar or not
+      expect(scrolledIn(at2 + (0.85 * svh) / span, geo)).toBeCloseTo(0.85);
+    }
+    // no probe measured: the viewport height is the unit
+    expect(scrolledIn(0.5, { trackH: 2000, viewH: 500, top: 500, height: 500 })).toBeCloseTo(
+      scrolledIn(0.5, { trackH: 2000, viewH: 500, top: 500, height: 500, unit: 0 }),
+    );
+  });
+
+  it("the unit comes from a hidden 100svh probe in tramo A", () => {
+    expect(css("screen-track-a.css")).toMatch(/\.jscreen \.ta-unit\{position:absolute;[^}]*height:100svh;visibility:hidden/);
+  });
+
   it("the opening (TV grows, linen → dusk) eases in and ends before scene 2 takes the TV", () => {
     for (const geo of [
       { trackH: 14000, viewH: 900, top: 1440, height: 5580 },
