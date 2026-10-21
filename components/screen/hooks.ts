@@ -101,7 +101,9 @@ export function useScript(
   const [finished, setFinished] = useState(false);
   const eventsRef = useRef(events);
   const speedRef = useRef(speed);
+  const skipRef = useRef(skip);
   useEffect(() => {
+    skipRef.current = skip;
     eventsRef.current = events;
     speedRef.current = speed;
   });
@@ -144,10 +146,21 @@ export function useScript(
     if (play && !started.current) run();
   }, [skip, play, run, clear]);
 
-  useEffect(() => clear, [clear]);
+  useEffect(
+    () => () => {
+      clear();
+      started.current = false;
+    },
+    [clear],
+  );
 
   const replay = useCallback(() => {
     clear();
+    if (skipRef.current) {
+      setDone(new Set(eventsRef.current.map((e) => e.id)));
+      setFinished(true);
+      return;
+    }
     setDone(new Set());
     setFinished(false);
     run();

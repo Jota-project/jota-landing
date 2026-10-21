@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { act, renderHook } from "@testing-library/react";
+import { StrictMode } from "react";
 import { useInView, useReducedMotion, useScript, useTrackProgress } from "@/components/screen/hooks";
 
 type IOCb = (entries: Partial<IntersectionObserverEntry>[]) => void;
@@ -98,6 +99,23 @@ describe("useScript", () => {
     expect(result.current.finished).toBe(false);
     act(() => void vi.advanceTimersByTime(500));
     expect(result.current.finished).toBe(true);
+  });
+
+  it("plays to the end under StrictMode", () => {
+    const { result } = renderHook(() => useScript(evs, { play: true, skip: false }), {
+      wrapper: StrictMode,
+    });
+    act(() => void vi.advanceTimersByTime(500));
+    expect([...result.current.done].sort()).toEqual(["a", "b"]);
+    expect(result.current.finished).toBe(true);
+  });
+
+  it("replay under skip keeps the final state", () => {
+    const { result } = renderHook(() => useScript(evs, { play: true, skip: true }));
+    act(() => result.current.replay());
+    expect(result.current.done.size).toBe(2);
+    expect(result.current.finished).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it("clears timers on unmount", () => {
