@@ -203,6 +203,7 @@ describe("TV screens", () => {
   it("WebReceta shows the recipe site and its loading state", () => {
     wrap(<WebReceta loading />);
     expect(screen.getByText("cocinadecasa.example")).toBeTruthy();
+    expect(screen.getByText("Cocina de casa")).toBeTruthy();
     expect(screen.getByTestId("tv-web").getAttribute("data-loading")).toBe("true");
   });
 

@@ -236,7 +236,8 @@
       "recipeName": "Home Kitchen",
       "recipeNav1": "Recipes",
       "recipeNav2": "Menus",
-      "recipeNav3": "Saved"
+      "recipeNav3": "Saved",
+      "weatherLine": "18°, partly cloudy"
     },
     "remote": {
       "room": "Living room",

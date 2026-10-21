@@ -35,14 +35,14 @@ export function Inicio({ focus = 0 }: { focus?: number }) {
   const [a, b] = GRAD[f];
 
   return (
-    <div className="tv-inicio" style={{ ["--ca" as string]: a, ["--cb" as string]: b }}>
-      <i className="tv-ini-orb a" aria-hidden="true" />
-      <i className="tv-ini-orb b" aria-hidden="true" />
+    <div className="tv-inicio">
+      <i className="tv-ini-orb a" aria-hidden="true" style={{ ["--ca" as string]: a }} />
+      <i className="tv-ini-orb b" aria-hidden="true" style={{ ["--cb" as string]: b }} />
 
       <div className="tv-ini-top">
         <span className="tv-ini-clock">21:40</span>
         <span className="tv-ini-wx">
-          {t("weather")}, {t("weatherDetail").toLowerCase()}
+          {t("weatherLine")}
         </span>
         <div className="tv-ini-hint">
           <i className="tv-ini-dot" aria-hidden="true" />
@@ -68,7 +68,7 @@ export function Inicio({ focus = 0 }: { focus?: number }) {
               data-focus={i === f ? "true" : "false"}
               style={{ background: `linear-gradient(135deg,${GRAD[i][0]},${GRAD[i][1]})` }}
             >
-              {it.title.length <= 16 && <span>{it.title}</span>}
+              <span>{it.title}</span>
             </div>
             <div className="tv-ini-prog">
               <b style={{ transform: `scaleX(${PROGRESS[i]})` }} />
