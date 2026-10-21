@@ -22,9 +22,9 @@ export function WebReceta({ loading }: { loading: boolean }) {
         <b style={{ width: "78%" }} />
       </div>
       <div className="gal" aria-hidden="true">
-        <i style={{ background: "#c9b27c" }} />
+        <i style={{ background: "#d98a3c" }} />
         <i style={{ background: "#8fae8b" }} />
-        <i style={{ background: "#d08d6f" }} />
+        <i style={{ background: "#e8b86c" }} />
       </div>
     </div>
   );
