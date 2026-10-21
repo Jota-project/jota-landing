@@ -63,9 +63,10 @@
   --base:#211b2a;--clock:#d9d1dc;--dsoft:#bab2c4;--dacc:#c3b7e3;--pillbg:#2a2433;--orb:.42;--mbase:#1a1420;
   background:var(--base);color:var(--text);overflow:hidden;font:400 16px/1.5 var(--sans);
   --la:#7c6aae;--lb:#6e8cc4;--sheet:#2a2233;--tint:.76;--br:.6;--t-main:#ddd6d0;--t-you:#c3b7e3;--t-soft:#d0c9d9}
-/* sin JS (y antes del primer efecto) la escala sale del ancho del marco: tan(atan2(a,b)) = a/b sin unidades */
+/* sin JS (antes de hidratar) la escala sale del ancho del marco: tan(atan2(a,b)) = a/b sin unidades. Solo entonces:
+   WebKit (Safari, todo iOS) lo calcula mal y dejaría el lienzo en miniatura; hidratado manda --s, medido por TvFrame */
 @supports (transform:scale(tan(atan2(1px,1px)))){
-  .jscreen .tv-stage{transform:scale(tan(atan2(100cqw,1920px)))}
+  .jscreen:not([data-hydrated]) .tv-stage{transform:scale(tan(atan2(100cqw,1920px)))}
 }
 /* controles reales sobre la tele, fuera del lienzo aria-hidden */
 .jscreen .tv-over{position:absolute;right:.75rem;bottom:.75rem;z-index:6;display:flex;gap:.5rem}
@@ -73,7 +74,7 @@
 .jscreen .tv-over .tv-replay:hover{background:rgba(45,38,55,.9)}
 .jscreen .tv-over .tv-replay[aria-disabled=true]{opacity:.55;cursor:default}
 /* sobre la barra de progreso de la serie (bottom 70–76 del lienzo de 1920) a cualquier tamaño */
-.jscreen .tv-over .tv-replay[data-lift=true]{margin-bottom:calc(100cqw*120/1920)}
+.jscreen .tv-over .tv-replay[data-lift=true]{margin-bottom:calc(var(--s,.5)*120px)}
 /* zona táctil de 24px como mínimo sin agrandar la pastilla */
 .jscreen .tv-over .tv-replay{position:relative}
 .jscreen .tv-over .tv-replay::after{content:"";position:absolute;left:0;right:0;top:50%;height:max(100%,24px);transform:translateY(-50%)}

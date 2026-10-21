@@ -4,9 +4,10 @@
 .jscreen .ph-vp{--ps:.5;container-type:inline-size;position:relative;width:100%;aspect-ratio:390/844;border-radius:calc(48px*var(--ps));overflow:hidden;background:var(--bg);pointer-events:none;
   box-shadow:0 0 0 calc(9px*var(--ps)) #0e0b13,0 0 0 calc(10px*var(--ps)) rgba(246,243,240,.12),0 30px 70px rgba(0,0,0,.5)}
 .jscreen .ph-screen{position:absolute;left:0;top:0;width:390px;height:844px;transform:scale(var(--ps));transform-origin:0 0;overflow:hidden;color:var(--text);font:500 15px/1.3 var(--sans);-webkit-font-smoothing:antialiased}
-/* sin JS el lienzo también escala (el marco usa --ps, que sin JS vale .5) */
+/* sin JS (antes de hidratar) el lienzo también escala (el marco usa --ps, que sin JS vale .5); hidratado manda --ps,
+   medido por PhoneFrame: WebKit (Safari, todo iOS) calcula mal tan(atan2()) con cqw */
 @supports (transform:scale(tan(atan2(1px,1px)))){
-  .jscreen .ph-screen{transform:scale(tan(atan2(100cqw,390px)))}
+  .jscreen:not([data-hydrated]) .ph-screen{transform:scale(tan(atan2(100cqw,390px)))}
 }
 .jscreen .mn{position:absolute;inset:0;background:var(--bg);--ca:#3d6f8c;--cb:#7c6aae}
 .jscreen .mn-amb{position:absolute;inset:0;overflow:hidden}

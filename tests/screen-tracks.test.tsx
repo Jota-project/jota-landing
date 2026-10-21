@@ -522,10 +522,21 @@ describe("no-JS and CSS fallbacks", () => {
   it("TV and phone canvases scale with container units, without JS", () => {
     const tv = css("screen-tv.css");
     expect(tv).toMatch(/\.tv-vp\{[^}]*container-type:inline-size/);
-    expect(tv).toMatch(/@supports[^{]*atan2[^{]*\{\s*\.jscreen \.tv-stage\{transform:scale\(tan\(atan2\(100cqw,1920px\)\)\)/);
+    expect(tv).toMatch(/@supports[^{]*atan2[^{]*\{\s*\.jscreen:not\(\[data-hydrated\]\) \.tv-stage\{transform:scale\(tan\(atan2\(100cqw,1920px\)\)\)/);
     const b = css("screen-track-b.css");
     expect(b).toMatch(/\.ph-vp\{[^}]*container-type:inline-size/);
-    expect(b).toMatch(/@supports[^{]*atan2[^{]*\{[^@]*\.ph-screen\{[^}]*tan\(atan2\(100cqw,390px\)\)/);
+    expect(b).toMatch(/@supports[^{]*atan2[^{]*\{[^@]*\.jscreen:not\(\[data-hydrated\]\) \.ph-screen\{[^}]*tan\(atan2\(100cqw,390px\)\)/);
+  });
+
+  it("WebKit: the trig/cqw scale only applies before hydration; hydrated, the JS-measured --s/--ps rule", () => {
+    // Safari (every iPhone browser) gets tan(atan2(100cqw,…)) wrong and the TV shrank to a thumbnail
+    for (const f of ["screen-tv.css", "screen-track-b.css"]) {
+      const src = css(f);
+      const rules = [...src.matchAll(/([^{}]+)\{[^{}]*(?:atan2|cqw)[^{}]*\}/g)].map((m) => m[1].trim());
+      for (const sel of rules) expect(sel, f).toMatch(/:not\(\[data-hydrated\]\)/);
+    }
+    expect(css("screen-tv.css")).toMatch(/\.tv-stage\{[^}]*transform:scale\(var\(--s\)\)/);
+    expect(css("screen-track-b.css")).toMatch(/\.ph-screen\{[^}]*transform:scale\(var\(--ps\)\)/);
   });
 
   it("sections keep their heights before hydration (no layout jump)", () => {
