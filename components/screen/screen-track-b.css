@@ -160,8 +160,9 @@
   .jscreen .tb-phone{position:absolute;right:.5rem;top:var(--tb-pht);width:26vw}
   /* aquí el móvil entra solo con opacidad: un desplazamiento lo bajaría sobre el texto */
   .jscreen[data-hydrated] .tb-live .tb-phone{transform:none}
-  .jscreen #s4.tb-scene{min-height:225svh}
-  .jscreen #s5.tb-scene{min-height:225svh}
+  /* lo mismo que en escritorio: cada zona del mando y el segundo texto necesitan el mismo tiempo */
+  .jscreen #s4.tb-scene{min-height:300svh}
+  .jscreen #s5.tb-scene{min-height:300svh}
   .jscreen .tb-cap{top:calc(4.5rem + var(--tb-low) + 1rem);min-height:0;padding:1.5rem 0;font-size:1.0625rem}
   .jscreen .tb-still .tb-row{grid-template-columns:minmax(0,1fr);padding:2.5rem 1rem}
   .jscreen .tb-still .tb-cap{order:2}

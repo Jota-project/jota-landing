@@ -104,6 +104,10 @@ describe("the scroll leaves time", () => {
     const b = css("screen-track-b.css");
     expect(b).toMatch(/#s4\.tb-scene\{grid-row:1;min-height:300svh\}/);
     expect(b).toMatch(/#s5\.tb-scene\{grid-row:2;min-height:300svh\}/);
+    // mobile keeps the same length: each remote phase and the second caption need the same time
+    const mb = b.slice(b.indexOf("@media (max-width:1023px)"));
+    expect(mb).toMatch(/#s4\.tb-scene\{min-height:300svh\}/);
+    expect(mb).toMatch(/#s5\.tb-scene\{min-height:300svh\}/);
     const end = css("screen-end.css");
     expect(end).toMatch(/\.jscreen \.tck\{position:relative;height:220svh/);
     expect(end).toMatch(/\.jscreen \.tdk\{position:relative;height:220svh/);
