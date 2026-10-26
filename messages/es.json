@@ -6,7 +6,7 @@
     "team": "Equipo",
     "contact": "Contacto",
     "skipToContent": "Saltar al contenido",
-    "screen": "J-Screen"
+    "screen": "Jota-Screen"
   },
   "hero": {
     "eyebrow": "Agente personal con voz",
@@ -51,7 +51,7 @@
     "card4": "Es tu agente de código: revisa, te recuerda tareas pendientes y te frena un commit si algo falta por mirar.",
     "card5": "Te recuerda lo que tienes a medias y retoma el hilo donde lo dejasteis.",
     "closing": "Y como se apoya en OpenClaw, lo que hoy no hace, se le puede enseñar.",
-    "screenLink": "Ver J-Screen"
+    "screenLink": "Ver Jota-Screen"
   },
   "why": {
     "eyebrow": "Por qué ahora",
@@ -114,8 +114,8 @@
   },
   "screen": {
     "meta": {
-      "title": "J-Screen — Le hablas. La tele se encarga.",
-      "description": "J-Screen convierte la tele que ya tienes en la pantalla de Jota: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
+      "title": "Jota-Screen — Le hablas. La tele se encarga.",
+      "description": "Jota-Screen convierte la tele que ya tienes en la pantalla de Jota: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
     },
     "s1": {
       "headline": "Le hablas. La tele se encarga.",
@@ -145,14 +145,14 @@
     },
     "s6": {
       "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
-      "line2": "J-Screen pone la pantalla; J-Gateway escucha, piensa y te contesta.",
+      "line2": "Jota-Screen pone la pantalla; Jota-Gateway escucha, piensa y te contesta.",
       "soon": "Muy pronto: un script y una instalación guiada.",
       "network": "Todo en tu red. Fuera de casa, con conexión segura.",
-      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; J-Gateway escucha, piensa y contesta, y habla con tu móvil.",
+      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; Jota-Gateway escucha, piensa y contesta, y habla con tu móvil.",
       "pc": "Mini PC o portátil",
       "hdmi": "HDMI",
       "tv": "Tu tele",
-      "gateway": "J-Gateway",
+      "gateway": "Jota-Gateway",
       "listen": "Escucha",
       "think": "Piensa",
       "answer": "Contesta",

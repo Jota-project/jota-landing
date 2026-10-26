@@ -109,7 +109,7 @@ describe("Nav", () => {
       "href",
       "/#what",
     );
-    expect(screen.getByRole("link", { name: "J-Screen" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Jota-Screen" })).toHaveAttribute(
       "href",
       "/jota-screen",
     );
