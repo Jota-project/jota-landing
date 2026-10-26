@@ -6,7 +6,7 @@
     "team": "Team",
     "contact": "Contact",
     "skipToContent": "Skip to content",
-    "screen": "J-Screen"
+    "screen": "Jota-Screen"
   },
   "hero": {
     "eyebrow": "Personal agent with a voice",
@@ -51,7 +51,7 @@
     "card4": "Acts as your coding agent: reviews, reminds you of open tasks and stops a commit if something's left to check.",
     "card5": "Reminds you what's unfinished and picks up where you left off.",
     "closing": "And because it's built on OpenClaw, what it can't do yet, you can teach it.",
-    "screenLink": "See J-Screen"
+    "screenLink": "See Jota-Screen"
   },
   "why": {
     "eyebrow": "Why now",
@@ -114,8 +114,8 @@
   },
   "screen": {
     "meta": {
-      "title": "J-Screen — You talk. The TV handles it.",
-      "description": "J-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
+      "title": "Jota-Screen — You talk. The TV handles it.",
+      "description": "Jota-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
     },
     "s1": {
       "headline": "You talk. The TV handles it.",
@@ -145,14 +145,14 @@
     },
     "s6": {
       "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
-      "line2": "J-Screen provides the screen; J-Gateway listens, thinks and answers you.",
+      "line2": "Jota-Screen provides the screen; Jota-Gateway listens, thinks and answers you.",
       "soon": "Coming soon: a script and a guided install.",
       "network": "All on your network. Away from home, over a secure connection.",
-      "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; J-Gateway listens, thinks and answers, and talks to your phone.",
+      "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; Jota-Gateway listens, thinks and answers, and talks to your phone.",
       "pc": "Mini PC or laptop",
       "hdmi": "HDMI",
       "tv": "Your TV",
-      "gateway": "J-Gateway",
+      "gateway": "Jota-Gateway",
       "listen": "Listens",
       "think": "Thinks",
       "answer": "Answers",
