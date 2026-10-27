@@ -31,9 +31,8 @@
 
 .hm-said{font-family:var(--font-display,var(--font-fraunces),serif);font-size:clamp(1.35rem,2.6vw,1.75rem);line-height:1.2;font-weight:500;min-height:2.4em}
 .hm-answer{min-height:1.6em}
-.hm-said .tv-w,.hm-answer .tv-w{display:inline-block;margin-right:.26em;opacity:0;filter:blur(4px);transition:opacity .45s var(--ease-out,cubic-bezier(.23,1,.32,1)),filter .45s var(--ease-out,cubic-bezier(.23,1,.32,1))}
-.hm-said .tv-w.in,.hm-answer .tv-w.in{opacity:1;filter:none}
-@media (max-width:700px){.hm-said .tv-w,.hm-answer .tv-w{filter:none}}
+.hm-said .tv-w,.hm-answer .tv-w{display:inline-block;margin-right:.26em;opacity:0;transition:opacity .45s var(--ease-out,cubic-bezier(.23,1,.32,1))}
+.hm-said .tv-w.in,.hm-answer .tv-w.in{opacity:1}
 
 .hm-tool{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-size:.88rem;
   transition:opacity .9s var(--ease-drawer,cubic-bezier(.32,.72,0,1)),transform .9s var(--ease-drawer,cubic-bezier(.32,.72,0,1))}
