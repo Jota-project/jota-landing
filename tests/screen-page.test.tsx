@@ -101,26 +101,16 @@ describe("Nav", () => {
     );
   }
 
-  it("Nav points to home sections from the product page", async () => {
+  it("Nav links the three sections and marks the current one", async () => {
     const { Nav } = await import("@/components/Nav");
     pathname.value = "/jota-screen";
-    const { unmount } = renderNav(Nav);
-    expect(screen.getByRole("link", { name: "What it can do" })).toHaveAttribute(
-      "href",
-      "/#what",
-    );
-    expect(screen.getByRole("link", { name: "J-Screen" })).toHaveAttribute(
-      "href",
-      "/jota-screen",
-    );
-    unmount();
-
-    pathname.value = "/";
     renderNav(Nav);
-    expect(screen.getByRole("link", { name: "What it can do" })).toHaveAttribute(
-      "href",
-      "#what",
-    );
+    const [screenLink] = screen.getAllByRole("link", { name: "Jota-Screen" });
+    expect(screenLink).toHaveAttribute("href", "/jota-screen");
+    expect(screenLink).toHaveAttribute("aria-current", "page");
+    expect(screen.getAllByRole("link", { name: "DIY" })[0]).toHaveAttribute("href", "/diy");
+    expect(screen.getByRole("link", { name: "Install it" })).toHaveAttribute("href", "/diy");
+    expect(screen.getByRole("link", { name: "Go to home" })).toHaveAttribute("href", "/");
   });
 });
 
