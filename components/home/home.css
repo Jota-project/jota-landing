@@ -1,0 +1,81 @@
+/* Home: the TV of the hero, the house at dusk (TV, speaker, phone) and the flat sections after it.
+   The canvases come from /jota-screen (.jscreen); only transform and opacity animate. */
+
+/* ---------- hero ---------- */
+.hm-tv{display:flex;flex-direction:column;gap:14px}
+.hm-tv .tv-vp{box-shadow:0 30px 80px -30px rgba(33,27,42,.55)}
+/* the TV is drawn at 1920px and shrunk to a third: the pill grows so its words read at hero size */
+.hm-tv .tv-glass{transform:scale(1.5);transform-origin:50% 40px}
+@media (max-width:640px){.hm-tv .tv-glass{transform:scale(1.7)}}
+.hm-cap{font-size:.92rem;line-height:1.5;color:var(--color-ink-soft,#6a6377);max-width:52ch;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.hm-replay{font:inherit;font-weight:600;color:var(--color-malva-text,#67569a);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:4px;
+  animation:hm-in .4s var(--ease-out,cubic-bezier(.23,1,.32,1)) both}
+.hm-replay:focus-visible{outline:2px solid var(--color-malva,#7c6aae);outline-offset:3px;border-radius:4px}
+@keyframes hm-in{from{opacity:0}}
+
+/* ---------- the house ---------- */
+.hm-grid{display:grid;gap:40px 32px;grid-template-columns:repeat(12,minmax(0,1fr));align-items:start}
+.hm-cell{display:flex;flex-direction:column;gap:12px;min-width:0}
+.hm-cell-tv{grid-column:1/8;grid-row:1/3}
+.hm-cell-voice{grid-column:8/13;grid-row:1}
+.hm-cell-phone{grid-column:8/13;grid-row:2;display:grid;grid-template-columns:120px minmax(0,1fr);gap:24px;align-items:center}
+.hm-cell-phone>div{display:flex;flex-direction:column;gap:12px}
+.hm-cell figure{margin:0 0 10px}
+.hm-cell-tv .tv-vp{box-shadow:0 30px 80px -30px rgba(0,0,0,.7)}
+.hm-h3{font-family:var(--font-display,var(--font-fraunces),serif);font-size:1.6rem;font-weight:500;line-height:1.15;letter-spacing:-.01em}
+.hm-p{color:rgba(246,243,240,.78);max-width:46ch;line-height:1.5}
+.hm-link{align-self:flex-start;font-weight:600;color:var(--color-malva-soft,#a99ad1);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(169,154,209,.45);transition:color .15s ease,text-decoration-color .15s ease}
+.hm-link:hover{color:#fff;text-decoration-color:#fff}
+.hm-link:focus-visible,.hm-door:focus-visible,.hm-link-ink:focus-visible{outline:2px solid var(--color-malva-soft,#a99ad1);outline-offset:4px;border-radius:6px}
+
+/* the speaker: a step up from dusk, the orb and the exchange */
+.hm-voice{--la:#7c6aae;--lb:#6e8cc4;--accent:#c3b7e3;--sz:72px}
+.hm-voice-in{background:#2b2436;border-radius:24px;padding:28px;min-height:270px;display:flex;flex-direction:column;gap:24px;justify-content:space-between;overflow:hidden}
+.hm-voice-orb{display:flex;align-items:center;gap:16px}
+.hm-voice-state{font-size:.85rem;color:rgba(246,243,240,.6);transition:opacity .25s ease}
+.hm-voice-log{display:flex;flex-direction:column;gap:12px;min-height:5.2em}
+.hm-voice-you{font-family:var(--font-display,var(--font-fraunces),serif);font-size:clamp(1.25rem,1.9vw,1.55rem);line-height:1.25;color:#c3b7e3;text-wrap:pretty}
+.hm-voice-jota{font-family:var(--font-display,var(--font-fraunces),serif);font-size:clamp(1.5rem,2.4vw,2rem);line-height:1.18;color:#ddd6d0;text-wrap:pretty}
+.hm-voice .tv-w{margin-right:.24em}
+
+/* the phone: the orb on dusk, nothing else */
+.hm-phone{width:120px}
+.hm-phone-screen{position:absolute;inset:0;display:grid;place-items:center;background:#211b2a;--la:#7c6aae;--lb:#6e8cc4;--accent:#c3b7e3}
+
+@media (max-width:900px){
+  .hm-grid{grid-template-columns:1fr;gap:40px}
+  .hm-cell-tv,.hm-cell-voice,.hm-cell-phone{grid-column:auto;grid-row:auto}
+  .hm-cell-phone{grid-template-columns:96px minmax(0,1fr);gap:20px}
+  .hm-phone{width:96px}
+  .hm-voice-in{padding:22px;min-height:240px}
+}
+
+/* ---------- with what you already use ---------- */
+.hm-rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.hm-rows li{display:grid;gap:8px 40px;padding:26px 0;border-top:1px solid var(--color-line,#ded6cf)}
+.hm-rows li:last-child{border-bottom:1px solid var(--color-line,#ded6cf)}
+.hm-row-name{font-family:var(--font-display,var(--font-fraunces),serif);font-size:1.7rem;font-weight:500;line-height:1.1;letter-spacing:-.01em;color:var(--color-ink,#2a2433)}
+.hm-row-body{max-width:58ch;line-height:1.5;color:var(--color-ink,#2a2433);margin:0}
+@media (min-width:768px){.hm-rows li{grid-template-columns:16rem minmax(0,1fr);align-items:baseline}}
+.hm-link-ink{font-weight:600;color:var(--color-malva-text,#67569a);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(103,86,154,.4);transition:text-decoration-color .15s ease}
+.hm-link-ink:hover{text-decoration-color:currentColor}
+
+/* ---------- three doors ---------- */
+.hm-doors{display:grid;gap:12px}
+@media (min-width:768px){.hm-doors{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.hm-door{display:flex;flex-direction:column;gap:10px;padding:28px;border-radius:24px;background:var(--color-linen-2,#efe9e4);color:var(--color-ink,#2a2433);
+  transition:transform .16s var(--ease-out,cubic-bezier(.23,1,.32,1)),background-color .2s ease}
+.hm-door-primary{background:var(--color-malva,#7c6aae);color:#fff}
+.hm-door-primary .hm-door-b{color:rgba(255,255,255,.82)}
+.hm-door:active{transform:scale(.985)}
+@media (hover:hover) and (pointer:fine){
+  .hm-door:hover{transform:translateY(-2px)}
+  .hm-door:not(.hm-door-primary):hover{background:var(--color-malva-tint,#e9e3f2)}
+}
+.hm-door-t{font-family:var(--font-display,var(--font-fraunces),serif);font-size:1.55rem;font-weight:500;line-height:1.15;letter-spacing:-.01em}
+.hm-door-b{margin-top:auto;line-height:1.45;color:var(--color-ink-soft,#6a6377)}
+
+@media (prefers-reduced-motion:reduce){
+  .hm-replay{animation:none}
+  .hm-door,.hm-door:hover,.hm-door:active{transform:none;transition:none}
+}

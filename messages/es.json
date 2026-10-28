@@ -1,115 +1,18 @@
 {
   "nav": {
-    "hero": "Inicio",
-    "what": "Qué puede hacer",
-    "model": "Modelo",
-    "team": "Equipo",
+    "home": "Inicio",
+    "screen": "Jota-Screen",
+    "diy": "DIY",
     "contact": "Contacto",
-    "skipToContent": "Saltar al contenido",
-    "screen": "Jota-Screen"
-  },
-  "hero": {
-    "eyebrow": "Agente personal con voz",
-    "headline": "No un asistente.",
-    "headlineItalic": "Un agente.",
-    "subhead": "Jota recuerda, aprende cómo eres y actúa por ti — en tu casa, tu trabajo y tu día a día. Le hablas, y se encarga.",
-    "ctaPrimary": "Hablemos",
-    "ctaSecondary": "Qué puede hacer"
-  },
-  "problem": {
-    "eyebrow": "El problema",
-    "headline": "Los asistentes de hoy son rápidos.",
-    "headlineItalic": "Y tontos.",
-    "body": "Responden al momento, pero ahí se acaba. No te recuerdan, no aprenden cómo eres, no encadenan tareas ni se conectan con lo que de verdad usas. Para automatizar algo te obligan a pelearte con apps frágiles y menús que cambian. Contestan comandos sueltos — no hacen nada por ti."
-  },
-  "solution": {
-    "eyebrow": "La solución",
-    "headline": "Un agente que te conoce",
-    "headlineItalic": "y actúa por ti.",
-    "body": "Jota tiene memoria, aprende cómo eres y encadena tareas de verdad. Sobre OpenClaw —un orquestador de IA abierto y personalizable hasta el extremo— se conecta con lo que quieras: tu casa a través de Home Assistant, tu correo, tu código, tus tareas y tus rutinas. Le hablas con naturalidad y se encarga.",
-    "pillar1": "Memoria y contexto — te recuerda, retoma el hilo y no parte de cero cada vez.",
-    "pillar2": "Personalización al extremo — con OpenClaw, un agente moldeado a tu medida.",
-    "pillar3": "Conectado a todo — casa, trabajo y vida, no comandos sueltos."
-  },
-  "how": {
-    "eyebrow": "Cómo funciona",
-    "headline": "Le hablas.",
-    "headlineItalic": "Se encarga.",
-    "body": "Dices \"Ok Jota\" y le hablas con naturalidad. Jota entiende lo que quieres, decide qué hacer, actúa sobre lo que tengas conectado y te va respondiendo mientras trabaja — recordando el contexto de lo que ya habéis hablado.",
-    "step1": "Escucha — se activa con tu voz en cuanto dices \"Ok Jota\".",
-    "step2": "Entiende — interpreta tu intención y el contexto, no solo palabras clave.",
-    "step3": "Actúa — encadena tareas sobre tu casa, tu trabajo y tus servicios.",
-    "step4": "Responde — empieza a hablarte mientras piensa, con voz natural."
-  },
-  "what": {
-    "eyebrow": "Qué puede hacer",
-    "headline": "Un agente para toda tu vida,",
-    "headlineItalic": "no solo para tu casa.",
-    "card1": "Pone la lavadora antes de que te levantes y sube las persianas con el despertador.",
-    "card2": "Arma la alarma y apaga las luces cuando sales de casa, sin que se lo pidas.",
-    "card3": "Te lleva los correos: los resume, te avisa de lo urgente y redacta respuestas.",
-    "card4": "Es tu agente de código: revisa, te recuerda tareas pendientes y te frena un commit si algo falta por mirar.",
-    "card5": "Te recuerda lo que tienes a medias y retoma el hilo donde lo dejasteis.",
-    "closing": "Y como se apoya en OpenClaw, lo que hoy no hace, se le puede enseñar.",
-    "screenLink": "Ver Jota-Screen"
-  },
-  "why": {
-    "eyebrow": "Por qué ahora",
-    "headline": "La IA ya no solo responde:",
-    "headlineItalic": "actúa.",
-    "body": "Los modelos de IA por fin razonan, encadenan tareas y usan herramientas — dejan de ser un chat para convertirse en agentes. Al mismo tiempo, la gente está harta de asistentes que no recuerdan nada y Home Assistant se ha vuelto el estándar de la domótica seria. Nadie ha juntado todavía un agente de verdad con voz natural y personalización total. Esa es la ventana."
-  },
-  "model": {
-    "eyebrow": "Nube o local",
-    "headline": "Tú decides dónde",
-    "headlineItalic": "vive tu asistente.",
-    "body": "Jota funciona de las dos formas, y puedes cambiar cuando quieras.",
-    "cloudTitle": "Jota Cloud",
-    "cloudBody": "Lo enciendes y funciona. La potencia de la IA corre en nuestros servidores, con una suscripción. Privado por diseño, sin montar nada.",
-    "localTitle": "Jota Local",
-    "localBody": "Control absoluto. Todo funciona en tu casa, por tu cuenta o con nuestro hardware. Tu asistente, tu red, tus reglas.",
-    "recommended": "Recomendado"
-  },
-  "team": {
-    "eyebrow": "Equipo",
-    "headline": "Dos personas construyendo esto",
-    "headlineItalic": "a fondo.",
-    "body": "Un equipo con la parte técnica y la de producto cubiertas, construyendo Jota de arriba abajo: desde el motor de voz hasta la experiencia final.",
-    "members": [
-      {
-        "name": "Alfonso Garre",
-        "role": "Founder · Producto",
-        "bio": "Construyó el motor de voz de Jota y la arquitectura completa del agente de principio a fin."
-      },
-      {
-        "name": "Joan Moreno",
-        "role": "Co-fundador · Empresa",
-        "bio": "Traduce la visión técnica a algo que un cliente, un inversor o un socio pueda entender y querer."
-      }
-    ]
-  },
-  "engineering": {
-    "eyebrow": "Estado del producto",
-    "headline": "No es una idea.",
-    "headlineItalic": "Ya funciona.",
-    "body": "La arquitectura de Jota está construida y operativa de principio a fin: de la voz al razonamiento del agente y de vuelta a la voz, conectada a la casa y a servicios reales. Iteramos sobre ella cada semana.",
-    "proof1": "Flujo de voz completo funcionando end-to-end.",
-    "proof2": "Agente sobre OpenClaw, conectado a Home Assistant y a herramientas reales.",
-    "proof3": "Wake word propia entrenada (\"Ok Jota\").",
-    "proof4": "Desarrollo activo y continuo, con releases frecuentes."
-  },
-  "contact": {
-    "eyebrow": "Hablemos",
-    "headline": "¿Construimos el agente que sí",
-    "headlineItalic": "es tuyo?",
-    "body": "Si inviertes en IA aplicada, agentes o el hogar del futuro, hablemos.",
-    "ctaPrimary": "Escríbenos",
-    "ctaSecondary": "Apúntate a la lista de espera",
-    "emailSubject": "Hablemos de Jota",
-    "waitlistSubject": "Lista de espera Jota"
+    "install": "Instálalo",
+    "skipToContent": "Ir al inicio"
   },
   "footer": {
-    "tagline": "Jota — tu agente, con voz.",
+    "ask": "¿Echas algo en falta?",
+    "askBody": "Cuéntanos qué tienes montado y qué te falta.",
+    "copy": "Copiar dirección",
+    "copied": "Copiada",
+    "team": "Lo hacen Alfonso Garre (producto y tecnología) y Joan Moreno (empresa).",
     "rights": "Todos los derechos reservados."
   },
   "screen": {
@@ -145,14 +48,14 @@
     },
     "s6": {
       "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
-      "line2": "Jota-Screen pone la pantalla; Jota-Gateway escucha, piensa y te contesta.",
-      "soon": "Muy pronto: un script y una instalación guiada.",
-      "network": "Todo en tu red. Fuera de casa, con conexión segura.",
-      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; Jota-Gateway escucha, piensa y contesta, y habla con tu móvil.",
+      "line2": "Jota-Screen pone la pantalla; jota-gateway la conecta con el cerebro de Jota.",
+      "soon": "De momento se instala a mano, siguiendo los README.",
+      "network": "Todo en tu red. Fuera de casa, con el túnel o proxy que elijas.",
+      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; jota-gateway la conecta con el cerebro de Jota y con tu móvil.",
       "pc": "Mini PC o portátil",
       "hdmi": "HDMI",
       "tv": "Tu tele",
-      "gateway": "Jota-Gateway",
+      "gateway": "jota-gateway",
       "listen": "Escucha",
       "think": "Piensa",
       "answer": "Contesta",
@@ -182,15 +85,15 @@
           "icon": "agents"
         },
         {
-          "title": "Jota Cloud o Jota Local",
-          "body": "Tú eliges dónde piensa.",
+          "title": "Tú eliges los proveedores",
+          "body": "Local, o con el modelo y la voz que prefieras.",
           "icon": "cloud"
         }
       ]
     },
     "s8": {
       "headline": "No es una idea. Ya funciona.",
-      "line": "Funciona hoy en nuestro salón; muy pronto, en el tuyo.",
+      "line": "Funciona hoy en nuestro salón.",
       "ctaWaitlist": "Apúntate a la lista de espera",
       "ctaTalk": "Hablemos",
       "back": "Volver al inicio"
@@ -255,5 +158,82 @@
       "type": "Escribir en la tele",
       "talk": "Hablar con Jota"
     }
+  },
+  "home": {
+    "meta": {
+      "title": "Jota, un asistente de voz que vive en tu casa",
+      "description": "Jota se instala en una máquina tuya y le hablas desde la tele, un altavoz o el móvil. Funciona con lo que ya tienes: Home Assistant, OpenClaw y el modelo de IA que elijas."
+    },
+    "hero": {
+      "headline": "Un asistente de voz que vive en tu casa.",
+      "sub": "Jota se instala en una máquina tuya. Le hablas desde la tele, desde un altavoz o desde el móvil, y funciona con lo que ya tienes: Home Assistant, OpenClaw y el modelo de IA que elijas.",
+      "ctaInstall": "Instálalo en tu máquina",
+      "ctaScreen": "Ver Jota-Screen",
+      "caption": "Estás viendo una serie y preguntas dónde se rodó. Jota contesta en la tele y la serie sigue.",
+      "replay": "Verlo otra vez",
+      "tvLabel": "La tele con Jota-Screen, contestando a una pregunta sobre la serie"
+    },
+    "house": {
+      "title": "Está en toda la casa",
+      "lead": "Jota-Gateway es el cerebro. Cada sitio desde el que le hablas es un cliente conectado a él.",
+      "tvTitle": "En la tele",
+      "tvBody": "Jota-Screen. Un mini PC o un portátil viejo conectado por HDMI. El móvil hace de mando y de micrófono, sin instalar ninguna app.",
+      "tvCta": "Cómo es Jota-Screen",
+      "tvLabel": "La tele en reposo, con la hora y el tiempo",
+      "voiceTitle": "En un altavoz o un micro",
+      "voiceBody": "jota-voice, de código abierto, en un Mac, un Android o Linux. Dices la palabra de activación y hablas; la respuesta suena ahí mismo.",
+      "voiceLabel": "jota-voice escuchando un aviso para la cena",
+      "listen": "Escuchando",
+      "think": "Pensando",
+      "talk": "Hablando",
+      "idle": "En reposo",
+      "phoneTitle": "En el iPhone",
+      "phoneBody": "Una app propia, experimental y en una fase inicial.",
+      "phoneLabel": "La app de Jota para iPhone"
+    },
+    "keep": {
+      "title": "Con lo que ya usas",
+      "lead": "Jota se monta encima de lo que ya tienes en casa y lo lleva a la tele, al altavoz y al móvil.",
+      "rows": [
+        {
+          "name": "Home Assistant",
+          "body": "Jota le habla por MCP y le pide las cosas de casa. También al revés: el asistente de voz de Home Assistant puede ser Jota."
+        },
+        {
+          "name": "OpenClaw",
+          "body": "Hace de cerebro, con su memoria, sus agentes, sus herramientas y sus tareas programadas."
+        },
+        {
+          "name": "El modelo de IA",
+          "body": "El que ya tengas configurado en OpenClaw."
+        },
+        {
+          "name": "La voz",
+          "body": "whisper.cpp y Kokoro en tu red. O ElevenLabs: si transcribe, le llega tu audio; si pone la voz, el texto de las respuestas."
+        }
+      ],
+      "protocol": "Todo pasa por Jota-Gateway. Si quieres escribir tu propio cliente, el protocolo está documentado.",
+      "protocolLink": "Protocolo del cliente"
+    },
+    "local": {
+      "title": "Se instala en una máquina tuya",
+      "body": "No hay un servicio de Jota en la nube por el que pase tu voz. Con jota-transcriber y jota-speaker, tu audio no sale de tu red. Lo único que sale es lo que le pides al modelo de IA que tengas contratado.",
+      "open": "El gateway, la transcripción, la voz y jota-voice son de código abierto.",
+      "link": "Qué sale de casa y qué no",
+      "github": "Código en GitHub"
+    },
+    "doors": {
+      "title": "Por dónde seguir",
+      "install": "Instálalo en tu máquina",
+      "installBody": "Las entradas DIY: qué se montó, con qué versiones y cómo.",
+      "screen": "Mira Jota-Screen",
+      "screenBody": "La tele que ya tienes, convertida en la pantalla de Jota.",
+      "how": "Lee cómo está hecho",
+      "howBody": "Qué pasa desde que le hablas hasta que te contesta, pieza a pieza."
+    }
+  },
+  "contact": {
+    "emailSubject": "Hablemos de Jota",
+    "waitlistSubject": "Lista de espera Jota"
   }
 }

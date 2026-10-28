@@ -1,15 +1,34 @@
 import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { CONTACT_EMAIL } from "@/lib/contact";
+import { CopyEmail } from "./CopyEmail";
 
 export async function Footer() {
   const t = await getTranslations("footer");
+  const nav = await getTranslations("nav");
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-linen-2 border-t border-line mt-12">
-      <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-3 px-6 py-10 md:flex-row md:items-center">
-        <p className="font-display text-base text-ink">{t("tagline")}</p>
-        <p className="text-xs text-ink-soft">
-          © {year} Jota. {t("rights")}
-        </p>
+    <footer id="contact" className="mt-12 border-t border-line bg-linen-2">
+      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-[1fr_auto]">
+        <div className="flex flex-col gap-3">
+          <h2 className="font-display text-2xl font-medium text-ink">{t("ask")}</h2>
+          <p className="max-w-[46ch] text-ink">{t("askBody")}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="select-all font-medium text-malva-text underline underline-offset-4">
+              {CONTACT_EMAIL}
+            </a>
+            <CopyEmail label={t("copy")} done={t("copied")} />
+          </div>
+        </div>
+        <ul className="flex gap-6 text-sm text-ink-soft md:flex-col md:gap-2">
+          <li><Link href="/" className="hover:text-malva">{nav("home")}</Link></li>
+          <li><Link href="/jota-screen" className="hover:text-malva">{nav("screen")}</Link></li>
+          <li><Link href="/diy" className="hover:text-malva">{nav("diy")}</Link></li>
+        </ul>
+        <div className="flex flex-col gap-1 border-t border-line pt-6 text-xs text-ink-soft md:col-span-2">
+          <p>{t("team")}</p>
+          <p>© {year} Jota. {t("rights")}</p>
+        </div>
       </div>
     </footer>
   );

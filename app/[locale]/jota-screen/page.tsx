@@ -50,7 +50,7 @@ export default async function JotaScreenPage({ params }: Props) {
       <TrackA />
       <FitFrames />
 
-      <div className="bg-[#211b2a] text-linen" data-tone="dark">
+      <div className="bg-dusk text-linen" data-tone="dark">
         <TrackB />
         <FitFrames />
         <TrackC />

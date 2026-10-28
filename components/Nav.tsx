@@ -3,20 +3,18 @@
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageToggle } from "./LanguageToggle";
+import { buttonClass } from "./Button";
 import { useTranslations } from "next-intl";
 
 const links = [
-  { href: "#hero", key: "hero" },
-  { href: "#what", key: "what" },
-  { href: "#model", key: "model" },
-  { href: "#team", key: "team" },
+  { href: "/jota-screen", key: "screen" },
+  { href: "/diy", key: "diy" },
   { href: "#contact", key: "contact" },
 ] as const;
 
 export function Nav() {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const prefix = pathname === "/" ? "" : "/";
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -37,36 +35,55 @@ export function Nav() {
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-6 px-6">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-6">
         <Link
-          href={`${prefix}#hero`}
+          href="/"
           aria-label={t("skipToContent")}
-          className="font-display text-xl font-medium text-ink"
+          className="grid size-9 place-items-center rounded-[11px] bg-[linear-gradient(135deg,var(--color-malva),var(--color-sky))] font-display text-lg font-medium text-white"
         >
           J
         </Link>
-        <ul className="hidden gap-7 md:flex">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={`${prefix}${link.href}`}
-                className="text-sm text-ink-soft hover:text-malva transition-colors duration-150"
-              >
-                {t(link.key)}
-              </a>
-            </li>
-          ))}
-          <li>
-            <Link
-              href="/jota-screen"
-              className="text-sm text-ink-soft hover:text-malva transition-colors duration-150"
-            >
-              {t("screen")}
-            </Link>
-          </li>
+        <ul className="hidden flex-1 gap-7 md:flex">
+          {links.map((link) => {
+            const current = link.href !== "#contact" && pathname.startsWith(link.href);
+            return (
+              <li key={link.href}>
+                {link.href === "#contact" ? (
+                  <a href="#contact" className="text-sm text-ink-soft transition-colors duration-150 hover:text-malva">
+                    {t(link.key)}
+                  </a>
+                ) : (
+                  <Link
+                    href={link.href}
+                    aria-current={current ? "page" : undefined}
+                    className={`text-sm transition-colors duration-150 hover:text-malva ${current ? "text-ink" : "text-ink-soft"}`}
+                  >
+                    {t(link.key)}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
-        <LanguageToggle />
+        <div className="flex items-center gap-3">
+          <LanguageToggle />
+          <Link href="/diy" className={buttonClass("primary", "hidden px-4 py-2 sm:inline-flex")}>
+            {t("install")}
+          </Link>
+        </div>
       </div>
+      {/* phone: the three sections stay reachable without a menu */}
+      <ul className="flex gap-6 overflow-x-auto px-6 pb-3 md:hidden">
+        {links.map((link) => (
+          <li key={link.href}>
+            {link.href === "#contact" ? (
+              <a href="#contact" className="text-sm text-ink-soft">{t(link.key)}</a>
+            ) : (
+              <Link href={link.href} className="text-sm text-ink-soft">{t(link.key)}</Link>
+            )}
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }
