@@ -72,3 +72,12 @@ html {
     animation: none;
   }
 }
+
+/* ---------- Barra de navegación sobre el cuerpo Dusk (NavTone pone data-nav en <html>; la usan /jota-screen y el home) ---------- */
+/* la barra vive fuera de .jscreen; estas reglas sin capa ganan a las utilidades de Tailwind */
+html[data-nav=dark] nav[aria-label=Primary]{background-color:rgba(33,27,42,.8);border-bottom-color:rgba(246,243,240,.1)}
+html[data-nav=dark] nav[aria-label=Primary] a{color:var(--color-linen)}
+html[data-nav=dark] nav[aria-label=Primary] ul a{color:rgba(246,243,240,.75)}
+html[data-nav=dark] nav[aria-label=Primary] button{color:rgba(246,243,240,.75);border-color:rgba(246,243,240,.3)}
+html[data-nav=dark] nav[aria-label=Primary] :is(a,button):hover{color:var(--color-malva-soft)}
+html[data-nav=dark] nav[aria-label=Primary] button:hover{border-color:var(--color-malva-soft)}

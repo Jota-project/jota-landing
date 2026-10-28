@@ -161,164 +161,75 @@
   },
   "home": {
     "meta": {
-      "title": "Jota: le hablas y apaga la luz del salón",
-      "description": "Jota es un agente con voz que se instala en una máquina tuya y une lo que ya usas: Home Assistant, OpenClaw y el modelo que elijas."
+      "title": "Jota, un asistente de voz que vive en tu casa",
+      "description": "Jota se instala en una máquina tuya y le hablas desde la tele, un altavoz o el móvil. Funciona con lo que ya tienes: Home Assistant, OpenClaw y el modelo de IA que elijas."
     },
     "hero": {
-      "headline": "Le hablas y apaga la luz del salón.",
-      "sub": "Jota es un agente con voz que se instala en una máquina tuya y une lo que ya usas: Home Assistant, OpenClaw y el modelo que elijas. No tienes que tirar nada de lo que has montado.",
+      "headline": "Un asistente de voz que vive en tu casa.",
+      "sub": "Jota se instala en una máquina tuya. Le hablas desde la tele, desde un altavoz o desde el móvil, y funciona con lo que ya tienes: Home Assistant, OpenClaw y el modelo de IA que elijas.",
       "ctaInstall": "Instálalo en tu máquina",
-      "ctaHow": "Ver cómo está hecho",
-      "stateK": "Estado",
-      "stateV": "Funciona en nuestro salón",
-      "testedK": "Probado con",
-      "testedV": "jota-gateway v1.21.0, OpenClaw 2026.10.5 y 4 piezas más",
-      "reviewedK": "Revisado",
-      "reviewedV": "27 oct 2026"
+      "ctaScreen": "Ver Jota-Screen",
+      "caption": "Estás viendo una serie y preguntas dónde se rodó. Jota contesta en la tele y la serie sigue.",
+      "replay": "Verlo otra vez",
+      "tvLabel": "La tele con Jota-Screen, contestando a una pregunta sobre la serie"
     },
-    "talk": {
-      "said": "Ok Jota, apaga la luz del salón",
-      "tool": "Home Assistant",
-      "toolSub": "Apagar la luz del salón",
-      "answer": "Hecho, he apagado la luz del salón.",
-      "lamp": "Luz del salón",
-      "idle": "En reposo",
+    "house": {
+      "title": "Está en toda la casa",
+      "lead": "Jota-Gateway es el cerebro. Cada sitio desde el que le hablas es un cliente conectado a él.",
+      "tvTitle": "En la tele",
+      "tvBody": "Jota-Screen. Un mini PC o un portátil viejo conectado por HDMI. El móvil hace de mando y de micrófono, sin instalar ninguna app.",
+      "tvCta": "Cómo es Jota-Screen",
+      "tvLabel": "La tele en reposo, con la hora y el tiempo",
+      "voiceTitle": "En un altavoz o un micro",
+      "voiceBody": "jota-voice, de código abierto, en un Mac, un Android o Linux. Dices la palabra de activación y hablas; la respuesta suena ahí mismo.",
+      "voiceLabel": "jota-voice escuchando un aviso para la cena",
       "listen": "Escuchando",
       "think": "Pensando",
-      "talkState": "Hablando",
-      "done": "Hecho",
-      "again": "Otra vez",
-      "note": "Ejemplo. «Ok Jota» es una primera versión que seguimos entrenando; jota-voice trae «Ok Nabu» de serie."
-    },
-    "map": {
-      "routeTitle": "Qué ha pasado en esos segundos",
-      "routeLead": "La misma frase, por dentro. Todo pasa por una sola puerta, el gateway: el cliente nunca habla directamente con las otras piezas.",
-      "borderTitle": "Qué sale de tu casa",
-      "borderLead": "Todas las piezas se instalan en una máquina tuya. Lo que sale depende de los proveedores que elijas.",
-      "tabRoute": "Recorrido",
-      "tabBorder": "Qué sale de casa",
-      "play": "Reproducir el recorrido",
-      "inside": "Tu red",
-      "outside": "Fuera, solo si lo eliges",
-      "nothingOut": "Nada sale de tu red.",
-      "ha": "Home Assistant, por MCP",
-      "hint": "Pulsa «Reproducir el recorrido» o una pieza.",
-      "n1": "Cliente",
-      "n1p": "jota-voice o Jota-Screen",
-      "n2": "jota-gateway",
-      "n2p": "valida la clave",
-      "n3": "Transcripción",
-      "n4": "OpenClaw",
-      "n5": "Síntesis",
-      "stt": "jota-transcriber",
-      "sttExt": "ElevenLabs",
-      "llm": "modelo local",
-      "llmExt": "modelo en la nube",
-      "tts": "jota-speaker",
-      "ttsExt": "ElevenLabs",
-      "s1": "El cliente oye la palabra de activación en el propio aparato. Hasta entonces el audio no sale. Luego manda tu voz al gateway en fragmentos, mientras hablas.",
-      "s2": "jota-gateway comprueba la clave del cliente y elige el agente: el altavoz del salón puede ir siempre a un agente pensado para la casa.",
-      "s3": "La transcripción va en directo. La final, «apaga la luz del salón», vuelve al cliente, que la confirma y la envía.",
-      "s4": "OpenClaw piensa y actúa: le pide a Home Assistant, conectado por MCP, que apague la luz del salón.",
-      "s5": "jota-speaker genera la voz frase a frase. Texto y audio llegan por la misma conexión: «Hecho, he apagado la luz del salón».",
-      "reduced": "1 Cliente · 2 jota-gateway · 3 Transcripción · 4 OpenClaw y Home Assistant · 5 Síntesis. Pulsa una pieza para leer su paso.",
-      "cStt": "Transcribir con ElevenLabs",
-      "cLlm": "Modelo en la nube",
-      "cTts": "Voz con ElevenLabs",
-      "cTun": "Usarlo fuera de casa con un túnel",
-      "oStt": "ElevenLabs recibe tu audio",
-      "oLlm": "El modelo en la nube recibe el texto",
-      "oTts": "ElevenLabs recibe el texto de las respuestas",
-      "oTun": "El túnel o proxy ve pasar el audio",
-      "allLocal": "Con todo en local, «apaga la luz del salón» no sale de tu red.",
-      "lStt": "Si transcribe ElevenLabs, le llega tu audio. Lo elige quien administra el gateway y vale para todos los clientes.",
-      "lLlm": "Con un modelo en la nube, lo que dices sale como texto hacia ese proveedor.",
-      "lTts": "Si ElevenLabs pone la voz, le llega el texto de las respuestas.",
-      "lTun": "Si publicas el gateway con un túnel o proxy, el audio pasa por ese servicio.",
-      "routeFoot": "Recorrido ilustrado, a ritmo de lectura. Los tiempos reales dependen de tu máquina.",
-      "borderFoot": "Cada proveedor tiene sus condiciones sobre qué guarda y durante cuánto tiempo.",
-      "proofRoute": "Los cinco pasos, con detalle",
-      "proofBorder": "Dónde corre Jota y qué sale de casa"
+      "talk": "Hablando",
+      "idle": "En reposo",
+      "phoneTitle": "En el iPhone",
+      "phoneBody": "Una app propia, experimental y en una fase inicial.",
+      "phoneLabel": "La app de Jota para iPhone"
     },
     "keep": {
-      "title": "Lo que ya tienes se queda",
-      "lead": "Jota no sustituye tus piezas: las une detrás del gateway.",
-      "hUse": "Lo que usas",
-      "hJota": "Qué pone Jota",
-      "hHow": "Cómo se conecta",
-      "hOpen": "Código",
+      "title": "Con lo que ya usas",
+      "lead": "Jota se monta encima de lo que ya tienes en casa y lo lleva a la tele, al altavoz y al móvil.",
       "rows": [
         {
-          "use": "Home Assistant",
-          "jota": "Jota maneja tu casa",
-          "how": "Por MCP. Y al revés: Jota puede ser el asistente de voz de Home Assistant, con jota-speaker por Wyoming y el gateway como agente compatible con OpenAI.",
-          "open": "Abierto"
+          "name": "Home Assistant",
+          "body": "Jota le habla por MCP y le pide las cosas de casa. También al revés: el asistente de voz de Home Assistant puede ser Jota."
         },
         {
-          "use": "Tu modelo",
-          "jota": "OpenClaw lo usa para pensar y actuar",
-          "how": "Local o en la nube, dentro de OpenClaw, con memoria, agentes, herramientas y tareas programadas.",
-          "open": "Abierto"
+          "name": "OpenClaw",
+          "body": "Hace de cerebro, con su memoria, sus agentes, sus herramientas y sus tareas programadas."
         },
         {
-          "use": "ElevenLabs (opcional)",
-          "jota": "Transcripción o voz de un proveedor",
-          "how": "Lo eliges en el gateway. Cambiarlo no toca nada en los clientes.",
-          "open": "Externo"
+          "name": "El modelo de IA",
+          "body": "Local o en la nube, el que elijas en OpenClaw. Si está en la nube, lo que dices le llega ya convertido en texto."
         },
         {
-          "use": "Tus aparatos",
-          "jota": "Cada uno es un cliente con su clave",
-          "how": "Si pierdes uno, le revocas la clave y el resto sigue igual.",
-          "open": "jota-voice abierto"
-        },
-        {
-          "use": "Tu propio cliente",
-          "jota": "El protocolo está documentado",
-          "how": "El audio sube en PCM Float32 a 16 kHz y baja en PCM16 a 24 kHz, por un WebSocket.",
-          "open": "Abierto"
+          "name": "La voz",
+          "body": "whisper.cpp y Kokoro en tu red. O ElevenLabs: si transcribe, le llega tu audio; si pone la voz, el texto de las respuestas."
         }
       ],
-      "proof": "Qué es de Jota y qué es abierto"
+      "protocol": "Todo pasa por Jota-Gateway. Si quieres escribir tu propio cliente, el protocolo está documentado.",
+      "protocolLink": "Protocolo del cliente"
     },
-    "where": {
-      "title": "Dónde le hablas",
-      "screenTitle": "Jota-Screen, en la tele",
-      "screenBody": "Le preguntas mientras ves una serie y contesta arriba, sin pausarla. El móvil hace de mando y de micrófono, sin instalar ninguna app: escribes el código que sale en la tele y listo.",
-      "screenNeeds": "Necesitas un mini PC o un portátil viejo conectado a la tele por HDMI, y tu móvil.",
-      "screenCta": "Ver Jota en la tele",
-      "voiceTitle": "jota-voice, en tus aparatos",
-      "voiceBody": "Escucha la palabra de activación en el propio aparato y no envía audio hasta oírla.",
-      "vMac": "macOS",
-      "vMacS": "Compatible, con instalador",
-      "vAndroid": "Android",
-      "vAndroidS": "Compatible, con instalador, vía Termux",
-      "vLinux": "Linux",
-      "vLinuxS": "Compatible; se instala a mano",
-      "vWin": "Windows",
-      "vWinS": "Aún no",
-      "vEsp": "ESP32",
-      "vEspS": "Aún no hay cliente",
-      "iosTitle": "App de iPhone",
-      "iosBody": "Experimental y en una fase inicial."
+    "local": {
+      "title": "Se instala en una máquina tuya",
+      "body": "No hay un servicio de Jota en la nube por el que pase tu voz. Con jota-transcriber, jota-speaker y un modelo local, lo que dices no sale de tu red.",
+      "open": "El gateway, la transcripción, la voz y jota-voice son de código abierto.",
+      "link": "Qué sale de casa y qué no",
+      "github": "Código en GitHub"
     },
-    "notyet": {
-      "title": "Lo que aún no hace",
-      "items": [
-        "Una conversación por cliente y agente: no puedes abrir varias desde el mismo cliente.",
-        "Si se corta la conexión a mitad de una respuesta, esa respuesta se pierde. El contexto se conserva.",
-        "Los avisos necesitan una conexión abierta: si tu cliente no está conectado, el aviso se pierde.",
-        "Puedes interrumpir una respuesta, pero no un aviso que Jota lanza por su cuenta.",
-        "«Ok Jota» es una primera versión; jota-voice trae «Ok Nabu» de serie.",
-        "Todavía no hay cliente para Windows ni para ESP32, ni instalación guiada."
-      ],
-      "proof": "Limitaciones actuales"
-    },
-    "close": {
-      "title": "Móntalo en tu casa",
-      "body": "Empieza por el gateway y un cliente. Todo lo que necesitas está en el DIY y en los README.",
+    "doors": {
+      "title": "Por dónde seguir",
       "install": "Instálalo en tu máquina",
-      "client": "Escribir tu propio cliente"
+      "installBody": "Las entradas DIY: qué se montó, con qué versiones y cómo.",
+      "screen": "Mira Jota-Screen",
+      "screenBody": "La tele que ya tienes, convertida en la pantalla de Jota.",
+      "how": "Lee cómo está hecho",
+      "howBody": "Qué pasa desde que le hablas hasta que te contesta, pieza a pieza."
     }
   },
   "contact": {
