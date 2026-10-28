@@ -205,7 +205,7 @@
         },
         {
           "name": "El modelo de IA",
-          "body": "Local o en la nube, el que elijas en OpenClaw. Si está en la nube, lo que dices le llega ya convertido en texto."
+          "body": "El que ya tengas configurado en OpenClaw."
         },
         {
           "name": "La voz",
@@ -217,7 +217,7 @@
     },
     "local": {
       "title": "Se instala en una máquina tuya",
-      "body": "No hay un servicio de Jota en la nube por el que pase tu voz. Con jota-transcriber, jota-speaker y un modelo local, lo que dices no sale de tu red.",
+      "body": "No hay un servicio de Jota en la nube por el que pase tu voz. Con jota-transcriber y jota-speaker, tu audio no sale de tu red. Lo único que sale es lo que le pides al modelo de IA que tengas contratado.",
       "open": "El gateway, la transcripción, la voz y jota-voice son de código abierto.",
       "link": "Qué sale de casa y qué no",
       "github": "Código en GitHub"

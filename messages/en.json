@@ -205,7 +205,7 @@
         },
         {
           "name": "The AI model",
-          "body": "Local or in the cloud, whichever you pick in OpenClaw. If it's in the cloud, what you say reaches it already turned into text."
+          "body": "Whichever one you already have set up in OpenClaw."
         },
         {
           "name": "The voice",
@@ -217,7 +217,7 @@
     },
     "local": {
       "title": "It runs on a machine of your own",
-      "body": "Your voice never goes through a cloud service of ours. With jota-transcriber, jota-speaker and a local model, what you say never leaves your network.",
+      "body": "Your voice never goes through a cloud service of ours. With jota-transcriber and jota-speaker, your audio never leaves your network. The only thing that does is what you ask the AI model you pay for.",
       "open": "The gateway, the transcription, the voice and jota-voice are open source.",
       "link": "What leaves home and what doesn't",
       "github": "Code on GitHub"
