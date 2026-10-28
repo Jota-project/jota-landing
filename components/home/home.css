@@ -4,6 +4,9 @@
 /* ---------- hero ---------- */
 .hm-tv{display:flex;flex-direction:column;gap:14px}
 .hm-tv .tv-vp{box-shadow:0 30px 80px -30px rgba(33,27,42,.55)}
+/* the TV is drawn at 1920px and shrunk to a third: the pill grows so its words read at hero size */
+.hm-tv .tv-glass{transform:scale(1.5);transform-origin:50% 40px}
+@media (max-width:640px){.hm-tv .tv-glass{transform:scale(1.7)}}
 .hm-cap{font-size:.92rem;line-height:1.5;color:var(--color-ink-soft,#6a6377);max-width:52ch;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
 .hm-replay{font:inherit;font-weight:600;color:var(--color-malva-text,#67569a);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:4px;
   animation:hm-in .4s var(--ease-out,cubic-bezier(.23,1,.32,1)) both}

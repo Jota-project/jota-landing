@@ -17,8 +17,8 @@
   },
   "screen": {
     "meta": {
-      "title": "J-Screen — Le hablas. La tele se encarga.",
-      "description": "J-Screen convierte la tele que ya tienes en la pantalla de Jota: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
+      "title": "Jota-Screen — Le hablas. La tele se encarga.",
+      "description": "Jota-Screen convierte la tele que ya tienes en la pantalla de Jota: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
     },
     "s1": {
       "headline": "Le hablas. La tele se encarga.",
@@ -48,7 +48,7 @@
     },
     "s6": {
       "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
-      "line2": "J-Screen pone la pantalla; jota-gateway la conecta con el cerebro de Jota.",
+      "line2": "Jota-Screen pone la pantalla; jota-gateway la conecta con el cerebro de Jota.",
       "soon": "De momento se instala a mano, siguiendo los README.",
       "network": "Todo en tu red. Fuera de casa, con el túnel o proxy que elijas.",
       "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; jota-gateway la conecta con el cerebro de Jota y con tu móvil.",

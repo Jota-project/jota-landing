@@ -17,8 +17,8 @@
   },
   "screen": {
     "meta": {
-      "title": "J-Screen — You talk. The TV handles it.",
-      "description": "J-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
+      "title": "Jota-Screen — You talk. The TV handles it.",
+      "description": "Jota-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
     },
     "s1": {
       "headline": "You talk. The TV handles it.",
@@ -48,7 +48,7 @@
     },
     "s6": {
       "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
-      "line2": "J-Screen provides the screen; jota-gateway connects it to Jota's brain.",
+      "line2": "Jota-Screen provides the screen; jota-gateway connects it to Jota's brain.",
       "soon": "For now you install it by hand, following the READMEs.",
       "network": "All on your network. Away from home, through the tunnel or proxy you choose.",
       "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; jota-gateway connects it to Jota's brain and to your phone.",

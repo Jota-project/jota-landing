@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Nav } from "@/components/Nav";
@@ -19,12 +19,9 @@ export async function generateMetadata({
   const { locale } = await params;
   const isEs = locale === "es";
 
-  const title = isEs
-    ? "Jota — Tu agente personal, con voz"
-    : "Jota — Your personal agent, with a voice";
-  const description = isEs
-    ? "No es un asistente de voz más: un agente que recuerda, se personaliza y actúa por ti. Tu casa, tu trabajo, tu día a día. Privado por diseño."
-    : "Not just another voice assistant: an agent that remembers, personalizes and acts for you. Your home, your work, your day. Private by design.";
+  const t = await getTranslations({ locale, namespace: "home.meta" });
+  const title = t("title");
+  const description = t("description");
   const ogImage = isEs ? "/og-image.png" : "/og-image-en.png";
 
   return {
