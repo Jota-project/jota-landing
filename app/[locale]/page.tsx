@@ -15,10 +15,11 @@ import { Reposo } from "@/components/screen/tv/Reposo";
 import { Orb } from "@/components/screen/tv/Orb";
 import { PhoneFrame } from "@/components/screen/phone/PhoneFrame";
 
+import { GITHUB_ORG, repoUrl } from "@/lib/github";
+
 type Props = { params: Promise<{ locale: string }> };
 
 const ARTICLE = "/diy/como-esta-hecho-jota";
-const GITHUB = "https://github.com/jota-project";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -48,6 +49,7 @@ export default async function HomePage({ params }: Props) {
           <div className="flex flex-wrap gap-3 pt-1">
             <Link href="/diy" className={buttonClass("primary")}>{t("hero.ctaInstall")}</Link>
             <Link href="/jota-screen" className={buttonClass("ghost")}>{t("hero.ctaScreen")}</Link>
+            <a href={GITHUB_ORG} target="_blank" rel="noopener" className={buttonClass("ghost")}>{t("hero.ctaCode")} ↗</a>
           </div>
         </div>
         <HeroTv />
@@ -115,7 +117,7 @@ export default async function HomePage({ params }: Props) {
         </ul>
         <p className="max-w-[60ch] text-ink-soft">
           {t("keep.protocol")}{" "}
-          <a href={`${GITHUB}/jota-gateway/blob/main/docs/client-protocol.md`} className="hm-link-ink">{t("keep.protocolLink")}</a>
+          <a href={`${repoUrl("jota-gateway")}/blob/main/docs/client-protocol.md`} className="hm-link-ink">{t("keep.protocolLink")}</a>
         </p>
       </section>
 
@@ -130,7 +132,7 @@ export default async function HomePage({ params }: Props) {
             <p className="max-w-[40ch]">{t("local.open")}</p>
             <p className="flex flex-wrap gap-x-6 gap-y-2">
               <Link href={`${ARTICLE}#casa`} className="hm-link-ink">{t("local.link")}</Link>
-              <a href={GITHUB} className="hm-link-ink">{t("local.github")}</a>
+              <a href={GITHUB_ORG} className="hm-link-ink">{t("local.github")}</a>
             </p>
           </div>
         </div>
@@ -152,6 +154,10 @@ export default async function HomePage({ params }: Props) {
             <span className="hm-door-t">{t("doors.how")}</span>
             <span className="hm-door-b">{t("doors.howBody")}</span>
           </Link>
+          <a href={GITHUB_ORG} target="_blank" rel="noopener" className="hm-door">
+            <span className="hm-door-t">{t("doors.code")} ↗</span>
+            <span className="hm-door-b">{t("doors.codeBody")}</span>
+          </a>
         </div>
       </section>
     </main>

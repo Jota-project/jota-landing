@@ -5,7 +5,8 @@
     "diy": "DIY",
     "contact": "Contact",
     "install": "Install it",
-    "skipToContent": "Go to home"
+    "skipToContent": "Go to home",
+    "newTab": "opens in a new tab"
   },
   "footer": {
     "ask": "Missing something?",
@@ -13,7 +14,8 @@
     "copy": "Copy address",
     "copied": "Copied",
     "team": "Made by Alfonso Garre (product and engineering) and Joan Moreno (business).",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "code": "Code on GitHub"
   },
   "screen": {
     "meta": {
@@ -96,7 +98,8 @@
       "line": "It works today in our living room.",
       "ctaWaitlist": "Join the waitlist",
       "ctaTalk": "Let's talk",
-      "back": "Back to home"
+      "back": "Back to home",
+      "code": "Code on GitHub"
     },
     "chat": {
       "series1You": "Jota, where was this filmed?",
@@ -169,6 +172,7 @@
       "sub": "Jota runs on a machine of your own. You talk to it from the TV, from a speaker or from your phone, and it works with what you already have: Home Assistant, OpenClaw and the AI model you choose.",
       "ctaInstall": "Install it on your machine",
       "ctaScreen": "See Jota-Screen",
+      "ctaCode": "Code on GitHub",
       "caption": "You're watching a series and ask where it was filmed. Jota answers on the TV and the show keeps playing.",
       "replay": "Watch it again",
       "tvLabel": "The TV with Jota-Screen, answering a question about the show"
@@ -229,7 +233,9 @@
       "screen": "See Jota-Screen",
       "screenBody": "The TV you already have, turned into Jota's screen.",
       "how": "Read how it's made",
-      "howBody": "What happens from the moment you speak until it answers, piece by piece."
+      "howBody": "What happens from the moment you speak until it answers, piece by piece.",
+      "code": "All the code on GitHub",
+      "codeBody": "Every piece of Jota is a public repository: gateway, transcription, voice and client."
     }
   },
   "contact": {

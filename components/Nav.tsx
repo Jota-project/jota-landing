@@ -5,6 +5,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageToggle } from "./LanguageToggle";
 import { buttonClass } from "./Button";
 import { useTranslations } from "next-intl";
+import { GITHUB_ORG } from "@/lib/github";
 
 const links = [
   { href: "/jota-screen", key: "screen" },
@@ -64,6 +65,12 @@ export function Nav() {
               </li>
             );
           })}
+          <li>
+            <a href={GITHUB_ORG} target="_blank" rel="noopener" className="text-sm text-ink-soft transition-colors duration-150 hover:text-malva">
+              GitHub<span aria-hidden="true"> ↗</span>
+              <span className="sr-only"> ({t("newTab")})</span>
+            </a>
+          </li>
         </ul>
         <div className="flex items-center gap-3">
           <LanguageToggle />
@@ -83,6 +90,12 @@ export function Nav() {
             )}
           </li>
         ))}
+        <li>
+          <a href={GITHUB_ORG} target="_blank" rel="noopener" className="text-sm text-ink-soft">
+            GitHub<span aria-hidden="true"> ↗</span>
+            <span className="sr-only"> ({t("newTab")})</span>
+          </a>
+        </li>
       </ul>
     </nav>
   );

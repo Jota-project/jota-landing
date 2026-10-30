@@ -5,7 +5,8 @@
     "diy": "DIY",
     "contact": "Contacto",
     "install": "Instálalo",
-    "skipToContent": "Ir al inicio"
+    "skipToContent": "Ir al inicio",
+    "newTab": "se abre en una pestaña nueva"
   },
   "footer": {
     "ask": "¿Echas algo en falta?",
@@ -13,7 +14,8 @@
     "copy": "Copiar dirección",
     "copied": "Copiada",
     "team": "Lo hacen Alfonso Garre (producto y tecnología) y Joan Moreno (empresa).",
-    "rights": "Todos los derechos reservados."
+    "rights": "Todos los derechos reservados.",
+    "code": "Código en GitHub"
   },
   "screen": {
     "meta": {
@@ -96,7 +98,8 @@
       "line": "Funciona hoy en nuestro salón.",
       "ctaWaitlist": "Apúntate a la lista de espera",
       "ctaTalk": "Hablemos",
-      "back": "Volver al inicio"
+      "back": "Volver al inicio",
+      "code": "Código en GitHub"
     },
     "chat": {
       "series1You": "Jota, ¿dónde se rodó esto?",
@@ -169,6 +172,7 @@
       "sub": "Jota se instala en una máquina tuya. Le hablas desde la tele, desde un altavoz o desde el móvil, y funciona con lo que ya tienes: Home Assistant, OpenClaw y el modelo de IA que elijas.",
       "ctaInstall": "Instálalo en tu máquina",
       "ctaScreen": "Ver Jota-Screen",
+      "ctaCode": "Código en GitHub",
       "caption": "Estás viendo una serie y preguntas dónde se rodó. Jota contesta en la tele y la serie sigue.",
       "replay": "Verlo otra vez",
       "tvLabel": "La tele con Jota-Screen, contestando a una pregunta sobre la serie"
@@ -229,7 +233,9 @@
       "screen": "Mira Jota-Screen",
       "screenBody": "La tele que ya tienes, convertida en la pantalla de Jota.",
       "how": "Lee cómo está hecho",
-      "howBody": "Qué pasa desde que le hablas hasta que te contesta, pieza a pieza."
+      "howBody": "Qué pasa desde que le hablas hasta que te contesta, pieza a pieza.",
+      "code": "Todo el código en GitHub",
+      "codeBody": "Cada pieza de Jota es un repositorio público: gateway, transcripción, voz y cliente."
     }
   },
   "contact": {
