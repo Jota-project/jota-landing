@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { buttonClass } from "@/components/Button";
 import { mailtoHref } from "@/lib/contact";
+import { repoUrl } from "@/lib/github";
 import { useInView, useReducedMotion, useTrackProgress } from "../hooks";
 import { Reposo } from "../tv/Reposo";
 import { TvFrame } from "../tv/TvFrame";
@@ -93,6 +94,8 @@ export function TrackD() {
       <div className="tdk-fade" aria-hidden="true" />
       <div className="tdk-back">
         <Link href="/">{t("s8.back")}</Link>
+        {" · "}
+        <a href={repoUrl("jota-screen")} target="_blank" rel="noopener">{t("s8.code")} ↗</a>
       </div>
     </>
   );
