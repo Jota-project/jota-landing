@@ -6,6 +6,6 @@ export default createMiddleware(routing);
 export const config = {
   matcher: [
     // Aplica a todo excepto API, _next, _vercel, archivos con extensión, y /components
-    "/((?!api|_next|_vercel|components|.*\\..*).*)",
+    "/((?!api|_next|_vercel|components|lab|.*\\..*).*)",
   ],
 };
