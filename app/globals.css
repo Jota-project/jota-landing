@@ -1,83 +1,18 @@
 @import "tailwindcss";
+@import "./fogar-tokens.css";
 
 @theme {
-  --color-linen:      #F6F3F0;
-  --color-linen-2:    #EFE9E4;
-  --color-malva:      #7C6AAE;
-  --color-malva-soft: #A99AD1;
-  --color-malva-tint: #E9E3F2;
-  --color-sky:        #6E8CC4;
-  --color-sky-tint:   #E1E8F3;
-  --color-ink:        #2A2433;
-  --color-ink-soft:   #6A6377;
-  --color-line:       #DED6CF;
-  --color-malva-text: #67569A;
-  --color-dusk:       #211B2A;
-
-  --font-display: var(--font-fraunces), "Fraunces", serif;
-  --font-sans:    var(--font-inter), "Inter", system-ui, sans-serif;
-
-  --radius-card: 24px;
-  --radius-pill: 9999px;
-
-  --spacing-section-y: 6rem;
-  --spacing-section-y-md: 8rem;
-  --width-prose: 60ch;
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --color-noche: #0b1012;
+  --color-hueso: #ece6dc;
+  --color-hueso-suave: #b8bec2;
+  --font-display: var(--font-unbounded), "Unbounded", system-ui, sans-serif;
+  --font-sans: var(--font-figtree), "Figtree", system-ui, sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 body {
-  background: var(--color-linen);
-  color: var(--color-ink);
+  background: var(--noche);
+  color: var(--hueso);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-@keyframes orb-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.orb {
-  width: 96px;
-  height: 96px;
-  border-radius: 9999px;
-  flex-shrink: 0;
-  background: radial-gradient(
-    circle at 32% 30%,
-    var(--color-malva-soft),
-    var(--color-malva) 46%,
-    var(--color-sky) 100%
-  );
-  /* static glow: only transform animates */
-  box-shadow: 0 0 0 12px rgba(124, 106, 174, 0.14), 0 0 70px rgba(124, 106, 174, 0.5);
-  animation: orb-pulse 3.4s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .orb {
-    animation: none;
-  }
-}
-
-/* ---------- Barra de navegación sobre el cuerpo Dusk (NavTone pone data-nav en <html>; la usan /jota-screen y el home) ---------- */
-/* la barra vive fuera de .jscreen; estas reglas sin capa ganan a las utilidades de Tailwind */
-html[data-nav=dark] nav[aria-label=Primary]{background-color:rgba(33,27,42,.8);border-bottom-color:rgba(246,243,240,.1)}
-html[data-nav=dark] nav[aria-label=Primary] a{color:var(--color-linen)}
-html[data-nav=dark] nav[aria-label=Primary] ul a{color:rgba(246,243,240,.75)}
-html[data-nav=dark] nav[aria-label=Primary] button{color:rgba(246,243,240,.75);border-color:rgba(246,243,240,.3)}
-html[data-nav=dark] nav[aria-label=Primary] :is(a,button):hover{color:var(--color-malva-soft)}
-html[data-nav=dark] nav[aria-label=Primary] button:hover{border-color:var(--color-malva-soft)}
