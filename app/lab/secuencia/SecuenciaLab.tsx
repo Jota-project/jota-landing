@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ScrollSequence from "@/components/fogar/ScrollSequence";
-import { LineaViva } from "@/components/fogar/linea-viva/LineaViva";
 import { Anclado, Capa, Guias, letra } from "@/components/fogar/escena/Escena";
 
 // Recorrido v5 (Higgsfield + maqueta) exportado en AVIF: 283 fotogramas a 12 fps, con paradas reales.
@@ -79,7 +78,6 @@ export function SecuenciaLab() {
     [ancho],
   );
   const [lampara, setLampara] = useState(false);
-  const [termostato, setTermostato] = useState(false);
   const enPortada = f <= 18;
   const enBalda = f >= BALDA.desde && f <= BALDA.hasta;
   const boton = (on: boolean) =>
@@ -94,7 +92,6 @@ export function SecuenciaLab() {
           (
             [
               ["balda_lampara", lampara, "120ms", "300ms"],
-              ["balda_termostato", termostato, "900ms", "400ms"],
             ] as const
           ).map(([n, on, dentro, fuera]) => (
             <img
@@ -110,9 +107,6 @@ export function SecuenciaLab() {
 
         {/* Portada (f_000): la palabra en la tele, título en la pared derecha y tres rótulos. */}
         <Capa visible={enPortada}>
-          <Anclado x={760} y={340} w={400}>
-            <LineaViva estado="rest" label="Fogar" />
-          </Anclado>
           <Anclado x={1330} y={150} w={560}>
             <h1 className="font-display leading-none tracking-[-0.035em]" style={{ fontSize: letra(60, 32) }}>
               El fuego
@@ -130,15 +124,18 @@ export function SecuenciaLab() {
 
         {/* Balda (f_176–198): título bajo la balda, la casa con sus dos botones, la radio y la libreta (único vidrio). */}
         <Capa visible={enBalda}>
-          <Guias lineas={[[590, 210, 590, 278], [800, 222, 923, 222], [880, 690, 880, 606], [1500, 470, 1380, 590]]} />
+          <Guias lineas={[[880, 690, 880, 606], [1500, 470, 1380, 590]]} />
           <Anclado x={413} y={80} w={480}>
             <p className={rotulo} style={{ fontSize: letra(17) }}>
-              La casa. Fogar la enciende y la apaga a través de Home Assistant.
+              La casa. Fogar enciende la lámpara a través de Home Assistant.
             </p>
             <div className="mt-3 flex gap-2">
               <button type="button" aria-pressed={lampara} onClick={() => setLampara((v) => !v)} className={boton(lampara)}>Lámpara</button>
-              <button type="button" aria-pressed={termostato} onClick={() => setTermostato((v) => !v)} className={boton(termostato)}>Termostato</button>
             </div>
+          </Anclado>
+          {/* El termómetro de la pared: solo marca la temperatura, sin domótica. */}
+          <Anclado x={923} y={203} w={87}>
+            <p className="text-center font-medium tabular-nums text-[color:var(--hueso)]" style={{ fontSize: letra(22, 11) }} aria-label="Temperatura: 21 grados">21°</p>
           </Anclado>
           <Anclado x={858} y={700} w={420}>
             <p className={rotulo} style={{ fontSize: letra(16) }}>Un altavoz satélite con un cliente ligero.</p>
