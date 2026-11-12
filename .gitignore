@@ -10,3 +10,5 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 docs/
 .env*
+
+media-src/
