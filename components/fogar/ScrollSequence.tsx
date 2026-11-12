@@ -19,7 +19,12 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
     const canvas = ref.current!;
     const ctx = canvas.getContext("2d")!;
     const still = matchMedia("(prefers-reduced-motion: reduce), (max-width: 767px), (pointer: coarse)").matches;
-    const frames: (HTMLImageElement | null)[] = Array(count).fill(null);
+    // Todos los fotogramas se guardan comprimidos (blobs, ~40 KB); solo se decodifican los cercanos a la posición
+    // actual (ImageBitmap, fuera del hilo principal). Así pintar nunca obliga al navegador a decodificar en mitad del scroll.
+    const blobs: (Blob | null)[] = Array(count).fill(null);
+    const frames: (ImageBitmap | null)[] = Array(count).fill(null);
+    const decoding = new Set<number>();
+    const NEAR = 12; // fotogramas decodificados a cada lado (~8 MB cada uno a 1920)
     const scrollEl = document.getElementById(scrollId);
     let cur = 0, shown = -1, raf = 0, alive = true;
 
@@ -42,18 +47,41 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
       const img = frames[i];
       if (!img) return;
       const cw = canvas.width, ch = canvas.height;
-      const s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight); // cover
-      const w = img.naturalWidth * s, h = img.naturalHeight * s;
+      const s = Math.max(cw / img.width, ch / img.height); // cover
+      const w = img.width * s, h = img.height * s;
+      ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
       shown = i;
+    };
+
+    // Decodifica la ventana alrededor de `c` (de dentro hacia fuera) y libera lo que queda lejos.
+    const decodeAround = (c: number) => {
+      for (let i = 0; i < count; i++) {
+        if (frames[i] && Math.abs(i - c) > NEAR * 2 && i !== 0) { frames[i]!.close(); frames[i] = null; }
+      }
+      for (let d = 0; d <= NEAR; d++) {
+        for (const i of [c + d, c - d]) {
+          const b = blobs[i];
+          if (!b || frames[i] || decoding.has(i)) continue;
+          decoding.add(i);
+          createImageBitmap(b).then((bm) => {
+            decoding.delete(i);
+            if (!alive || Math.abs(i - Math.round(cur)) > NEAR * 2) return bm.close();
+            frames[i] = bm;
+            schedule();
+          }, () => decoding.delete(i));
+        }
+      }
     };
 
     const tick = () => {
       raf = 0;
       const target = still ? 0 : progress() * (count - 1);
-      cur += (target - cur) * 0.25; // suavizado: el scroll a saltos de la rueda no se nota
-      if (Math.abs(target - cur) < 0.02) cur = target;
-      const i = nearest(Math.round(cur));
+      cur += (target - cur) * 0.4; // suavizado corto: absorbe los saltos de la rueda sin notarse lento
+      if (Math.abs(target - cur) < 0.05) cur = target;
+      const c = Math.round(cur);
+      decodeAround(c);
+      const i = nearest(c);
       if (i >= 0 && i !== shown) paint(i);
       if (cur !== target) raf = requestAnimationFrame(tick);
     };
@@ -67,11 +95,10 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
       schedule();
     };
 
-    const load = (i: number) => {
-      const img = new Image();
-      img.src = src(i);
-      return img.decode().then(() => { if (alive) { frames[i] = img; schedule(); } }, () => {});
-    };
+    const load = (i: number) =>
+      fetch(src(i))
+        .then((r) => (r.ok ? r.blob() : null))
+        .then((b) => { if (alive && b) { blobs[i] = b; schedule(); } }, () => {});
 
     // Primero el póster; después pasadas cada vez más finas (1 de cada 16, 8, 4, 2 y el resto),
     // para que todo el recorrido sea navegable pronto aunque falten fotogramas intermedios.
@@ -93,6 +120,7 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
+      frames.forEach((f) => f?.close());
       removeEventListener("resize", resize);
       removeEventListener("scroll", schedule);
     };
