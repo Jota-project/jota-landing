@@ -1,0 +1,303 @@
+/* DIY de Fogar (/diy y sus artículos). Dirección D «Hilo» con licencia: noche, hueso y líneas finas; champán y salvia
+   salen de la tinta de la línea viva (tinta.ts). El naranja de la marca (ascua, llama) solo en dos momentos:
+   el orbe que viaja por el mapa y la brasa del cierre «Móntalo». La casa tiene su hoja (casa.css). */
+/* En la capa components de Tailwind: así las utilidades de los componentes pueden ajustar estas reglas. El orden
+   se declara aquí también por si esta hoja llega antes que globals.css. */
+@layer theme, base, components, utilities;
+@layer components {
+.diy {
+  --champan: #e6d9c2;
+  --salvia: #cfe6d6;
+  --raya: color-mix(in srgb, var(--hueso) 14%, transparent);
+  --hilo-x: -12px;
+  --margen: 16px;
+}
+@media (min-width: 768px) { .diy { --margen: 48px; } }
+@media (min-width: 1024px) { .diy { --hilo-x: -32px; } }
+
+/* ---------- Prosa del artículo: 58ch dan ~65–72 caracteres de texto corrido en Figtree, ritmo de 1.65 ---------- */
+.diy-prosa { max-width: 58ch; font-size: 18px; line-height: 1.65; color: var(--hueso-suave); }
+/* Las anclas no quedan bajo la tira sticky del móvil (56 px); vale también para el foco por teclado. */
+html:has(.diy-articulo) { scroll-padding-top: 76px; }
+@media (min-width: 1024px) { html:has(.diy-articulo) { scroll-padding-top: 24px; } }
+.diy-prosa .frase { font-family: var(--font-display); font-size: .9em; letter-spacing: -0.02em; color: var(--champan); }
+.diy-prosa h2 {
+  font-family: var(--font-display); font-weight: 400; letter-spacing: -0.035em; line-height: 1.12;
+  font-size: clamp(26px, 3.2vw, 34px); color: var(--hueso); margin: 4.5rem 0 1.25rem; text-wrap: balance;
+}
+.diy-prosa h3 { font-size: 19px; font-weight: 600; line-height: 1.35; color: var(--hueso); margin: 2.75rem 0 .75rem; }
+.diy-prosa p, .diy-prosa ul, .diy-prosa .tabla { margin: 0 0 1.15em; }
+.diy-prosa ul { padding-left: 1.25em; list-style: none; }
+.diy-prosa li { position: relative; margin-bottom: .55em; }
+.diy-prosa ul > li::before {
+  content: ""; position: absolute; left: -1.1em; top: .82em; width: .55em; height: 1px; background: var(--hueso-tenue);
+}
+.diy-prosa strong { color: var(--hueso); font-weight: 600; }
+.diy-prosa a {
+  color: var(--hueso); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hueso) 35%, transparent);
+  text-underline-offset: 4px; overflow-wrap: anywhere; transition: text-decoration-color var(--t-fundido) ease-out, text-decoration-thickness var(--t-fundido) ease-out, color var(--t-fundido) ease-out;
+}
+@media (hover: hover) and (pointer: fine) { .diy-prosa a:hover { text-decoration-thickness: 2px; text-decoration-color: var(--hueso); } }
+.diy-prosa a:active { color: var(--chispa); text-decoration-color: var(--chispa); }
+.diy-prosa a:focus-visible { border-radius: 4px; }
+.diy-prosa code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .86em; padding: .1em .35em; border-radius: 6px;
+  background: var(--piedra-alta); color: var(--hueso);
+}
+
+/* Tablas: en móvil, «Qué es de Fogar y qué es abierto» se apila por data-label; la de compatibilidad cabe tal cual. */
+.diy-prosa .tabla { overflow-x: auto; }
+.diy-prosa table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+.diy-prosa th, .diy-prosa td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--veta); }
+.diy-prosa thead th { font-size: 13px; font-weight: 500; color: var(--hueso-tenue); border-bottom-color: var(--raya); }
+.diy-prosa tbody th { font-weight: 600; color: var(--hueso); white-space: nowrap; }
+.diy-prosa .compat tbody th { width: 6.5em; }
+.diy-prosa .si { color: var(--salvia); }
+.diy-prosa .no { color: var(--hueso); }
+@media (max-width: 767px) {
+  .diy-prosa .piezas, .diy-prosa .piezas tbody, .diy-prosa .piezas tr, .diy-prosa .piezas th, .diy-prosa .piezas td { display: block; }
+  .diy-prosa .piezas thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .diy-prosa .piezas tr { padding: 14px 0; border-bottom: 1px solid var(--veta); }
+  .diy-prosa .piezas th, .diy-prosa .piezas td { border: 0; padding: 2px 0; white-space: normal; }
+  .diy-prosa .piezas td::before { content: attr(data-label) " · "; color: var(--hueso-tenue); }
+}
+
+
+/* ---------- Hilo de lectura: nace bajo el titular, baja por el margen y se llena con el scroll ---------- */
+.diy-cuerpo { position: relative; view-timeline: --lectura block; }
+.diy-cuerpo::before {
+  content: ""; position: absolute; left: var(--hilo-x); top: -28px; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--raya) 60px);
+}
+.diy-cuerpo::after {
+  content: ""; position: absolute; left: calc(var(--hilo-x) - .5px); top: 0; bottom: 0; width: 2px; border-radius: 2px;
+  background: linear-gradient(to bottom, var(--champan), #fffaf0);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--champan) 45%, transparent);
+  transform-origin: top; transform: scaleY(0); opacity: 0;
+}
+/* nodos en el hilo: cada h2 y cada paso se enciende al cruzar la línea de lectura (40 % de la ventana) */
+.diy-prosa h2, .diy-prosa section[id^="paso-"] > h3, .diy-prosa #cortar > h3 { position: relative; }
+.diy-prosa h2::before, .diy-prosa section[id^="paso-"] > h3::before, .diy-prosa #cortar > h3::before {
+  content: ""; position: absolute; left: calc(var(--hilo-x) - 4.5px); top: .45em; width: 9px; height: 9px; border-radius: 999px;
+  box-sizing: border-box; border: 1px solid var(--champan); background: var(--champan);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--champan) 16%, transparent), 0 0 14px color-mix(in srgb, var(--champan) 55%, transparent);
+}
+.diy-prosa section[id^="paso-"] > h3::before, .diy-prosa #cortar > h3::before { top: .5em; }
+@supports (animation-timeline: view()) {
+  .diy-cuerpo::after {
+    opacity: 1; animation: diy-llena linear both; animation-timeline: --lectura;
+    animation-range: cover 60vh cover calc(100% - 40vh);
+  }
+  .diy-prosa h2::before, .diy-prosa section[id^="paso-"] > h3::before, .diy-prosa #cortar > h3::before {
+    animation: diy-nodo linear both; animation-timeline: view(); animation-range: cover 54% cover 62%;
+  }
+}
+@keyframes diy-llena { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes diy-nodo {
+  from { background: var(--noche); border-color: var(--hueso-tenue); box-shadow: 0 0 0 0 transparent, 0 0 0 transparent; }
+}
+
+/* ---------- El hilo (figura del resumen): la orden baja por la línea y cada pieza se enciende al pasar ---------- */
+.diy-hilo { margin: 2.5rem 0 2.75rem; padding: 28px 0 0; border-top: 1px solid var(--veta); }
+.diy-hilo ol { list-style: none; margin: 0; padding: 0; }
+.diy-hilo li { position: relative; display: grid; grid-template-columns: 18px minmax(0, 1fr); column-gap: 18px; padding-bottom: 24px; margin: 0; }
+.diy-hilo li::before { content: none; }
+.diy-hilo li:last-child { padding-bottom: 0; }
+.diy-hilo .punto {
+  width: 11px; height: 11px; margin: 8px 0 0 3.5px; border-radius: 999px; border: 1px solid var(--hueso-tenue); background: var(--noche);
+  transition: background-color var(--t-paso) ease .55s, border-color var(--t-paso) ease .55s, box-shadow var(--t-paso) ease .55s, transform var(--t-paso) var(--curva-entrada) .55s;
+}
+.diy-hilo li:first-child .punto, .diy-hilo li:first-child .nodo, .diy-hilo li:first-child .ahora { transition-delay: 0s; }
+.diy-hilo .tramo { position: absolute; left: 8.5px; top: 21px; bottom: -6px; width: 1px; background: var(--veta); overflow: hidden; }
+.diy-hilo .tramo::after {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, var(--champan) 70%, #fffaf0);
+  transform: scaleY(0); transform-origin: top; transition: transform .6s var(--curva-desliza);
+}
+.diy-hilo .nodo { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font-size: 16px; line-height: 1.6; }
+.diy-hilo .nodo a { color: var(--hueso); font-weight: 600; text-decoration: none; }
+@media (hover: hover) and (pointer: fine) { .diy-hilo .nodo a:hover { text-decoration: underline; text-underline-offset: 4px; } }
+.diy-hilo .nodo a:active { color: var(--chispa); text-decoration: underline; text-underline-offset: 4px; }
+.diy-hilo .nodo span { font-size: 14px; color: var(--hueso-tenue); }
+.diy-hilo .nodo, .diy-hilo .ahora { margin: 0; }
+.diy-hilo .ahora { font-size: 15px; line-height: 1.5; color: var(--hueso-tenue); transition: color var(--t-paso) ease .55s; }
+.diy-hilo li[data-on] .punto { background: var(--champan); border-color: var(--champan); box-shadow: 0 0 0 4px color-mix(in srgb, var(--champan) 16%, transparent), 0 0 14px color-mix(in srgb, var(--champan) 55%, transparent); }
+.diy-hilo li[data-actual] .punto { transform: scale(1.25); }
+.diy-hilo li[data-paso] .tramo::after { transform: scaleY(1); }
+.diy-hilo li[data-actual] .ahora { color: var(--salvia); }
+.diy-hilo .pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 24px; }
+.diy-hilo .pie span { font-size: 15px; line-height: 1.5; color: var(--hueso-suave); max-width: 46ch; }
+.diy-hilo .frase { font-family: var(--font-display); letter-spacing: -0.025em; font-size: clamp(18px, 2.2vw, 22px); line-height: 1.25; color: var(--champan); margin-bottom: 22px; }
+
+/* ---------- Reproducir el recorrido (escenario e hilo): play ↔ stop ---------- */
+.diy .reproducir {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 18px 0 15px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--hueso) 22%, transparent); background: transparent; color: var(--hueso);
+  font-size: 14px; cursor: pointer; justify-self: start;
+  transition: background-color var(--t-fundido) ease, border-color var(--t-fundido) ease;
+}
+.diy .reproducir .icono {
+  width: 10px; height: 10px; background: var(--champan);
+  clip-path: polygon(0 0, 100% 50%, 100% 50%, 0 100%); transition: clip-path var(--t-fundido) ease;
+}
+.diy .reproducir[aria-pressed="true"] { border-color: var(--champan); background: color-mix(in srgb, var(--champan) 12%, var(--noche)); }
+.diy .reproducir[aria-pressed="true"] .icono { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+@media (hover: hover) and (pointer: fine) { .diy .reproducir:hover { border-color: var(--hueso-tenue); background: color-mix(in srgb, var(--hueso) 6%, transparent); } }
+.diy .reproducir:active { border-color: var(--hueso); background: color-mix(in srgb, var(--hueso) 12%, transparent); }
+
+/* ---------- Escenario (≥ 1024 px): línea viva, mapa de las cinco piezas, recorrido e índice ---------- */
+.diy-escenario {
+  position: sticky; top: 24px; display: grid; gap: 14px; max-height: calc(100dvh - 48px); overflow-y: auto; scrollbar-width: none;
+}
+.diy-escenario .linea { width: 260px; margin-left: -8px; }
+.diy-escenario .mapa { position: relative; width: 320px; height: 196px; }
+.diy-escenario .mapa svg { display: block; overflow: visible; }
+.diy-escenario .base { fill: none; stroke: var(--raya); stroke-width: 1; stroke-dasharray: 3 4; }
+.diy-escenario .lit {
+  fill: none; stroke: var(--champan); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--champan) 70%, transparent));
+  transition: stroke-dashoffset 600ms var(--curva-desliza);
+}
+.diy-escenario .lit[data-on] { stroke-dashoffset: 0; }
+.diy-escenario .pieza rect { fill: var(--noche); stroke: color-mix(in srgb, var(--hueso) 24%, transparent); transition: fill var(--t-paso) ease, stroke var(--t-paso) ease; }
+.diy-escenario .pieza circle { fill: var(--noche); stroke: var(--hueso-tenue); stroke-width: 1.2; transition: fill var(--t-paso) ease, stroke var(--t-paso) ease; }
+.diy-escenario .pieza text { fill: var(--hueso-tenue); font-family: var(--font-texto, inherit); font-size: 12px; transition: fill var(--t-paso) ease; }
+.diy-escenario .pieza[data-on] rect { fill: color-mix(in srgb, var(--champan) 13%, var(--noche)); stroke: var(--champan); }
+.diy-escenario .pieza[data-on] circle { fill: var(--champan); stroke: var(--champan); }
+.diy-escenario .pieza[data-on] text { fill: var(--hueso); }
+/* el orbe: una brasa que viaja por el cable real (Escenario.tsx, WAAPI sobre offset-path) */
+.diy-escenario .orbe {
+  position: absolute; left: 0; top: 0; width: 9px; height: 9px; border-radius: 999px; pointer-events: none;
+  background: radial-gradient(circle, var(--chispa) 0 30%, var(--llama) 70%);
+  box-shadow: 0 0 10px 2px color-mix(in srgb, var(--llama) 70%, transparent);
+  offset-rotate: 0deg; offset-distance: 100%; opacity: 0; transition: opacity var(--t-fundido) ease;
+}
+.diy-escenario .orbe[data-visible] { opacity: 1; }
+.diy-escenario .rotulo { min-height: 2.9em; margin: 0; font-size: 14px; line-height: 1.45; color: var(--hueso-suave); max-width: 320px; }
+.diy-escenario .rotulo .n { color: var(--hueso); font-weight: 600; }
+.diy-escenario .toc ol { list-style: none; margin: 4px 0 0; padding: 0; border-left: 1px solid var(--veta); }
+.diy-escenario .toc a {
+  display: block; padding: 4px 0 4px 16px; margin-left: -1px; border-left: 1px solid transparent; font-size: 13px; line-height: 1.4;
+  color: var(--hueso-tenue); text-decoration: none; transition: color var(--t-fundido) ease, border-color var(--t-fundido) ease;
+}
+@media (hover: hover) and (pointer: fine) { .diy-escenario .toc a:hover { color: var(--hueso); } }
+.diy-escenario .toc a:active { color: var(--chispa); }
+.diy-escenario .toc a[aria-current="true"] { color: var(--hueso); border-left-color: var(--champan); }
+
+/* ---------- Tira (< 1024 px): sticky, alto 0 para no empujar el texto; aparece donde hay pieza activa ---------- */
+.diy-tira { position: sticky; top: 0; height: 0; z-index: 30; }
+.diy-tira .barra {
+  position: absolute; top: 0; left: calc(-1 * var(--margen)); right: calc(-1 * var(--margen)); height: 56px;
+  display: flex; align-items: center; gap: 12px; padding: 0 var(--margen);
+  background: var(--noche); border-bottom: 1px solid var(--veta);
+  transform: translateY(-100%); opacity: 0; pointer-events: none;
+  transition: transform 240ms var(--curva-entrada), opacity var(--t-fundido) ease;
+}
+.diy-articulo[data-piezas] .diy-tira .barra { transform: none; opacity: 1; }
+.diy-tira .mini { width: 76px; height: 26px; flex: none; overflow: visible; }
+.diy-tira .mini .base { fill: none; stroke: var(--raya); stroke-width: 1; }
+.diy-tira .mini circle { fill: var(--noche); stroke: var(--hueso-tenue); stroke-width: 1; transition: fill var(--t-fundido) ease, stroke var(--t-fundido) ease; }
+.diy-tira .mini circle[data-on] { fill: var(--champan); stroke: var(--champan); }
+.diy-tira .nombre { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; color: var(--hueso); }
+
+/* ---------- El comando como protagonista (índice y Móntalo) ---------- */
+.diy-comando { font-family: ui-monospace, "SF Mono", Menlo, monospace; word-break: break-all; white-space: pre-wrap; margin: 0; }
+.diy-comando-bloque { margin-top: 22px; }
+.diy-comando-bloque .caja {
+  display: flex; flex-direction: column; gap: 16px; padding: 20px; border-radius: var(--radio-bloque);
+  background: var(--noche); border: 1px solid color-mix(in srgb, var(--hueso) 16%, transparent);
+}
+.diy-comando-bloque .diy-comando { font-size: clamp(15px, 1.35vw, 17px); line-height: 1.6; color: var(--hueso); }
+.diy-comando-bloque code { padding: 0; background: none; font-size: inherit; border-radius: 0; }
+.diy-comando-bloque .prompt { color: var(--champan); user-select: none; }
+/* la balda: la línea viva descansa sobre una raya, como en la escena */
+.diy-comando-bloque .balda { display: flex; justify-content: flex-end; margin-top: 6px; border-bottom: 1px solid color-mix(in srgb, var(--hueso) 20%, transparent); }
+.diy-instala { padding-top: 6px; border-top: 1px solid var(--veta); }
+@media (min-width: 1024px) { .diy-instala { border-top: 0; padding-top: 0; } }
+
+/* ---------- Ficha del índice: el hilo cruza la foto al pasar o enfocar ---------- */
+.diy-ficha .foto { transition: transform 700ms var(--curva-entrada), filter var(--t-pulso) ease-out; }
+.diy-ficha .hilo { position: absolute; left: 0; right: 0; bottom: 13%; height: 0; }
+.diy-ficha .hilo .linea, .diy-ficha .hilo .traza { position: absolute; left: 8%; right: 8%; top: 0; height: 1px; }
+.diy-ficha .hilo .linea { background-image: linear-gradient(to right, color-mix(in srgb, var(--hueso) 45%, transparent) 50%, transparent 0); background-size: 7px 1px; }
+.diy-ficha .hilo .traza {
+  height: 2px; top: -.5px; background: var(--champan); box-shadow: 0 0 10px color-mix(in srgb, var(--champan) 70%, transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform var(--t-paso) ease-out;
+}
+.diy-ficha .nodo { position: absolute; top: 0; width: 0; height: 0; }
+.diy-ficha .nodo > span {
+  position: absolute; bottom: 12px; left: -6px; font-size: 13px; line-height: 1.2; color: var(--hueso); white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(11, 16, 18, .9);
+}
+.diy-ficha .nodo:nth-child(4) > span { left: 0; transform: translateX(-50%); }
+.diy-ficha .nodo:last-child > span { left: auto; right: -6px; }
+.diy-ficha .nodo i {
+  position: absolute; left: -5.5px; top: -5.5px; width: 11px; height: 11px; border-radius: 999px; border: 1px solid var(--hueso-suave); background: var(--noche);
+  transition: background-color var(--t-fundido) ease, border-color var(--t-fundido) ease, box-shadow var(--t-fundido) ease;
+}
+.diy-ficha .leer .flecha { display: inline-block; transition: transform 200ms var(--curva-entrada); }
+.diy-ficha:focus-within .traza, .diy-ficha[data-visto] .traza { transform: scaleX(1); transition: transform 600ms var(--curva-desliza); }
+.diy-ficha:focus-within .nodo i, .diy-ficha[data-visto] .nodo i { background: var(--champan); border-color: var(--champan); box-shadow: 0 0 12px color-mix(in srgb, var(--champan) 70%, transparent); }
+.diy-ficha .nodo:nth-child(4) i { transition-delay: 0ms; }
+.diy-ficha:focus-within .nodo:nth-child(4) i, .diy-ficha[data-visto] .nodo:nth-child(4) i { transition-delay: 300ms; }
+.diy-ficha:focus-within .nodo:nth-child(5) i, .diy-ficha[data-visto] .nodo:nth-child(5) i { transition-delay: 560ms; }
+@media (hover: hover) and (pointer: fine) {
+  .diy-ficha:hover .foto { transform: scale(1.02); }
+  .diy-ficha:hover h3 a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; }
+  .diy-ficha:hover .leer .flecha { transform: translateX(4px); }
+  .diy-ficha:hover .traza { transform: scaleX(1); transition: transform 600ms var(--curva-desliza); }
+  .diy-ficha:hover .nodo i { background: var(--champan); border-color: var(--champan); box-shadow: 0 0 12px color-mix(in srgb, var(--champan) 70%, transparent); }
+  .diy-ficha:hover .nodo:nth-child(4) i { transition-delay: 300ms; }
+  .diy-ficha:hover .nodo:nth-child(5) i { transition-delay: 560ms; }
+}
+
+/* La ficha entera es el enlace: el foco y el pulsado se pintan en el bloque, no en el título. */
+.diy-ficha:has(h3 a:focus-visible) { outline: 2px solid var(--hueso); outline-offset: 10px; border-radius: var(--radio-vidrio); box-shadow: 0 0 0 13px var(--noche); }
+.diy-ficha:has(h3 a:active) .foto { transform: scale(1.01); filter: brightness(.9); }
+.diy-ficha:has(h3 a:active) h3 a { color: var(--chispa); }
+
+/* ---------- Cierre: Móntalo, con el comando y tres puertas. La brasa de la marca, una vez ---------- */
+.diy-prosa .diy-montalo {
+  margin: 5rem 0 0; padding: 28px 22px 10px; border-radius: var(--radio-vidrio); border: 1px solid var(--veta);
+  background:
+    radial-gradient(120% 90% at 0% 100%, color-mix(in srgb, var(--ascua) 24%, transparent), transparent 62%),
+    var(--piedra);
+}
+@media (min-width: 768px) { .diy-prosa .diy-montalo { padding: 36px 32px 12px; } }
+.diy-prosa .diy-montalo h2 { margin-top: 0; }
+.diy-prosa .diy-montalo h2::before { left: calc(var(--hilo-x) - 4.5px - 23px); }
+@media (min-width: 768px) { .diy-prosa .diy-montalo h2::before { left: calc(var(--hilo-x) - 4.5px - 33px); } }
+.diy-prosa .diy-montalo .requisitos { margin-top: 14px; font-size: 15px; color: var(--hueso-tenue); }
+.diy-prosa .diy-montalo .puertas-h { margin: 1.75rem 0 .25rem; font-size: 13px; font-weight: 500; color: var(--hueso-tenue); }
+.diy-prosa .puertas { padding: 0; margin: 0; }
+.diy-prosa .puertas li { margin: 0; }
+.diy-prosa .puertas li::before { content: none; }
+.diy-prosa .puertas a {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 52px;
+  border-top: 1px solid var(--veta); text-decoration: none; font-size: 17px;
+}
+.diy-prosa .puertas a span { color: var(--champan); transition: transform 200ms var(--curva-entrada); }
+@media (hover: hover) and (pointer: fine) { .diy-prosa .puertas a:hover span { transform: translateX(3px); } .diy-prosa .puertas a:hover { background: color-mix(in srgb, var(--hueso) 5%, transparent); } }
+.diy-prosa .puertas a:active { background: color-mix(in srgb, var(--hueso) 9%, transparent); }
+.diy-prosa .puertas a { transition: background-color var(--t-fundido) ease-out; }
+.diy-prosa .diy-registro { margin-top: 2rem; font-size: 14px; color: var(--hueso-tenue); }
+.diy-prosa .diy-registro summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; }
+.diy-prosa .diy-registro ul { margin: .25rem 0 0; font-size: 14px; }
+
+/* ---------- Reducir movimiento: estado final, solo fundidos de color ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .diy-hilo *, .diy-hilo *::after, .diy-escenario *, .diy-ficha *, .diy-prosa .puertas a span { transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow !important; transition-delay: 0s !important; transition-duration: var(--t-fundido) !important; }
+  .diy-cuerpo::after { animation: none !important; opacity: 0 !important; }
+  .diy-prosa h2::before, .diy-prosa section[id^="paso-"] > h3::before, .diy-prosa #cortar > h3::before { animation: none !important; }
+  .diy-escenario .lit { stroke-dashoffset: 1; opacity: 0; transition: opacity var(--t-fundido) ease !important; }
+  .diy-escenario .lit[data-on] { stroke-dashoffset: 0; opacity: 1; }
+  .diy-escenario .orbe { display: none; }
+  .diy-tira .barra { transition: opacity var(--t-fundido) ease; transform: none; }
+  .diy-ficha .traza { transform: scaleX(1) !important; opacity: 0; transition: opacity var(--t-fundido) ease !important; }
+  .diy-ficha:focus-within .traza, .diy-ficha[data-visto] .traza { opacity: 1; }
+  .diy-ficha .foto { transform: none !important; }
+  .diy-hilo li[data-actual] .punto { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+  .diy-ficha:hover .traza { opacity: 1; }
+}
+}

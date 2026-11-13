@@ -1,0 +1,74 @@
+{
+  "diy": {
+    "saltar": "Skip to content",
+    "nuevo": "New",
+    "enlace": {"label": "Go to the DIY section", "texto": "DIY"},
+    "portada": {"titulo": "From the DIY", "lead": "Technical notes and guides to build it yourself. Every entry says what was tested.", "leer": "Read", "todo": "See all DIY"},
+    "indice": {
+      "seccion": "DIY",
+      "h1": "Fogar, inside out and in your home",
+      "lede": "How Fogar is built and how to put it together with open-source pieces. Every entry says what was tested and with which versions.",
+      "instala": {
+        "titulo": "Install it in one step",
+        "cuerpo": "Paste this into a terminal on the machine where Fogar will live.",
+        "copiar": "Copy",
+        "copiado": "Copied",
+        "requisitos": "You need",
+        "linux": "Linux with a systemd user session.",
+        "openclaw": "OpenClaw 2026.6.11 or later, on the same machine or over an SSH tunnel.",
+        "readme": "Full instructions in the fogar-gateway README"
+      },
+      "regla": {
+        "titulo": "Tested end to end",
+        "cuerpo": "We only publish what we've built ourselves and seen working. If something depends on an external provider, we say so."
+      },
+      "entradas": "Entries",
+      "leer": "Read the entry",
+      "filas": {
+        "estado": "Status",
+        "dificultad": "Difficulty",
+        "lectura": "Reading time",
+        "montar": "To set up",
+        "probado": "Tested with"
+      }
+    },
+    "articulo": {
+      "enEsta": "In this entry",
+      "probadoCon": "Tested with",
+      "piezasMas": "{n, plural, one {and # more piece} other {and # more pieces}}",
+      "dificultad": "Difficulty",
+      "registro": "Changelog",
+      "queEs": "To get to know the product, see <enlace>what Fogar is and what it can do</enlace>.",
+      "volver": "All DIY entries",
+      "hilo": {
+        "titulo": "The path of a command",
+        "frase": "“OK Fogar, turn off the living room light”",
+        "repetir": "Play the path",
+        "pie": "Everything goes through the gateway: the client never talks to the other pieces directly.",
+        "nodos": [
+          { "n": "Client", "d": "your voice", "ahora": "audio in chunks, on its way to the gateway" },
+          { "n": "fogar-gateway", "d": "checks the client", "ahora": "audio from a client with a valid key" },
+          { "n": "Transcription", "d": "voice → text", "ahora": "“turn off the living room light”" },
+          { "n": "Orchestrator", "d": "thinks and acts", "ahora": "a command for Home Assistant" },
+          { "n": "Synthesis", "d": "text → voice", "ahora": "“Done, I've turned off the living room light”" },
+          { "n": "Client", "d": "text and audio", "ahora": "text and audio over the same connection" }
+        ]
+      },
+      "escenario": {"reproducir": "Play the path", "paso": "Step {n} of {total}: {pieza}, {ahora}", "fin": "Path finished"},
+      "montalo": {"titulo": "Set it up", "puertas": "Where to go next", "readme": "fogar-gateway README", "protocolo": "Client protocol", "wake": "fogar-wake-trainer"},
+      "casa": {
+        "titulo": "What runs on your machines and what goes out",
+        "red": "Your network",
+        "piezas": ["Client", "fogar-gateway", "fogar-transcriber", "OpenClaw", "fogar-speaker", "Home Assistant"],
+        "fuera": "Outside, the providers you choose",
+        "ayuda": "Press one to see what it receives.",
+        "nada": "Something always leaves your home, to the external providers you choose.",
+        "proveedores": [
+          { "n": "ElevenLabs", "sale": "ElevenLabs receives your audio if it transcribes, or the text of the answers if it provides the voice." },
+          { "n": "Cloud model", "sale": "The cloud model receives what you say, already turned into text." },
+          { "n": "Tunnel or proxy", "sale": "Your audio goes through the tunnel or proxy when you use Fogar away from home." }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+/* La casa (Casa.tsx). Hoja propia: la usan el artículo de DIY y la portada, así que no depende de .diy.
+   Muros y tejado son una sola línea; al elegir un proveedor, la línea sale de la pieza que le habla y cruza el muro. */
+@layer theme, base, components, utilities;
+@layer components {
+.diy-casa {
+  --champan: #e6d9c2;
+  --muro: color-mix(in srgb, var(--hueso) 34%, transparent);
+  --guion: color-mix(in srgb, var(--hueso) 24%, transparent);
+  --fuera-w: 8.75rem;
+  margin: 3.25rem 0 2.5rem;
+  font-family: var(--font-texto, inherit);
+}
+@media (min-width: 640px) { .diy-casa { --fuera-w: 13rem; } }
+
+.diy-casa .planta {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--fuera-w); grid-template-rows: auto repeat(3, auto); row-gap: 12px;
+  padding-bottom: 20px;
+}
+.diy-casa .muros {
+  grid-column: 1; grid-row: 1 / -1; margin-bottom: -20px;
+  border: 1px solid var(--muro); border-top: 0; border-radius: 0 0 14px 14px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--piedra) 80%, transparent), transparent);
+}
+.diy-casa .tejado {
+  grid-column: 1; grid-row: 1; align-self: start; width: 100%; height: 34px; transform: translateY(-100%); overflow: visible;
+}
+.diy-casa .tejado path { fill: none; stroke: var(--muro); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.diy-casa .rotulo { grid-column: 1; grid-row: 1; padding: 10px 16px 0; font-size: 13px; color: var(--hueso-suave); z-index: 1; }
+.diy-casa .rotulo-fuera { grid-column: 2; grid-row: 1; align-self: end; padding-left: 28px; font-size: 13px; line-height: 1.35; color: var(--hueso-suave); }
+
+.diy-casa .fila { display: contents; }
+/* filas en su fila de rejilla: los muros ocupan la columna entera y la colocación automática las echaría debajo */
+.diy-casa .fila:nth-child(5) > * { grid-row: 2; }
+.diy-casa .fila:nth-child(6) > * { grid-row: 3; }
+.diy-casa .fila:nth-child(7) > * { grid-row: 4; }
+.diy-casa .dentro { grid-column: 1; display: flex; align-items: center; min-width: 0; padding-left: 16px; z-index: 1; }
+.diy-casa .fuera { grid-column: 2; display: flex; align-items: center; min-width: 0; }
+.diy-casa .planta ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; min-width: 0; }
+.diy-casa .planta li {
+  position: relative; margin: 0; padding: 6px 12px; border: 1px solid var(--veta); border-radius: var(--radio-chip, 10px);
+  font-size: 14px; line-height: 1.35; color: var(--hueso); background: var(--noche);
+  transition: border-color var(--t-paso, .3s) ease, box-shadow var(--t-paso, .3s) ease;
+}
+.diy-casa .planta li::before { content: none; }
+.diy-casa .planta li[data-origen] { border-color: var(--champan); box-shadow: 0 0 0 3px color-mix(in srgb, var(--champan) 14%, transparent), 0 0 18px color-mix(in srgb, var(--champan) 30%, transparent); }
+
+/* El cable: guion apagado; encendido, la luz corre desde la pieza hasta el proveedor (dentro y, después, fuera). */
+.diy-casa .cable {
+  position: relative; flex: 1 1 16px; min-width: 16px; height: 1px; margin-left: 8px;
+  background-image: linear-gradient(to right, var(--guion) 50%, transparent 0); background-size: 6px 1px;
+}
+.diy-casa .cable-fuera { flex: 0 0 20px; min-width: 20px; margin: 0 8px 0 0; }
+.diy-casa .cable::after {
+  content: ""; position: absolute; inset: -0.5px 0; background: var(--champan);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--champan) 70%, transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--curva-entrada, cubic-bezier(.23, 1, .32, 1)) 120ms;
+}
+.diy-casa .cable-fuera::after { transition-delay: 0ms; }
+.diy-casa .fila[data-on] .cable::after { transform: scaleX(1); transition-delay: 0ms; }
+.diy-casa .fila[data-on] .cable-fuera::after { transition-delay: 200ms; transition-duration: 250ms; }
+
+.diy-casa button {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 14px 6px 12px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--hueso) 22%, transparent); background: transparent; color: var(--hueso-suave);
+  font: inherit; font-size: 14px; line-height: 1.25; text-align: left; cursor: pointer;
+  transition: border-color var(--t-fundido, .16s) ease, color var(--t-fundido, .16s) ease, background-color var(--t-fundido, .16s) ease;
+}
+/* Señal de estado que no depende de un borde tenue: anillo vacío o punto lleno. */
+.diy-casa button::before {
+  content: ""; flex: none; width: 9px; height: 9px; border-radius: 999px; border: 1.5px solid var(--hueso-tenue);
+  transition: background-color var(--t-fundido, .16s) ease, border-color var(--t-fundido, .16s) ease;
+}
+.diy-casa button[aria-pressed="true"] { border-color: var(--champan); color: var(--hueso); background: color-mix(in srgb, var(--champan) 12%, var(--noche)); }
+.diy-casa button[aria-pressed="true"]::before { background: var(--champan); border-color: var(--champan); }
+@media (hover: hover) and (pointer: fine) { .diy-casa button:hover { color: var(--hueso); border-color: var(--hueso-tenue); } }
+.diy-casa button:active { border-color: var(--hueso); background: color-mix(in srgb, var(--hueso) 10%, var(--noche)); }
+
+.diy-casa .leyenda { margin: 22px 0 0; min-height: 3em; font-size: 15px; line-height: 1.5; color: var(--hueso-suave); }
+.diy-casa .leyenda p { margin: 0 0 .25em; }
+.diy-casa .tenue { color: var(--hueso-tenue); }
+
+@media (max-width: 639px) {
+  .diy-casa .planta li { font-size: 13px; padding: 5px 9px; }
+  .diy-casa .dentro { padding-left: 10px; }
+  .diy-casa button { font-size: 13px; padding: 6px 10px; }
+  .diy-casa .rotulo-fuera { padding-left: 16px; font-size: 12px; }
+  .diy-casa .cable-fuera { flex-basis: 12px; min-width: 12px; margin-right: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* sin recorrido: la línea aparece entera con un fundido */
+  .diy-casa .cable::after, .diy-casa .fila[data-on] .cable::after { transform: scaleX(1); opacity: 0; transition: opacity var(--t-fundido, .16s) ease; }
+  .diy-casa .fila[data-on] .cable::after { opacity: 1; }
+}
+}

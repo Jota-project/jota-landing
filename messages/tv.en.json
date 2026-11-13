@@ -1,0 +1,147 @@
+{
+  "tv": {
+    "saltar": "Skip the walk",
+    "meta": {
+      "title": "Fogar TV — You talk. The TV handles it.",
+      "description": "Fogar TV turns the TV you already own into Fogar's screen: it answers without covering what you watch, your phone is the remote, and it's an open ecosystem you can plug your own things into."
+    },
+    "s1": {
+      "headline": "You talk. The TV handles it.",
+      "subhead": "The TV you already own, turned into Fogar's screen.",
+      "caption": "Your TV, when nobody's using it."
+    },
+    "s2": {
+      "caption1": "You're watching something. Fogar answers up top, without pausing anything.",
+      "caption2": "And what it has pending stays in sight."
+    },
+    "s3": {
+      "caption1": "When there's screen to spare, you see everything it does.",
+      "caption2": "It opens websites, plays music, launches whatever you ask."
+    },
+    "s4": {
+      "caption1": "Nothing to install: it's a web page on your phone.",
+      "caption2": "Trackpad, keyboard, volume and Fogar's voice."
+    },
+    "s5": {
+      "caption1": "A code on the TV and you're in.",
+      "caption2": "You, your family and your guests, each with their own place.",
+      "admin": "Admin",
+      "member": "Member",
+      "guest": "Guest",
+      "guestExpiry": "Expires in 24 h",
+      "paired": "Paired"
+    },
+    "s6": {
+      "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
+      "line2": "Fogar TV provides the screen; fogar-gateway connects it to Fogar's brain.",
+      "soon": "For now you install it by hand, following the <readme>READMEs</readme>.",
+      "network": "It's an open ecosystem: anyone can build compatible pieces and plug in their own. Away from home, through the tunnel or proxy you choose.",
+      "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; fogar-gateway connects it to Fogar's brain and to your phone.",
+      "pc": "Mini PC or laptop",
+      "hdmi": "HDMI",
+      "tv": "Your TV",
+      "gateway": "fogar-gateway",
+      "listen": "Listens",
+      "think": "Thinks",
+      "answer": "Answers",
+      "phone": "Your phone"
+    },
+    "s7": {
+      "title": "More things it already does",
+      "items": [
+        {
+          "title": "Stage",
+          "body": "Fogar puts presentations, tasks and alerts on top of any website.",
+          "icon": "stage"
+        },
+        {
+          "title": "Spotify Connect",
+          "body": "The TV is one more speaker. Optional.",
+          "icon": "spotify"
+        },
+        {
+          "title": "Standby that follows your schedule",
+          "body": "It shifts from day to night.",
+          "icon": "reposo"
+        },
+        {
+          "title": "Other agents",
+          "body": "Claude and others control it through MCP.",
+          "icon": "agents"
+        },
+        {
+          "title": "You choose the providers",
+          "body": "The model and voice you prefer, without being tied to any.",
+          "icon": "cloud"
+        }
+      ]
+    },
+    "s8": {
+      "headline": "It's not an idea. It already works.",
+      "line": "It works today in our living room.",
+      "ctaTalk": "Let's talk",
+      "back": "Back to home",
+      "code": "Code on GitHub"
+    },
+    "chat": {
+      "series1You": "Fogar, where was this filmed?",
+      "series2You": "Remind me in twenty minutes about dinner.",
+      "jazzYou": "Put on some calm jazz in the living room.",
+      "recipeYou": "Show me the roasted pumpkin soup recipe.",
+      "toolWhere": "Looking up the place",
+      "toolTimer": "Setting the reminder",
+      "toolMusic": "Play in the Living room",
+      "toolMusicSub": "Spotify",
+      "toolWeb": "Open on the TV",
+      "toolWebSub": "Pumpkin soup recipe",
+      "series1Fogar": "On the Costa da Morte, near Fisterra.",
+      "series2Fogar": "Done, I'll remind you.",
+      "jazzFogar": "On it. Calm jazz in the living room.",
+      "recipeFogar": "Here it is."
+    },
+    "tv": {
+      "date": "Wednesday, October 21",
+      "weather": "18°",
+      "weatherDetail": "Partly cloudy",
+      "song": "Blue in Green",
+      "artist": "Miles Davis",
+      "showTitle": "The Lighthouse",
+      "showMeta": "S1 · E3 · 48 min",
+      "continueWatching": "Continue watching",
+      "activityLabel": "Dinner",
+      "activityTime": "20:00",
+      "upNext": "Up next",
+      "recipeSite": "cocinadecasa.example",
+      "recipeTitle": "Roasted pumpkin soup",
+      "pairTitle": "Pairing code",
+      "pairHint": "Type it on your phone",
+      "hint": "You've time for two episodes before bed",
+      "forYou": "For you on YouTube",
+      "apps": "Apps",
+      "i1Title": "Sourdough bread in 24 hours",
+      "i1Meta": "Cooking with Marta · minute 12 of 31",
+      "i2Title": "Tides",
+      "i2Meta": "Film · 47 min left",
+      "i3Title": "Trails in the Crevillent hills",
+      "i3Meta": "Alicante hiking · minute 4 of 22",
+      "y1": "How Jijona nougat is made",
+      "y2": "Live: meteor shower",
+      "y3": "Guitar: your first song",
+      "musicEyebrow": "Calm jazz · Living room",
+      "q1Title": "So What",
+      "q2Title": "Naima",
+      "q2Artist": "John Coltrane",
+      "recipeName": "Home Kitchen",
+      "recipeNav1": "Recipes",
+      "recipeNav2": "Menus",
+      "recipeNav3": "Saved",
+      "weatherLine": "18°, partly cloudy"
+    },
+    "remote": {
+      "room": "Living room",
+      "trackpadHint": "Swipe to move the cursor",
+      "type": "Type on the TV",
+      "talk": "Talk to Fogar"
+    }
+  }
+}

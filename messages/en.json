@@ -1,245 +1,242 @@
 {
-  "nav": {
-    "home": "Home",
-    "screen": "Jota-Screen",
-    "diy": "DIY",
-    "contact": "Contact",
-    "install": "Install it",
-    "skipToContent": "Go to home",
-    "newTab": "opens in a new tab"
-  },
-  "footer": {
-    "ask": "Missing something?",
-    "askBody": "Tell us what you've set up and what you're missing.",
-    "copy": "Copy address",
-    "copied": "Copied",
-    "team": "Made by Alfonso Garre (product and engineering) and Joan Moreno (business).",
-    "rights": "All rights reserved.",
-    "code": "Code on GitHub"
-  },
-  "screen": {
-    "meta": {
-      "title": "Jota-Screen — You talk. The TV handles it.",
-      "description": "Jota-Screen turns the TV you already own into Jota's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
-    },
-    "s1": {
-      "headline": "You talk. The TV handles it.",
-      "subhead": "The TV you already own, turned into Jota's screen.",
-      "caption": "Your TV, when nobody's using it."
-    },
-    "s2": {
-      "caption1": "You're watching something. Jota answers up top, without pausing anything.",
-      "caption2": "And what it has pending stays in sight."
-    },
-    "s3": {
-      "caption1": "When there's screen to spare, you see everything it does.",
-      "caption2": "It opens websites, plays music, launches whatever you ask."
-    },
-    "s4": {
-      "caption1": "Nothing to install: it's a web page on your phone.",
-      "caption2": "Trackpad, keyboard, volume and Jota's voice."
-    },
-    "s5": {
-      "caption1": "A code on the TV and you're in.",
-      "caption2": "You, your family and your guests, each with their own place.",
-      "admin": "Admin",
-      "member": "Member",
-      "guest": "Guest",
-      "guestExpiry": "Expires in 24 h",
-      "paired": "Paired"
-    },
-    "s6": {
-      "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
-      "line2": "Jota-Screen provides the screen; jota-gateway connects it to Jota's brain.",
-      "soon": "For now you install it by hand, following the READMEs.",
-      "network": "All on your network. Away from home, through the tunnel or proxy you choose.",
-      "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; jota-gateway connects it to Jota's brain and to your phone.",
-      "pc": "Mini PC or laptop",
-      "hdmi": "HDMI",
-      "tv": "Your TV",
-      "gateway": "jota-gateway",
-      "listen": "Listens",
-      "think": "Thinks",
-      "answer": "Answers",
-      "phone": "Your phone"
-    },
-    "s7": {
-      "title": "More things it already does",
-      "items": [
-        {
-          "title": "Stage",
-          "body": "Jota puts presentations, tasks and alerts on top of any website.",
-          "icon": "stage"
-        },
-        {
-          "title": "Spotify Connect",
-          "body": "The TV is one more speaker. Optional.",
-          "icon": "spotify"
-        },
-        {
-          "title": "Standby that follows your schedule",
-          "body": "It shifts from day to night.",
-          "icon": "reposo"
-        },
-        {
-          "title": "Other agents",
-          "body": "Claude and others control it through MCP.",
-          "icon": "agents"
-        },
-        {
-          "title": "You choose the providers",
-          "body": "Local, or with the model and voice you prefer.",
-          "icon": "cloud"
-        }
-      ]
-    },
-    "s8": {
-      "headline": "It's not an idea. It already works.",
-      "line": "It works today in our living room.",
-      "ctaWaitlist": "Join the waitlist",
-      "ctaTalk": "Let's talk",
-      "back": "Back to home",
-      "code": "Code on GitHub"
-    },
-    "chat": {
-      "series1You": "Jota, where was this filmed?",
-      "series1Jota": "On the Costa da Morte, near Fisterra.",
-      "series2You": "Remind me in twenty minutes about dinner.",
-      "series2Jota": "Done, I'll remind you.",
-      "jazzYou": "Put on some calm jazz in the living room.",
-      "jazzJota": "On it. Calm jazz in the living room.",
-      "recipeYou": "Show me the roasted pumpkin soup recipe.",
-      "recipeJota": "Here it is.",
-      "toolWhere": "Looking up the place",
-      "toolTimer": "Setting the reminder",
-      "toolMusic": "Play in the Living room",
-      "toolMusicSub": "Spotify",
-      "toolWeb": "Open on the TV",
-      "toolWebSub": "Pumpkin soup recipe"
-    },
-    "tv": {
-      "date": "Wednesday, October 21",
-      "weather": "18°",
-      "weatherDetail": "Partly cloudy",
-      "song": "Blue in Green",
-      "artist": "Miles Davis",
-      "showTitle": "The Lighthouse",
-      "showMeta": "S1 · E3 · 48 min",
-      "continueWatching": "Continue watching",
-      "activityLabel": "Dinner",
-      "activityTime": "20:00",
-      "upNext": "Up next",
-      "recipeSite": "cocinadecasa.example",
-      "recipeTitle": "Roasted pumpkin soup",
-      "pairTitle": "Pairing code",
-      "pairHint": "Type it on your phone",
-      "hint": "You've time for two episodes before bed",
-      "forYou": "For you on YouTube",
-      "apps": "Apps",
-      "i1Title": "Sourdough bread in 24 hours",
-      "i1Meta": "Cooking with Marta · minute 12 of 31",
-      "i2Title": "Tides",
-      "i2Meta": "Film · 47 min left",
-      "i3Title": "Trails in the Crevillent hills",
-      "i3Meta": "Alicante hiking · minute 4 of 22",
-      "y1": "How Jijona nougat is made",
-      "y2": "Live: meteor shower",
-      "y3": "Guitar: your first song",
-      "musicEyebrow": "Calm jazz · Living room",
-      "q1Title": "So What",
-      "q2Title": "Naima",
-      "q2Artist": "John Coltrane",
-      "recipeName": "Home Kitchen",
-      "recipeNav1": "Recipes",
-      "recipeNav2": "Menus",
-      "recipeNav3": "Saved",
-      "weatherLine": "18°, partly cloudy"
-    },
-    "remote": {
-      "room": "Living room",
-      "trackpadHint": "Swipe to move the cursor",
-      "type": "Type on the TV",
-      "talk": "Talk to Jota"
-    }
-  },
   "home": {
     "meta": {
-      "title": "Jota, a voice assistant that lives in your home",
-      "description": "Jota runs on a machine of your own. Talk to it from the TV, a speaker or your phone. It works with what you already have: Home Assistant, OpenClaw and the AI model you choose."
+      "title": "Fogar",
+      "description": "An AI ecosystem for your home: voice, a gateway that connects your clients and your smart home, and open source code."
     },
-    "hero": {
-      "headline": "A voice assistant that lives in your home.",
-      "sub": "Jota runs on a machine of your own. You talk to it from the TV, from a speaker or from your phone, and it works with what you already have: Home Assistant, OpenClaw and the AI model you choose.",
-      "ctaInstall": "Install it on your machine",
-      "ctaScreen": "See Jota-Screen",
-      "ctaCode": "Code on GitHub",
-      "caption": "You're watching a series and ask where it was filmed. Jota answers on the TV and the show keeps playing.",
-      "replay": "Watch it again",
-      "tvLabel": "The TV with Jota-Screen, answering a question about the show"
-    },
-    "house": {
-      "title": "It's all over the house",
-      "lead": "Jota-Gateway is the brain. Every place you talk to it from is a client connected to it.",
-      "tvTitle": "On the TV",
-      "tvBody": "Jota-Screen. A mini PC or an old laptop plugged in over HDMI. Your phone is the remote and the microphone, with no app to install.",
-      "tvCta": "What Jota-Screen is like",
-      "tvLabel": "The TV at rest, with the time and the weather",
-      "voiceTitle": "On a speaker or a mic",
-      "voiceBody": "jota-voice, open source, on a Mac, an Android or Linux. Say the wake word and talk; the answer plays right there.",
-      "voiceLabel": "jota-voice listening to a dinner reminder",
-      "listen": "Listening",
-      "think": "Thinking",
-      "talk": "Speaking",
-      "idle": "Idle",
-      "phoneTitle": "On the iPhone",
-      "phoneBody": "An app of its own, experimental and at an early stage.",
-      "phoneLabel": "The Jota app for iPhone"
-    },
-    "keep": {
-      "title": "With what you already use",
-      "lead": "Jota sits on top of what you already have at home and takes it to the TV, the speaker and the phone.",
-      "rows": [
-        {
-          "name": "Home Assistant",
-          "body": "Jota talks to it over MCP and asks it for things around the house. It works the other way too: Home Assistant's voice assistant can be Jota."
-        },
-        {
-          "name": "OpenClaw",
-          "body": "It's the brain, with its memory, its agents, its tools and its scheduled tasks."
-        },
-        {
-          "name": "The AI model",
-          "body": "Whichever one you already have set up in OpenClaw."
-        },
-        {
-          "name": "The voice",
-          "body": "whisper.cpp and Kokoro on your network. Or ElevenLabs: if it transcribes, it gets your audio; if it speaks, it gets the text of the answers."
-        }
+    "d": {
+      "h1": [
+        "The fire",
+        "of your home"
       ],
-      "protocol": "Everything goes through Jota-Gateway. If you want to write your own client, the protocol is documented.",
-      "protocolLink": "Client protocol"
+      "portada": "Any screen or speaker can be a client.",
+      "instalalo": "Install it",
+      "verTv": "Fogar TV",
+      "gatewayH2": [
+        "A program",
+        "in your home"
+      ],
+      "gateway": "It brings together voice, clients, home automation and OpenClaw.",
+      "gateway2": "Clients only talk to the gateway: it decides who gets in and with which agent.",
+      "vozH2": [
+        "It listens after its",
+        "wake word."
+      ],
+      "voz": "The one you choose. It's detected on the device itself. It's just another client.",
+      "vozEjemplo": "e.g. “What do I have on this week?”",
+      "baldaH2": [
+        "Fogar doesn't bring its own suite.",
+        "It uses yours."
+      ],
+      "lamparaTitulo": "The house.",
+      "lampara": "Fogar turns on the lamp through Home Assistant.",
+      "lamparaBoton": "Lamp",
+      "temperatura": "Temperature: {n} degrees",
+      "radio": "A satellite speaker with a light client.",
+      "libreta": "Your second brain, where you already write.",
+      "paredH2": "Everything goes through the gateway.",
+      "clientesLabel": "Clients",
+      "clientes": [
+        "Fogar TV",
+        "Voice client",
+        "Web panel"
+      ],
+      "tuCliente": "Your client",
+      "herramientasLabel": "Tools over MCP",
+      "herramientas": [
+        [
+          "The house",
+          "Home Assistant"
+        ],
+        [
+          "Second brain",
+          "Obsidian, Notion"
+        ]
+      ],
+      "tuHerramienta": "Your tool",
+      "nota": "Fogar TV and the voice client (macOS, Android and Linux) already work. The web panel will be the main interface.",
+      "recorrido": "A walk through a living room: a stone fireplace with a fire and a TV above it, a speaker, an oak shelf with a lamp, a radio, a clock and a notebook, and a plain wall.",
+      "teleSr": "The TV shows Fogar TV: the time, the date, a timer and what's playing. A line of light writes “Fogar” and follows the walk.",
+      "lineaLabel": "Fogar's living line",
+      "pausa": "Pause motion",
+      "saltar": "Skip the walk",
+      "navLabel": "Walk",
+      "navPortada": "The fire of your home"
     },
-    "local": {
-      "title": "It runs on a machine of your own",
-      "body": "Your voice never goes through a cloud service of ours. With jota-transcriber and jota-speaker, your audio never leaves your network. The only thing that does is what you ask the AI model you pay for.",
-      "open": "The gateway, the transcription, the voice and jota-voice are open source.",
-      "link": "What leaves home and what doesn't",
-      "github": "Code on GitHub"
-    },
-    "doors": {
-      "title": "Where to go next",
-      "install": "Install it on your machine",
-      "installBody": "The DIY entries: what was built, with which versions and how.",
-      "screen": "See Jota-Screen",
-      "screenBody": "The TV you already have, turned into Jota's screen.",
-      "how": "Read how it's made",
-      "howBody": "What happens from the moment you speak until it answers, piece by piece.",
-      "code": "All the code on GitHub",
-      "codeBody": "Every piece of Jota is a public repository: gateway, transcription, voice and client."
+    "resto": {
+      "instala": {
+        "titulo": "Install it",
+        "lead": "One step, on a machine of your own:",
+        "copiar": "Copy",
+        "copiado": "Copied",
+        "requisitos": "It needs Linux with user systemd and OpenClaw 2026.6.11 or later, on the same machine or over an SSH tunnel.",
+        "diy": "Step by step in DIY",
+        "como": "How it's made",
+        "terminal": "Terminal"
+      },
+      "usas": {
+        "titulo": "With what you already use",
+        "lead": "Fogar sits on top of what you already have at home and takes it to the TV and the speaker.",
+        "filas": [
+          [
+            "Home Assistant",
+            "Fogar talks to it over MCP and asks it for things around the house. It works the other way too: Home Assistant's voice assistant can be Fogar."
+          ],
+          [
+            "OpenClaw",
+            "It orchestrates, with its memory, its agents and its scheduled tasks, and calls Home Assistant, Obsidian, Notion… over MCP."
+          ],
+          [
+            "The AI model",
+            "Whichever one you already have set up in OpenClaw."
+          ],
+          [
+            "The voice",
+            "whisper.cpp and Kokoro on your network. Or ElevenLabs: if it transcribes, it gets your audio; if it speaks, it gets the text of the answers."
+          ]
+        ],
+        "protocolo": "Everything goes through fogar-gateway. If you want to write your own client, the protocol is documented.",
+        "protocoloLink": "Client protocol"
+      },
+      "casa": {
+        "titulo": "What leaves home and what doesn't",
+        "cuerpo": "Your voice doesn't go through a Fogar cloud service, but something always leaves: what you ask the AI model reaches whoever serves it. If you use ElevenLabs, or a tunnel to talk to it from outside, your audio or your answers go through them too. You choose every piece: your data goes where you decide and doesn't end up scattered around.",
+        "link": "Where it runs and what leaves home, in detail",
+        "abierto": "Open source:",
+        "piezas": {
+          "gateway": "the gateway",
+          "transcriber": "the transcription",
+          "speaker": "the voice",
+          "voice": "the voice client"
+        }
+      },
+      "puertas": {
+        "titulo": "Where to go next",
+        "items": [
+          [
+            "Install it on your machine",
+            "The DIY entries: what was built, with which versions and how."
+          ],
+          [
+            "See Fogar TV",
+            "The TV you already have, turned into Fogar's screen."
+          ],
+          [
+            "Read how it's made",
+            "What happens from the moment you speak until it answers, piece by piece."
+          ],
+          [
+            "All the code on GitHub",
+            "Every piece of Fogar is a public repository: gateway, transcription, voice and client."
+          ]
+        ]
+      },
+      "mapa": {
+        "label": "Map of the Fogar ecosystem",
+        "abierto": "It's an open ecosystem: the protocol is documented and anyone can write their own client or plug in their tool.",
+        "clientes": "You talk to it from",
+        "detras": "Behind it",
+        "centro": [
+          "fogar-gateway",
+          "Decides who gets in and with which agent"
+        ],
+        "estados": {
+          "hoy": "Works today",
+          "desarrollo": "In development",
+          "tuyo": "You plug it in"
+        },
+        "nodosClientes": [
+          [
+            "Fogar TV",
+            "The TV, with the remote on your phone",
+            "hoy"
+          ],
+          [
+            "Voice client",
+            "macOS and Android",
+            "hoy"
+          ],
+          [
+            "Home Assistant",
+            "Its voice assistant can be Fogar",
+            "hoy"
+          ],
+          [
+            "Web panel",
+            "The main interface",
+            "desarrollo"
+          ],
+          [
+            "iPhone app",
+            "Early stage",
+            "desarrollo"
+          ],
+          [
+            "Your client",
+            "With the documented protocol",
+            "tuyo"
+          ]
+        ],
+        "nodosDetras": [
+          [
+            "OpenClaw",
+            "Orchestrates: memory, agents and tasks",
+            "hoy"
+          ],
+          [
+            "The AI model",
+            "Whichever you have in OpenClaw",
+            "hoy"
+          ],
+          [
+            "fogar-transcriber",
+            "Transcription with whisper.cpp",
+            "hoy"
+          ],
+          [
+            "fogar-speaker",
+            "Voice with Kokoro",
+            "hoy"
+          ],
+          [
+            "Home Assistant and Obsidian",
+            "Tools over MCP",
+            "hoy"
+          ],
+          [
+            "Your tool",
+            "Over MCP, through OpenClaw",
+            "tuyo"
+          ]
+        ]
+      }
     }
   },
-  "contact": {
-    "emailSubject": "Let's talk about Jota",
-    "waitlistSubject": "Jota waitlist"
+  "sitio": {
+    "marca": "Fogar, home",
+    "idioma": "Leer en español",
+    "nav": {
+      "label": "Main",
+      "inicio": "Home",
+      "tv": "Fogar TV",
+      "diy": "DIY",
+      "codigo": "Code on GitHub"
+    },
+    "pie": {
+      "pregunta": "Missing something?",
+      "cuerpo": "Tell us what you've set up and what you're missing.",
+      "copiar": "Copy address",
+      "copiada": "Copied",
+      "mapa": "Site map"
+    }
+  },
+  "tele": {
+    "locale": "en",
+    "oido": "Play some quiet jazz in the living room",
+    "herramienta": "Play in Living room",
+    "respuesta": "Here you go. Quiet jazz in the living room, starting with Miles Davis.",
+    "tiempo": "16° · sun and clouds",
+    "tempo": "Pasta",
+    "tempoSub": "drain and serve"
   }
 }

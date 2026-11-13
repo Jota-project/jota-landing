@@ -1,0 +1,74 @@
+{
+  "diy": {
+    "saltar": "Saltar al contenido",
+    "nuevo": "Nuevo",
+    "enlace": {"label": "Ir a la sección DIY", "texto": "DIY"},
+    "portada": {"titulo": "Del DIY", "lead": "Notas técnicas y guías para montarlo tú. Cada entrada dice qué se probó.", "leer": "Leer", "todo": "Ver todo el DIY"},
+    "indice": {
+      "seccion": "DIY",
+      "h1": "Fogar, por dentro y en tu casa",
+      "lede": "Cómo está hecho Fogar y cómo montarlo con piezas de código abierto. Cada entrada dice qué se probó y con qué versiones.",
+      "instala": {
+        "titulo": "Instálalo en un paso",
+        "cuerpo": "Pega esto en una terminal del equipo donde va a vivir Fogar.",
+        "copiar": "Copiar",
+        "copiado": "Copiado",
+        "requisitos": "Necesitas",
+        "linux": "Linux con systemd de usuario.",
+        "openclaw": "OpenClaw 2026.6.11 o posterior, en el mismo equipo o por túnel SSH.",
+        "readme": "Instrucciones completas en el README de fogar-gateway"
+      },
+      "regla": {
+        "titulo": "Probado de principio a fin",
+        "cuerpo": "Solo publicamos lo que hemos montado y funciona. Si algo depende de un proveedor externo, lo decimos."
+      },
+      "entradas": "Entradas",
+      "leer": "Leer la entrada",
+      "filas": {
+        "estado": "Estado",
+        "dificultad": "Dificultad",
+        "lectura": "Lectura",
+        "montar": "Hay que montar",
+        "probado": "Probado con"
+      }
+    },
+    "articulo": {
+      "enEsta": "En esta entrada",
+      "probadoCon": "Probado con",
+      "piezasMas": "{n, plural, one {y # pieza más} other {y # piezas más}}",
+      "dificultad": "Dificultad",
+      "registro": "Registro de cambios",
+      "queEs": "Para conocer el producto, mira <enlace>qué es Fogar y qué puede hacer</enlace>.",
+      "volver": "Todas las entradas de DIY",
+      "hilo": {
+        "titulo": "Recorrido de una orden",
+        "frase": "«Ok Fogar, apaga la luz del salón»",
+        "repetir": "Reproducir el recorrido",
+        "pie": "Todo pasa por el gateway: el cliente nunca habla directamente con las otras piezas.",
+        "nodos": [
+          { "n": "Cliente", "d": "tu voz", "ahora": "audio en fragmentos, camino del gateway" },
+          { "n": "fogar-gateway", "d": "valida el cliente", "ahora": "audio de un cliente con clave válida" },
+          { "n": "Transcripción", "d": "voz → texto", "ahora": "«apaga la luz del salón»" },
+          { "n": "Orquestador", "d": "piensa y actúa", "ahora": "una orden para Home Assistant" },
+          { "n": "Síntesis", "d": "texto → voz", "ahora": "«Hecho, he apagado la luz del salón»" },
+          { "n": "Cliente", "d": "texto y audio", "ahora": "texto y audio por la misma conexión" }
+        ]
+      },
+      "escenario": {"reproducir": "Reproducir el recorrido", "paso": "Paso {n} de {total}: {pieza}, {ahora}", "fin": "Recorrido terminado"},
+      "montalo": {"titulo": "Móntalo", "puertas": "Por dónde seguir", "readme": "README de fogar-gateway", "protocolo": "Protocolo del cliente", "wake": "fogar-wake-trainer"},
+      "casa": {
+        "titulo": "Qué corre en tus máquinas y qué sale hacia fuera",
+        "red": "Tu red",
+        "piezas": ["Cliente", "fogar-gateway", "fogar-transcriber", "OpenClaw", "fogar-speaker", "Home Assistant"],
+        "fuera": "Fuera, los proveedores que eliges",
+        "ayuda": "Pulsa uno para ver qué recibe.",
+        "nada": "Algo siempre sale de casa, hacia los proveedores externos que elijas.",
+        "proveedores": [
+          { "n": "ElevenLabs", "sale": "ElevenLabs recibe tu audio si transcribe, o el texto de las respuestas si pone la voz." },
+          { "n": "Modelo en la nube", "sale": "El modelo en la nube recibe lo que dices, ya convertido en texto." },
+          { "n": "Túnel o proxy", "sale": "Tu audio pasa por el túnel o el proxy cuando usas Fogar fuera de casa." }
+        ]
+      }
+    }
+  }
+}

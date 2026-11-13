@@ -1,5 +1,5 @@
 {
-  "name": "jota-landing",
+  "name": "fogar-landing",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -14,11 +14,15 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@number-flow/react": "^0.6.2",
     "@vercel/analytics": "^2.0.1",
+    "gsap": "^3.15.1",
     "next": "16.2.10",
     "next-intl": "^4.13.2",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "three": "^0.187.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -27,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^6.0.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",

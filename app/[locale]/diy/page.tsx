@@ -1,19 +1,29 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import "@/components/diy/diy.css";
-import { DiyIndex } from "@/components/diy/DiyIndex";
-import { diyIndex, diyMetadata } from "@/components/diy/content";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Indice } from "@/components/fogar/diy/Indice";
+import { Cabecera } from "@/components/fogar/sitio/Cabecera";
+import { Pie } from "@/components/fogar/sitio/Pie";
+import { diyIndice, diyMetadata } from "@/content/fogar/diy";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return diyMetadata(locale, diyIndex(locale).meta);
+  return diyMetadata(locale, diyIndice(locale).meta);
 }
 
 export default async function DiyPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  // key: al cambiar de idioma se remonta entero, así los filtros y el diagrama no arrastran estado del DOM anterior
-  return <DiyIndex key={locale} c={diyIndex(locale)} />;
+  const t = await getTranslations("diy");
+  return (
+    <>
+      <a href="#contenido" className="f-saltar">{t("saltar")}</a>
+      <Cabecera actual="diy" />
+      <main>
+        <Indice c={diyIndice(locale)} />
+      </main>
+      <Pie />
+    </>
+  );
 }
