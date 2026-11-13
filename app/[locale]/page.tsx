@@ -12,7 +12,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       {/* Lo primero al tabular: antes que la esquina y que el botón de pausa. */}
-      <a href="#instala-t" className="f-saltar f-saltar-fijo">{t("saltar")}</a>
+      <a href="#instala-t" className="f-saltar">{t("saltar")}</a>
       <Esquina />
       <main>
         <DireccionD />
