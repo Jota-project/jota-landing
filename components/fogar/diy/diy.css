@@ -1,0 +1,128 @@
+/* DIY de Fogar (/diy y sus artículos). Dirección D «Hilo»: noche, hueso, líneas finas, sin naranja.
+   Champán y salvia salen de la tinta de la línea viva (tinta.ts). */
+/* En la capa components de Tailwind: así las utilidades de los componentes pueden ajustar estas reglas. El orden
+   se declara aquí también por si esta hoja llega antes que globals.css. */
+@layer theme, base, components, utilities;
+@layer components {
+.diy {
+  --champan: #e6d9c2;
+  --salvia: #cfe6d6;
+  --raya: color-mix(in srgb, var(--hueso) 14%, transparent);
+}
+
+/* ---------- Prosa del artículo: 58ch dan ~65–72 caracteres de texto corrido en Figtree, ritmo de 1.65 ---------- */
+.diy-prosa { max-width: 58ch; font-size: 18px; line-height: 1.65; color: var(--hueso-suave); }
+.diy-prosa > section { scroll-margin-top: 24px; }
+.diy-prosa section[id] { scroll-margin-top: 24px; }
+.diy-prosa h2 {
+  font-family: var(--font-display); font-weight: 400; letter-spacing: -0.035em; line-height: 1.12;
+  font-size: clamp(26px, 3.2vw, 34px); color: var(--hueso); margin: 4.5rem 0 1.25rem; text-wrap: balance;
+}
+.diy-prosa h3 { font-size: 19px; font-weight: 600; line-height: 1.35; color: var(--hueso); margin: 2.75rem 0 .75rem; }
+.diy-prosa p, .diy-prosa ul, .diy-prosa .tabla { margin: 0 0 1.15em; }
+.diy-prosa ul { padding-left: 1.25em; list-style: none; }
+.diy-prosa li { position: relative; margin-bottom: .55em; }
+.diy-prosa ul > li::before {
+  content: ""; position: absolute; left: -1.1em; top: .82em; width: .55em; height: 1px; background: var(--hueso-tenue);
+}
+.diy-prosa strong { color: var(--hueso); font-weight: 600; }
+.diy-prosa a {
+  color: var(--hueso); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hueso) 35%, transparent);
+  text-underline-offset: 4px; overflow-wrap: anywhere; transition: text-decoration-color .2s ease-out;
+}
+.diy-prosa a:hover { text-decoration-color: var(--hueso); }
+.diy-prosa a:focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; border-radius: 4px; }
+.diy-prosa code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .86em; padding: .1em .35em; border-radius: 6px;
+  background: var(--piedra-alta); color: var(--hueso);
+}
+
+/* Tablas: en móvil, «Qué es de Fogar y qué es abierto» se apila por data-label; la de compatibilidad cabe tal cual. */
+.diy-prosa .tabla { overflow-x: auto; }
+.diy-prosa table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+.diy-prosa th, .diy-prosa td { text-align: left; vertical-align: top; padding: 12px 16px 12px 0; border-bottom: 1px solid var(--veta); }
+.diy-prosa thead th { font-size: 13px; font-weight: 500; color: var(--hueso-tenue); border-bottom-color: var(--raya); }
+.diy-prosa tbody th { font-weight: 600; color: var(--hueso); white-space: nowrap; }
+.diy-prosa .compat tbody th { width: 6.5em; }
+.diy-prosa .si { color: var(--salvia); }
+.diy-prosa .no { color: var(--hueso); }
+@media (max-width: 767px) {
+  .diy-prosa .piezas, .diy-prosa .piezas tbody, .diy-prosa .piezas tr, .diy-prosa .piezas th, .diy-prosa .piezas td { display: block; }
+  .diy-prosa .piezas thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .diy-prosa .piezas tr { padding: 14px 0; border-bottom: 1px solid var(--veta); }
+  .diy-prosa .piezas th, .diy-prosa .piezas td { border: 0; padding: 2px 0; white-space: normal; }
+  .diy-prosa .piezas td::before { content: attr(data-label) " · "; color: var(--hueso-tenue); }
+}
+
+/* ---------- El hilo: la orden viaja por la línea y cada nodo se enciende al pasar ---------- */
+.diy-hilo { margin: 2.25rem 0 2.5rem; padding: 24px 20px 20px; border: 1px solid var(--veta); border-radius: var(--radio-bloque); background: color-mix(in srgb, var(--piedra) 70%, transparent); }
+.diy-hilo ol { list-style: none; margin: 0; padding: 0; }
+.diy-hilo li { position: relative; display: grid; grid-template-columns: 16px minmax(0, 1fr); column-gap: 16px; padding-bottom: 22px; margin: 0; }
+.diy-hilo li::before { content: none; }
+.diy-hilo li:last-child { padding-bottom: 0; }
+.diy-hilo .punto {
+  width: 9px; height: 9px; margin: 9px 0 0 3.5px; border-radius: 999px; border: 1px solid var(--hueso-tenue); background: var(--noche);
+  transition: background-color .3s ease-out .55s, border-color .3s ease-out .55s, box-shadow .3s ease-out .55s;
+}
+.diy-hilo li:first-child .punto, .diy-hilo li:first-child .nodo, .diy-hilo li:first-child .ahora { transition-delay: 0s; }
+.diy-hilo .tramo { position: absolute; left: 7.5px; top: 19px; bottom: -8px; width: 1px; background: var(--veta); overflow: hidden; }
+.diy-hilo .tramo::after {
+  content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, var(--champan) 70%, #fffaf0);
+  transform: scaleY(0); transform-origin: top; transition: transform .6s cubic-bezier(.65, 0, .35, 1);
+}
+.diy-hilo .nodo { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font-size: 16px; line-height: 1.6; }
+.diy-hilo .nodo a { color: var(--hueso); font-weight: 600; text-decoration: none; transition: color .3s ease-out .55s; }
+.diy-hilo .nodo a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.diy-hilo .nodo span { font-size: 14px; color: var(--hueso-tenue); }
+.diy-hilo .nodo, .diy-hilo .ahora { margin: 0; }
+.diy-hilo .ahora { font-size: 15px; line-height: 1.5; color: var(--hueso-tenue); transition: color .3s ease-out .55s; }
+.diy-hilo li[data-on] .punto { background: var(--champan); border-color: var(--champan); box-shadow: 0 0 0 4px color-mix(in srgb, var(--champan) 16%, transparent), 0 0 14px color-mix(in srgb, var(--champan) 55%, transparent); }
+.diy-hilo li[data-paso] .tramo::after { transform: scaleY(1); }
+.diy-hilo li[data-actual] .ahora { color: var(--salvia); }
+.diy-hilo .pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--veta); }
+.diy-hilo .pie span { font-size: 15px; line-height: 1.5; color: var(--hueso-suave); max-width: 46ch; }
+.diy-hilo .frase { font-family: var(--font-display); letter-spacing: -0.02em; font-size: 15px; color: var(--hueso); margin-bottom: 18px; }
+
+/* ---------- La casa: recinto con las piezas; la línea sale solo hacia el proveedor que eliges ---------- */
+.diy-casa { margin: 2.25rem 0 2.5rem; }
+.diy-casa .marco { display: grid; gap: 20px; }
+@media (min-width: 768px) { .diy-casa .marco { grid-template-columns: minmax(0, 1fr) minmax(0, 15rem); gap: 0; align-items: center; } }
+.diy-casa .recinto { position: relative; padding: 28px 20px 20px; border: 1px solid color-mix(in srgb, var(--hueso) 30%, transparent); border-radius: var(--radio-vidrio); background: color-mix(in srgb, var(--piedra) 70%, transparent); }
+.diy-casa .rotulo { position: absolute; top: -10px; left: 16px; padding: 0 8px; background: var(--noche); font-size: 13px; color: var(--hueso-suave); }
+.diy-casa .recinto ul { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; }
+.diy-casa .recinto li { margin: 0; padding: 6px 12px; border: 1px solid var(--veta); border-radius: var(--radio-chip); font-size: 14px; color: var(--hueso); background: var(--noche); }
+.diy-casa .recinto li::before { content: none; }
+.diy-casa .fuera p { margin: 0 0 10px; font-size: 13px; color: var(--hueso-suave); }
+@media (min-width: 768px) { .diy-casa .fuera p { padding-left: 44px; } }
+.diy-casa .fuera ul { display: grid; gap: 8px; padding: 0; margin: 0; }
+.diy-casa .fuera li { display: flex; align-items: center; margin: 0; }
+.diy-casa .fuera li::before { content: none; }
+.diy-casa .salida { flex: none; width: 20px; height: 1px; margin-right: 8px; background-image: linear-gradient(to right, var(--veta) 50%, transparent 0); background-size: 6px 1px; position: relative; }
+@media (min-width: 768px) { .diy-casa .salida { width: 36px; } }
+.diy-casa .salida::after { content: ""; position: absolute; inset: -.5px 0; background: var(--champan); box-shadow: 0 0 8px color-mix(in srgb, var(--champan) 60%, transparent); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.23, 1, .32, 1); }
+.diy-casa button[aria-pressed="true"] { border-color: var(--champan); color: var(--hueso); background: color-mix(in srgb, var(--champan) 12%, var(--noche)); }
+.diy-casa li:has(button[aria-pressed="true"]) .salida::after { transform: scaleX(1); }
+.diy-casa button {
+  min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--veta); background: transparent; color: var(--hueso-suave);
+  font-size: 14px; text-align: left; cursor: pointer; transition: border-color .2s ease-out, color .2s ease-out, background-color .2s ease-out;
+}
+.diy-casa button:hover { color: var(--hueso); border-color: var(--hueso-tenue); }
+.diy-casa button[aria-pressed="true"]:hover { border-color: var(--champan); }
+.diy-casa button:focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; }
+.diy-casa .leyenda { margin: 18px 0 0; min-height: 3em; font-size: 15px; line-height: 1.5; color: var(--hueso-suave); }
+.diy-casa .leyenda p { margin: 0 0 .25em; }
+
+/* ---------- Índice lateral: la línea viva baja hasta la parte que lees ---------- */
+.diy-lateral ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--veta); }
+.diy-lateral a { display: block; padding: 7px 0 7px 18px; margin-left: -1px; border-left: 1px solid transparent; font-size: 14px; line-height: 1.4; color: var(--hueso-tenue); text-decoration: none; transition: color .2s ease-out, border-color .2s ease-out; }
+.diy-lateral a:hover { color: var(--hueso-suave); }
+.diy-lateral a[aria-current="true"] { color: var(--hueso); border-left-color: var(--champan); }
+.diy-lateral .marca { transition: transform .5s cubic-bezier(.23, 1, .32, 1); }
+
+/* El comando de instalación es largo: se parte en vez de empujar la página a lo ancho. */
+.diy-comando { font-family: ui-monospace, "SF Mono", Menlo, monospace; word-break: break-all; white-space: pre-wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  .diy-hilo *, .diy-hilo *::after, .diy-casa *, .diy-casa *::after, .diy-lateral * { transition: none !important; }
+}
+}

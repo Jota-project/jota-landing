@@ -1,0 +1,58 @@
+/* Página Fogar TV. Dirección D «Hilo»: noche, hueso, líneas finas, sin naranja. */
+
+/* Bloque 1: la sala y el zoom hacia la tele. --z (0–1) y --s (escala) los escribe Apertura.tsx al hacer scroll. */
+.tv-apertura { --z: 0; --s: 1; position: relative; height: 260svh; }
+.tv-escenario { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.tv-sala {
+  position: absolute; left: 50%; top: 50%; width: max(100vw, 177.78svh); aspect-ratio: 16 / 9;
+  transform-origin: 50% 38.89%; /* el centro de la pantalla de la tele en el fotograma */
+  transform: translate(-50%, -50%) translateY(calc(var(--z) * 11.11%)) scale(var(--s));
+  will-change: transform;
+}
+.tv-velo { position: absolute; inset: 0; background: var(--noche); opacity: calc(var(--z) * .92); }
+.tv-portada {
+  position: absolute; inset: auto 0 0; padding-block: 120px 140px; /* al cargar, la cabecera empuja la escena hacia abajo */
+  background: linear-gradient(to top, var(--noche) 55%, color-mix(in srgb, var(--noche) 0%, transparent));
+  opacity: calc(1 - var(--z) * 3);
+}
+.tv-pie-tele { position: absolute; inset: auto 0 3svh; text-align: center; opacity: calc((var(--z) - .85) * 7); }
+.tv-solo-quieto { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-apertura { height: auto; }
+  .tv-escenario { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; }
+  .tv-sala { position: relative; left: auto; top: auto; width: 100%; transform: none; will-change: auto; order: 2; }
+  .tv-velo { display: none; }
+  .tv-portada { position: relative; order: 1; opacity: 1; background: none; padding-block: 48px 40px; }
+  .tv-pie-tele { display: none; }
+  .tv-solo-quieto { display: block; padding-block: 48px 0; }
+}
+
+/* Un marco de tele: 16:9, borde fino, las medidas de dentro en unidades del contenedor. */
+.tv-marco {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radio-bloque); background: var(--noche);
+  box-shadow: 0 0 0 1px var(--veta), 0 40px 80px -40px rgb(0 0 0 / .7); container-type: inline-size;
+}
+.tv-sin-marco { aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+.tv-txt { font-size: clamp(9px, 1.6cqw, 22px); line-height: 1.3; }
+
+/* El vidrio de Fogar TV, en CSS. */
+.tv-vidrio {
+  background: var(--vidrio); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: var(--sombra-vidrio);
+}
+
+/* Bloque 2: una serie que sigue sonando. Mar de noche sin naranja. */
+.tv-serie {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 68% 46%, color-mix(in srgb, var(--hueso) 55%, transparent) 0 2.2%, transparent 2.6%),
+    radial-gradient(ellipse 45% 30% at 68% 50%, color-mix(in srgb, var(--hueso) 14%, transparent), transparent 70%),
+    linear-gradient(to bottom, #1b2a33 0%, #2e434c 54%, #13222a 54.4%, #0b151a 100%);
+}
+
+/* Bloque 3: la web de la receta a pantalla completa. */
+.tv-web { position: absolute; inset: 0; background: var(--hueso); color: var(--noche); }
+
+/* Bloque 6: el esquema. */
+.tv-nodo { border: 1px solid var(--veta); border-radius: var(--radio-nodo); background: var(--piedra); padding: 12px 14px; }
+.tv-hilo { background: color-mix(in srgb, var(--hueso) 30%, transparent); }

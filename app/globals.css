@@ -22,3 +22,35 @@ body {
   display: inline-grid; gap: 2px; font-weight: 500; line-height: 1.3; padding: 7px 10px; border-radius: var(--radio-chip);
   background: var(--vidrio); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: var(--sombra-vidrio);
 }
+
+/* Laboratorio de direcciones (B · Vidrio): vidrio en CSS mientras no hay capa WebGL o en el modo apilado;
+   con la capa WebGL activa, el vidrio lo pinta el shader y el elemento queda transparente. */
+.vidrio-b {
+  background: var(--vidrio); -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: var(--sombra-vidrio);
+}
+[data-gl] .vidrio-b { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+/* En el modo apilado no hay vídeo detrás: el vidrio se nota como un escalón de tono sobre la noche. */
+main .vidrio-b { background: color-mix(in srgb, var(--hueso) 7%, var(--noche)); }
+
+/* Piezas comunes del sitio (pie, cabecera, subpáginas). */
+.f-ancho { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 768px) { .f-ancho { padding-inline: 48px; } }
+.f-foco:focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; border-radius: 4px; }
+.f-enlace { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hueso) 35%, transparent); text-underline-offset: 4px; transition: color .2s ease-out, text-decoration-color .2s ease-out; }
+.f-enlace:hover { color: var(--hueso); text-decoration-color: var(--hueso); }
+.f-boton {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: 20px; border-radius: 999px; font-size: 15px; font-weight: 500;
+  border: 1px solid color-mix(in srgb, var(--hueso) 16%, transparent); background: var(--piedra-alta); color: var(--hueso);
+  transition: background-color .2s ease-out, transform .12s ease-out;
+}
+.f-boton:hover { background: var(--veta); }
+.f-boton:active { transform: scale(.97); }
+.f-boton-claro { background: var(--hueso); color: var(--noche); border-color: var(--hueso); }
+.f-boton-claro:hover { background: #fff; }
+/* El hilo de la portada baja por los bloques finales: una línea fina a la izquierda que se apaga al llegar al pie. */
+.f-hilos { position: relative; }
+@media (min-width: 768px) {
+  .f-hilos::before { content: ""; position: absolute; left: 24px; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--hueso), color-mix(in srgb, var(--hueso) 30%, transparent) 70%, transparent); opacity: .5; }
+  .f-hilo::before { content: ""; position: absolute; left: -28.5px; top: calc(clamp(64px, 10vw, 140px) + .45em); width: 8px; height: 8px; border-radius: 50%; background: var(--hueso); box-shadow: 0 0 12px 2px color-mix(in srgb, var(--hueso) 45%, transparent); }
+}

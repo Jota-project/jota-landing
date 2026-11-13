@@ -1,0 +1,146 @@
+{
+  "tv": {
+    "meta": {
+      "title": "Fogar TV — Le hablas. La tele se encarga.",
+      "description": "Fogar TV convierte la tele que ya tienes en la pantalla de Fogar: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
+    },
+    "s1": {
+      "headline": "Le hablas. La tele se encarga.",
+      "subhead": "La tele que ya tienes, convertida en la pantalla de Fogar.",
+      "caption": "Tu tele, cuando nadie la usa."
+    },
+    "s2": {
+      "caption1": "Estás viendo algo. Fogar contesta arriba, sin pausar nada.",
+      "caption2": "Y lo que tiene pendiente se queda a la vista."
+    },
+    "s3": {
+      "caption1": "Si sobra pantalla, ves todo lo que hace.",
+      "caption2": "Abre webs, pone música, lanza lo que le pidas."
+    },
+    "s4": {
+      "caption1": "Sin instalar nada: es una web en tu móvil.",
+      "caption2": "Trackpad, teclado, volumen y la voz de Fogar."
+    },
+    "s5": {
+      "caption1": "Un código en la tele y listo.",
+      "caption2": "Tú, tu familia y tus invitados, cada uno con su sitio.",
+      "admin": "Admin",
+      "member": "Miembro",
+      "guest": "Invitado",
+      "guestExpiry": "Caduca en 24 h",
+      "paired": "Emparejado"
+    },
+    "s6": {
+      "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
+      "line2": "Fogar TV pone la pantalla; fogar-gateway la conecta con el cerebro de Fogar.",
+      "soon": "De momento se instala a mano, siguiendo los <readme>README</readme>.",
+      "network": "Todo en tu red. Fuera de casa, con el túnel o proxy que elijas.",
+      "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; fogar-gateway la conecta con el cerebro de Fogar y con tu móvil.",
+      "pc": "Mini PC o portátil",
+      "hdmi": "HDMI",
+      "tv": "Tu tele",
+      "gateway": "fogar-gateway",
+      "listen": "Escucha",
+      "think": "Piensa",
+      "answer": "Contesta",
+      "phone": "Tu móvil"
+    },
+    "s7": {
+      "title": "Más cosas que ya hace",
+      "items": [
+        {
+          "title": "Escenario",
+          "body": "Fogar pone presentaciones, tareas y avisos encima de cualquier web.",
+          "icon": "stage"
+        },
+        {
+          "title": "Spotify Connect",
+          "body": "La tele es un altavoz más. Opcional.",
+          "icon": "spotify"
+        },
+        {
+          "title": "Reposo que sigue tu horario",
+          "body": "Cambia de día a noche.",
+          "icon": "reposo"
+        },
+        {
+          "title": "Otros agentes",
+          "body": "Claude y otros la manejan por MCP.",
+          "icon": "agents"
+        },
+        {
+          "title": "Tú eliges los proveedores",
+          "body": "Local, o con el modelo y la voz que prefieras.",
+          "icon": "cloud"
+        }
+      ]
+    },
+    "s8": {
+      "headline": "No es una idea. Ya funciona.",
+      "line": "Funciona hoy en nuestro salón.",
+      "ctaTalk": "Hablemos",
+      "back": "Volver al inicio",
+      "code": "Código en GitHub"
+    },
+    "chat": {
+      "series1You": "Fogar, ¿dónde se rodó esto?",
+      "series2You": "Avísame en veinte minutos para la cena.",
+      "jazzYou": "Pon algo tranquilo de jazz en el salón.",
+      "recipeYou": "Enséñame la receta de la crema de calabaza asada.",
+      "toolWhere": "Buscando el lugar",
+      "toolTimer": "Creando el aviso",
+      "toolMusic": "Reproducir en el Salón",
+      "toolMusicSub": "Spotify",
+      "toolWeb": "Abrir en la tele",
+      "toolWebSub": "Receta de crema de calabaza",
+      "series1Fogar": "En la Costa da Morte, cerca de Fisterra.",
+      "series2Fogar": "Hecho, te aviso.",
+      "jazzFogar": "Ahí va. Jazz tranquilo en el salón.",
+      "recipeFogar": "Aquí la tienes."
+    },
+    "tv": {
+      "date": "Miércoles, 21 de octubre",
+      "weather": "18°",
+      "weatherDetail": "Parcialmente nublado",
+      "song": "Blue in Green",
+      "artist": "Miles Davis",
+      "showTitle": "El faro",
+      "showMeta": "T1 · E3 · 48 min",
+      "continueWatching": "Seguir viendo",
+      "activityLabel": "Cena",
+      "activityTime": "20:00",
+      "upNext": "A continuación",
+      "recipeSite": "cocinadecasa.example",
+      "recipeTitle": "Crema de calabaza asada",
+      "pairTitle": "Código de emparejamiento",
+      "pairHint": "Escríbelo en tu móvil",
+      "hint": "Te da tiempo a dos episodios antes de dormir",
+      "forYou": "Para ti en YouTube",
+      "apps": "Apps",
+      "i1Title": "Pan de masa madre en 24 horas",
+      "i1Meta": "Cocina con Marta · minuto 12 de 31",
+      "i2Title": "Mareas",
+      "i2Meta": "Película · quedan 47 min",
+      "i3Title": "Rutas por la sierra de Crevillent",
+      "i3Meta": "Senderismo Alicante · minuto 4 de 22",
+      "y1": "Cómo se hace el turrón de Jijona",
+      "y2": "Directo: lluvia de meteoritos",
+      "y3": "Guitarra: tu primera canción",
+      "musicEyebrow": "Jazz tranquilo · Salón",
+      "q1Title": "So What",
+      "q2Title": "Naima",
+      "q2Artist": "John Coltrane",
+      "recipeName": "Cocina de casa",
+      "recipeNav1": "Recetas",
+      "recipeNav2": "Menús",
+      "recipeNav3": "Guardados",
+      "weatherLine": "18°, parcialmente nublado"
+    },
+    "remote": {
+      "room": "Salón",
+      "trackpadHint": "Desliza para mover el cursor",
+      "type": "Escribir en la tele",
+      "talk": "Hablar con Fogar"
+    }
+  }
+}

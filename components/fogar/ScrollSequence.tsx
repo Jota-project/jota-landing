@@ -6,14 +6,20 @@ type Props = {
   scrollId: string;
   count: number;
   src: (i: number) => string;
+  /** Se llama cada vez que el canvas pinta un fotograma (índice pintado y el propio canvas, para capas WebGL encima). */
+  onPaint?: (i: number, canvas: HTMLCanvasElement) => void;
+  /** Progreso del scroll (0–1) → fotograma. Sin él, el reparto es lineal. */
+  mapa?: (p: number) => number;
 };
 
 /**
  * Secuencia de fotogramas pintada en un canvas según el scroll de `scrollId`.
  * Móvil, puntero táctil o «reducir movimiento»: solo el primer fotograma (póster), sin descargar el resto.
  */
-export default function ScrollSequence({ scrollId, count, src }: Props) {
+export default function ScrollSequence({ scrollId, count, src, onPaint, mapa }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const onPaintRef = useRef(onPaint);
+  useEffect(() => { onPaintRef.current = onPaint; });
 
   useEffect(() => {
     const canvas = ref.current!;
@@ -52,6 +58,7 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h);
       shown = i;
+      onPaintRef.current?.(i, canvas);
     };
 
     // Decodifica la ventana alrededor de `c` (de dentro hacia fuera) y libera lo que queda lejos.
@@ -76,7 +83,7 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
 
     const tick = () => {
       raf = 0;
-      const target = still ? 0 : progress() * (count - 1);
+      const target = still ? 0 : mapa ? mapa(progress()) : progress() * (count - 1);
       cur += (target - cur) * 0.4; // suavizado corto: absorbe los saltos de la rueda sin notarse lento
       if (Math.abs(target - cur) < 0.05) cur = target;
       const c = Math.round(cur);
@@ -92,6 +99,9 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
       shown = -1;
+      // Cambiar el tamaño borra el lienzo: se repinta ya, no en el siguiente fotograma, para que nadie lo vea (ni lo copie) en negro.
+      const i = nearest(Math.round(cur));
+      if (i >= 0) paint(i);
       schedule();
     };
 
@@ -124,7 +134,7 @@ export default function ScrollSequence({ scrollId, count, src }: Props) {
       removeEventListener("resize", resize);
       removeEventListener("scroll", schedule);
     };
-  }, [scrollId, count, src]);
+  }, [scrollId, count, src, mapa]);
 
   return <canvas ref={ref} aria-hidden className="absolute inset-0 h-full w-full" />;
 }

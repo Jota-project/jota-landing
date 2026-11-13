@@ -4,8 +4,158 @@
       "title": "Fogar",
       "description": "An AI ecosystem for your home: voice, a gateway that connects your clients and your smart home, and open source code."
     },
-    "soon": "We are building the new site.",
-    "code": "Code on GitHub",
-    "contact": "Contact"
+    "d": {
+      "h1": [
+        "The fire",
+        "of your home"
+      ],
+      "portada": "Any screen or speaker can be a client.",
+      "instalalo": "Install it",
+      "verTv": "Fogar TV",
+      "gatewayH2": [
+        "A program",
+        "in your home"
+      ],
+      "gateway": "It brings together voice, clients, home automation and OpenClaw.",
+      "gateway2": "Clients only talk to the gateway: it decides who gets in and with which agent.",
+      "vozH2": [
+        "It listens after its",
+        "wake word."
+      ],
+      "voz": "The one you choose. Until it hears it, no audio leaves the device. It's just another client.",
+      "vozEjemplo": "e.g. “What do I have on this week?”",
+      "baldaH2": [
+        "Fogar doesn't bring its own suite.",
+        "It uses yours."
+      ],
+      "lamparaTitulo": "The house.",
+      "lampara": "Fogar turns on the lamp through Home Assistant.",
+      "lamparaBoton": "Lamp",
+      "temperatura": "Temperature: {n} degrees",
+      "radio": "A satellite speaker with a light client.",
+      "libreta": "Your second brain, where you already write.",
+      "paredH2": "Everything goes through the gateway.",
+      "clientesLabel": "Clients",
+      "clientes": [
+        "Fogar TV",
+        "Voice client",
+        "Web panel"
+      ],
+      "tuCliente": "Your client",
+      "herramientasLabel": "Tools over MCP",
+      "herramientas": [
+        [
+          "The house",
+          "Home Assistant"
+        ],
+        [
+          "Second brain",
+          "Obsidian, Notion"
+        ]
+      ],
+      "tuHerramienta": "Your tool",
+      "nota": "Fogar TV and the voice client (macOS, Android and Linux) already work. The web panel will be the main interface.",
+      "recorrido": "A walk through a living room: a stone fireplace with a fire and a TV above it, a speaker, an oak shelf with a lamp, a radio, a clock and a notebook, and a plain wall.",
+      "teleSr": "The TV shows Fogar TV: the time, the date, a timer and what's playing. A line of light writes “Fogar” and follows the walk.",
+      "lineaLabel": "Fogar's living line",
+      "pausa": "Pause motion",
+      "saltar": "Skip the walk",
+      "navLabel": "Walk",
+      "navPortada": "The fire of your home"
+    },
+    "resto": {
+      "instala": {
+        "titulo": "Install it",
+        "lead": "One step, on a machine of your own:",
+        "copiar": "Copy",
+        "copiado": "Copied",
+        "requisitos": "It needs Linux with user systemd and OpenClaw 2026.6.11 or later, on the same machine or over an SSH tunnel.",
+        "diy": "Step by step in DIY",
+        "como": "How it's made"
+      },
+      "usas": {
+        "titulo": "With what you already use",
+        "lead": "Fogar sits on top of what you already have at home and takes it to the TV and the speaker.",
+        "filas": [
+          [
+            "Home Assistant",
+            "Fogar talks to it over MCP and asks it for things around the house. It works the other way too: Home Assistant's voice assistant can be Fogar."
+          ],
+          [
+            "OpenClaw",
+            "It orchestrates, with its memory, its agents and its scheduled tasks, and calls Home Assistant, Obsidian, Notion… over MCP."
+          ],
+          [
+            "The AI model",
+            "Whichever one you already have set up in OpenClaw."
+          ],
+          [
+            "The voice",
+            "whisper.cpp and Kokoro on your network. Or ElevenLabs: if it transcribes, it gets your audio; if it speaks, it gets the text of the answers."
+          ]
+        ],
+        "protocolo": "Everything goes through fogar-gateway. If you want to write your own client, the protocol is documented.",
+        "protocoloLink": "Client protocol"
+      },
+      "casa": {
+        "titulo": "What leaves home and what doesn't",
+        "cuerpo": "Your voice never goes through a Fogar cloud service. With fogar-transcriber and fogar-speaker, your audio never leaves your network. The only thing that does is what you ask the AI model you pay for.",
+        "link": "Where it runs and what leaves home, in detail",
+        "abierto": "Open source:",
+        "piezas": {
+          "gateway": "the gateway",
+          "transcriber": "the transcription",
+          "speaker": "the voice",
+          "voice": "the voice client"
+        }
+      },
+      "puertas": {
+        "titulo": "Where to go next",
+        "items": [
+          [
+            "Install it on your machine",
+            "The DIY entries: what was built, with which versions and how."
+          ],
+          [
+            "See Fogar TV",
+            "The TV you already have, turned into Fogar's screen."
+          ],
+          [
+            "Read how it's made",
+            "What happens from the moment you speak until it answers, piece by piece."
+          ],
+          [
+            "All the code on GitHub",
+            "Every piece of Fogar is a public repository: gateway, transcription, voice and client."
+          ]
+        ]
+      }
+    }
+  },
+  "sitio": {
+    "idioma": "Leer en español",
+    "nav": {
+      "label": "Main",
+      "inicio": "Home",
+      "tv": "Fogar TV",
+      "diy": "DIY",
+      "codigo": "Code on GitHub"
+    },
+    "pie": {
+      "pregunta": "Missing something?",
+      "cuerpo": "Tell us what you've set up and what you're missing.",
+      "copiar": "Copy address",
+      "copiada": "Copied",
+      "mapa": "Site map"
+    }
+  },
+  "tele": {
+    "locale": "en",
+    "oido": "Play some quiet jazz in the living room",
+    "herramienta": "Play in Living room",
+    "respuesta": "Here you go. Quiet jazz in the living room, starting with Miles Davis.",
+    "tiempo": "16° · sun and clouds",
+    "tempo": "Pasta",
+    "tempoSub": "drain and serve"
   }
 }

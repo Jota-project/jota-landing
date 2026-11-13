@@ -6,7 +6,7 @@
 
 /**
  * @param {HTMLCanvasElement} cv
- * @param {{ reduce?: boolean }} [opts]
+ * @param {{ reduce?: boolean, paleta?: Record<string,string>, halo?: number, humo?: string|null, giro?: number }} [opts]
  */
 export function crearLineaViva(cv, opts = {}) {
 /* ===== Motor de linea-viva/index.html (séptima vuelta), copiado sin cambios: modelo y trazo ===== */
@@ -256,12 +256,19 @@ function drawLine(c,pts,w,tin,tout,tip,mul){
   if(mul){ let i=0; while(i<n){ while(i<n&&mul[i]<=1.002) i++; let s0=i; while(i<n&&!(mul[i]<=1.002)) i++; if(i>s0+1) ribbon(c,pts,Math.max(0,s0-1),Math.min(n-1,i),wf); } }
 }
 
+/* costura: modelo. Sin lienzo ni bucle propio: devuelve los muelles y las formas para pintarlos fuera
+   (la capa WebGL de la landing y la tele de Fogar TV). El consumidor llama a go/step/drawn y lee DR y WMUL. */
+if(opts.modelo){ for(let i=0;i<N;i++){ P[i][0]=LX0+(LX1-LX0)*i/(N-1); P[i][1]=BASE; }
+  return {go,step,drawn,shape,drawLine,DR,WMUL,N,W,H,BASE,XMIN,XMAX,I_TIN,I_TOUT,TIP,STROKE,reduce,
+    set sweep(v){ sweepDir=v; },get cur(){ return cur; },get VS(){ return VS; },get SS(){ return SS; }}; }
+
 /* ===== Pintado con los tokens del sistema: el color sale de tokens.css, así que un cambio de token la recolorea ===== */
 const css=getComputedStyle(document.documentElement);
 const tok=n=>css.getPropertyValue("--"+n).trim();
 const h2r=h=>{ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join(""); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)); };
 const mixc=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
-const PAL={}; for(const k of ["hueso","ascua","llama","chispa","contra","noche"]) PAL[k]=tok(k)||"#888888";
+const PAL={}; for(const k of ["hueso","ascua","llama","chispa","contra","noche"]) PAL[k]=(opts.paleta&&opts.paleta[k])||tok(k)||"#888888"; // costura: paleta por opción
+const HALO=opts.halo??1, HUMO=opts.humo||null, GIRO=opts.giro||0; // costura: halo, color del humo (null = sin humo) y giro (volumen de cinta, 0–1)
 // propuesto: el color de cada estado (paso 3 de la fase 6)
 const STP={rest:{f:.55,v:.05,cols:["ascua","llama","chispa","llama"],b:.5},
   listen:{f:1.1,v:.28,cols:["llama","chispa","contra","chispa"],b:.55},
@@ -279,14 +286,36 @@ function flameGrad(c,t){ const g=c.createLinearGradient(0,BASE+30,0,30); g.addCo
 const bl=document.createElement("canvas");
 function bloom(c,pts,style,amt){ const w=c.canvas.width, h=c.canvas.height, bw=Math.max(1,Math.round(w/4)), bh=Math.max(1,Math.round(h/4)); if(bl.width!==bw||bl.height!==bh){ bl.width=bw; bl.height=bh; }
   const x=bl.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.setTransform(bw/W,0,0,bw/W,0,0); x.lineCap=x.lineJoin="round"; x.strokeStyle=style(x); x.lineWidth=STROKE*3.2; strokeRange(x,pts,0,pts.length-1);
-  c.save(); c.setTransform(1,0,0,1,0,0); c.globalCompositeOperation="lighter"; c.globalAlpha=Math.min(1,amt); c.filter=`blur(${Math.max(2,Math.round(w/110))}px)`; c.drawImage(bl,0,0,w,h); c.filter="none"; c.globalAlpha=Math.min(1,amt*.5); c.drawImage(bl,0,0,w,h); c.restore(); }
+  c.save(); c.setTransform(1,0,0,1,0,0); c.globalCompositeOperation="lighter"; c.globalAlpha=Math.min(1,amt); c.filter=`blur(${Math.max(2,Math.round(w/110*HALO))}px)`; c.drawImage(bl,0,0,w,h); c.filter="none"; c.globalAlpha=Math.min(1,amt*.5); c.drawImage(bl,0,0,w,h); c.restore(); }
 const ctx=cv.getContext("2d"); // costura
 function fitCv(){ const dpr=Math.max(1,window.devicePixelRatio||1), w=Math.round((cv.clientWidth||600)*dpr); if(w>0&&cv.width!==w){ cv.width=w; cv.height=Math.round(w*0.42); } }
+/* costura: humo. Un historial corto del trazo (una copia cada 3 fotogramas) pintado a ¼ de resolución: cada copia sube,
+   engorda y se apaga con la edad. Sin realimentación, así que no deja poso. */
+const hb=document.createElement("canvas"), HIST=[], HMAX=14; let hn=0;
+function smoke(pts,t){ const w=cv.width, h=cv.height, bw=Math.max(1,Math.round(w/4)), bh=Math.max(1,Math.round(h/4));
+  if(hb.width!==bw||hb.height!==bh){ hb.width=bw; hb.height=bh; }
+  if(hn++%3===0){ HIST.unshift(pts.map(p=>[p[0],p[1]])); if(HIST.length>HMAX) HIST.pop(); }
+  const x=hb.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.lineCap=x.lineJoin="round"; x.strokeStyle=HUMO;
+  for(let k=HIST.length-1;k>=0;k--){ const a=(k+1)/(HMAX+1), q=HIST[k];
+    x.setTransform(bw/W,0,0,bw/W,Math.sin(t*0.9+k*0.6)*a*3,-a*a*bh*0.32); x.globalAlpha=0.2*(1-a)*(1-a); x.lineWidth=STROKE*(1.4+a*7); strokeRange(x,q,0,q.length-1); }
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.filter=`blur(${Math.max(1,Math.round(w/180))}px)`; ctx.drawImage(hb,0,0,w,h); ctx.filter="none"; ctx.restore(); }
 function paintLine(pts,mul,w,t,f){ const s=cv.width/W; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
   let amt=0; for(const st in w) amt+=w[st]*STP[st].b*(st==="listen"?0.6+0.8*VS:1);
+  amt*=HALO; if(HUMO) smoke(pts,t);
   if(amt>0.01) bloom(ctx,pts,x=>f>0.5?flameGrad(x,t):lineGrad(x,w,t),amt);
-  ctx.setTransform(s,0,0,s,0,0); ctx.fillStyle=ctx.strokeStyle=lineGrad(ctx,w,t); drawLine(ctx,pts,STROKE,I_TIN,I_TOUT,TIP/STROKE,mul);
-  if(f>0.01){ ctx.globalAlpha=f; ctx.fillStyle=ctx.strokeStyle=flameGrad(ctx,t); drawLine(ctx,pts,STROKE,I_TIN,I_TOUT,TIP/STROKE,mul); ctx.globalAlpha=1; } }
+  ctx.setTransform(s,0,0,s,0,0); ctx.fillStyle=ctx.strokeStyle=lineGrad(ctx,w,t); trazo(pts,mul,t);
+  if(f>0.01){ ctx.globalAlpha=f; ctx.fillStyle=ctx.strokeStyle=flameGrad(ctx,t); trazo(pts,mul,t); ctx.globalAlpha=1; }
+  if(GIRO) brillo(pts,t); }
+/* costura: giro. La línea como una cinta que gira sobre sí misma: el grosor sigue una onda que viaja por el trazo
+   (cara y canto) y un filo de luz encima, desplazado hacia arriba, le da cuerpo de tubo. Sin giro, el trazo de siempre. */
+function anchoGiro(i,n,t){ return 1-GIRO*0.55+GIRO*1.1*(0.5+0.5*Math.sin(6.2832*(i/n)*1.4-t*1.8)); }
+function trazo(pts,mul,t){ if(!GIRO){ drawLine(ctx,pts,STROKE,I_TIN,I_TOUT,TIP/STROKE,mul); return; }
+  const n=pts.length, tp=TIP/STROKE, taper=i=> i<I_TIN ? tp+(1-tp)*smooth(i/I_TIN) : i>n-1-I_TOUT ? 0.14+0.86*smooth((n-1-i)/I_TOUT) : 1;
+  ribbon(ctx,pts,0,n-1,i=>STROKE*1.25*taper(i)*anchoGiro(i,n,t)*(mul?mul[i]:1)); }
+function brillo(pts,t){ const n=pts.length; ctx.save(); ctx.lineCap="round"; ctx.strokeStyle="rgba(255,252,246,0.8)";
+  for(let a=0;a<n-1;a+=6){ const k=anchoGiro(a,n,t); if(k<1.05) continue; ctx.globalAlpha=Math.min(1,(k-1.05)*1.6)*GIRO; ctx.lineWidth=STROKE*0.26*k;
+    ctx.beginPath(); ctx.moveTo(pts[a][0],pts[a][1]-STROKE*0.3*k); const b=Math.min(n-1,a+6); ctx.lineTo(pts[b][0],pts[b][1]-STROKE*0.3*anchoGiro(b,n,t)); ctx.stroke(); }
+  ctx.restore(); }
 
 /* ===== costura: bucle propio, sin controles; el consumidor elige el estado y el nivel de voz ===== */
 const SW={rest:1,listen:0,think:0,tool:0,speak:0}; let flameF=0, lastT=performance.now(), accT=0, raf=0, alive=true;

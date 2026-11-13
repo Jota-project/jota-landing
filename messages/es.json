@@ -4,8 +4,158 @@
       "title": "Fogar",
       "description": "Un ecosistema de inteligencia artificial para tu casa: voz, un gateway que une tus clientes y tu domótica, y código abierto."
     },
-    "soon": "Estamos construyendo la nueva web.",
-    "code": "Código en GitHub",
-    "contact": "Contacto"
+    "d": {
+      "h1": [
+        "El fuego",
+        "de tu casa"
+      ],
+      "portada": "Cualquier pantalla o altavoz puede ser un cliente.",
+      "instalalo": "Instálalo",
+      "verTv": "Fogar TV",
+      "gatewayH2": [
+        "Un programa",
+        "en tu casa"
+      ],
+      "gateway": "Une voz, clientes, domótica y OpenClaw.",
+      "gateway2": "Los clientes solo hablan con el gateway: él decide quién pasa y con qué agente.",
+      "vozH2": [
+        "Escucha tras su palabra",
+        "de activación."
+      ],
+      "voz": "La que tú elijas. Hasta oírla, el audio no sale del aparato. Es un cliente más.",
+      "vozEjemplo": "p. ej. “¿Qué tengo pendiente esta semana?”",
+      "baldaH2": [
+        "Fogar no trae su suite.",
+        "Usa la tuya."
+      ],
+      "lamparaTitulo": "La casa.",
+      "lampara": "Fogar enciende la lámpara a través de Home Assistant.",
+      "lamparaBoton": "Lámpara",
+      "temperatura": "Temperatura: {n} grados",
+      "radio": "Un altavoz satélite con un cliente ligero.",
+      "libreta": "Tu segundo cerebro, donde ya escribes.",
+      "paredH2": "Todo pasa por el gateway.",
+      "clientesLabel": "Clientes",
+      "clientes": [
+        "Fogar TV",
+        "Cliente de voz",
+        "Panel web"
+      ],
+      "tuCliente": "Tu cliente",
+      "herramientasLabel": "Herramientas por MCP",
+      "herramientas": [
+        [
+          "La casa",
+          "Home Assistant"
+        ],
+        [
+          "Segundo cerebro",
+          "Obsidian, Notion"
+        ]
+      ],
+      "tuHerramienta": "Tu herramienta",
+      "nota": "Fogar TV y el cliente de voz (macOS, Android y Linux) ya funcionan. El panel web será la interfaz principal.",
+      "recorrido": "Recorrido por un salón: chimenea de piedra con lumbre y una tele encima, un altavoz, una balda de roble con lámpara, radio, reloj y libreta, y una pared lisa.",
+      "teleSr": "La tele muestra Fogar TV: la hora, la fecha, un temporizador y lo que suena. Una línea de luz escribe «Fogar» y acompaña el recorrido.",
+      "lineaLabel": "La línea viva de Fogar",
+      "pausa": "Pausar movimiento",
+      "saltar": "Saltar el recorrido",
+      "navLabel": "Recorrido",
+      "navPortada": "El fuego de tu casa"
+    },
+    "resto": {
+      "instala": {
+        "titulo": "Instálalo",
+        "lead": "Un paso, en una máquina tuya:",
+        "copiar": "Copiar",
+        "copiado": "Copiado",
+        "requisitos": "Pide Linux con systemd de usuario y OpenClaw 2026.6.11 o posterior, en el mismo equipo o por túnel SSH.",
+        "diy": "Paso a paso en DIY",
+        "como": "Cómo está hecho"
+      },
+      "usas": {
+        "titulo": "Con lo que ya usas",
+        "lead": "Fogar se monta encima de lo que ya tienes en casa y lo lleva a la tele y al altavoz.",
+        "filas": [
+          [
+            "Home Assistant",
+            "Fogar le habla por MCP y le pide las cosas de casa. También al revés: el asistente de voz de Home Assistant puede ser Fogar."
+          ],
+          [
+            "OpenClaw",
+            "Orquesta, con su memoria, sus agentes y sus tareas programadas, y llama por MCP a Home Assistant, Obsidian, Notion…"
+          ],
+          [
+            "El modelo de IA",
+            "El que ya tengas configurado en OpenClaw."
+          ],
+          [
+            "La voz",
+            "whisper.cpp y Kokoro en tu red. O ElevenLabs: si transcribe, le llega tu audio; si pone la voz, el texto de las respuestas."
+          ]
+        ],
+        "protocolo": "Todo pasa por fogar-gateway. Si quieres escribir tu propio cliente, el protocolo está documentado.",
+        "protocoloLink": "Protocolo del cliente"
+      },
+      "casa": {
+        "titulo": "Qué sale de casa y qué no",
+        "cuerpo": "No hay un servicio de Fogar en la nube por el que pase tu voz. Con fogar-transcriber y fogar-speaker, tu audio no sale de tu red. Lo único que sale es lo que le pides al modelo de IA que tengas contratado.",
+        "link": "Dónde corre y qué sale de casa, en detalle",
+        "abierto": "Son de código abierto:",
+        "piezas": {
+          "gateway": "el gateway",
+          "transcriber": "la transcripción",
+          "speaker": "la voz",
+          "voice": "el cliente de voz"
+        }
+      },
+      "puertas": {
+        "titulo": "Por dónde seguir",
+        "items": [
+          [
+            "Instálalo en tu máquina",
+            "Las entradas DIY: qué se montó, con qué versiones y cómo."
+          ],
+          [
+            "Mira Fogar TV",
+            "La tele que ya tienes, convertida en la pantalla de Fogar."
+          ],
+          [
+            "Lee cómo está hecho",
+            "Qué pasa desde que le hablas hasta que te contesta, pieza a pieza."
+          ],
+          [
+            "Todo el código en GitHub",
+            "Cada pieza de Fogar es un repositorio público: gateway, transcripción, voz y cliente."
+          ]
+        ]
+      }
+    }
+  },
+  "sitio": {
+    "idioma": "Read in English",
+    "nav": {
+      "label": "Principal",
+      "inicio": "Inicio",
+      "tv": "Fogar TV",
+      "diy": "DIY",
+      "codigo": "Código en GitHub"
+    },
+    "pie": {
+      "pregunta": "¿Echas algo en falta?",
+      "cuerpo": "Cuéntanos qué tienes montado y qué te falta.",
+      "copiar": "Copiar dirección",
+      "copiada": "Copiada",
+      "mapa": "Mapa del sitio"
+    }
+  },
+  "tele": {
+    "locale": "es",
+    "oido": "Pon algo tranquilo de jazz en el salón",
+    "herramienta": "Reproducir en el Salón",
+    "respuesta": "Ahí va. Jazz tranquilo en el salón, empezando por Miles Davis.",
+    "tiempo": "16° · nubes y claros",
+    "tempo": "Pasta",
+    "tempoSub": "escurrir y servir"
   }
 }
