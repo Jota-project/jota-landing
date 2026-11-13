@@ -13,7 +13,7 @@ gsap.registerPlugin(useGSAP, SplitText);
 /** Textos de la spec (JLD Spec 2026-11-12) y del laboratorio de la secuencia. No se inventa ninguno. */
 export const T = {
   h1: ["El fuego", "de tu casa"],
-  frasePortada: "Cualquier pantalla o altavoz puede ser un cliente.",
+  frasePortada: "Una pantalla o un altavoz compatibles pueden ser clientes.",
   rotulosPortada: [
     { t: "Fogar TV", x: 720, y: 516 },
     { t: "altavoz", x: 352, y: 486 },
@@ -25,7 +25,7 @@ export const T = {
   rotuloVoz: "cliente de voz",
   casa: "La casa. Fogar enciende la lámpara a través de Home Assistant.",
   lampara: "Lámpara",
-  radio: "Un altavoz satélite con un cliente ligero.",
+  radio: "Un altavoz conectado a un cliente ligero: basta un ESP32.",
   libreta: "Tu segundo cerebro, donde ya escribes.",
   h2Balda: "Fogar no trae su suite. Usa la tuya.",
   temperatura: 21,

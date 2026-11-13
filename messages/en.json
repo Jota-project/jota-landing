@@ -9,7 +9,7 @@
         "The fire",
         "of your home"
       ],
-      "portada": "Any screen or speaker can be a client.",
+      "portada": "A compatible screen or speaker can be a client.",
       "instalalo": "Install it",
       "verTv": "Fogar TV",
       "gatewayH2": [
@@ -32,7 +32,7 @@
       "lampara": "Fogar turns on the lamp through Home Assistant.",
       "lamparaBoton": "Lamp",
       "temperatura": "Temperature: {n} degrees",
-      "radio": "A satellite speaker with a light client.",
+      "radio": "A speaker hooked up to a light client: an ESP32 is enough.",
       "libreta": "Your second brain, where you already write.",
       "paredH2": "Everything goes through the gateway.",
       "clientesLabel": "Clients",
@@ -76,7 +76,7 @@
       },
       "usas": {
         "titulo": "With what you already use",
-        "lead": "Fogar sits on top of what you already have at home and takes it to the TV and the speaker.",
+        "lead": "Fogar sits on top of what you already have at home and takes it to your compatible screens and speakers.",
         "filas": [
           [
             "Home Assistant",
