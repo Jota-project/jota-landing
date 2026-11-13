@@ -283,15 +283,21 @@ function stopCol(w,x,t){ let acc=[0,0,0], tot=0;
   return tot?acc.map(v=>v/tot):h2r(PAL.llama); }
 function lineGrad(c,w,t){ const g=c.createLinearGradient(XMIN-30,0,XMAX+30,0); for(let k=0;k<=20;k++){ g.addColorStop(k/20,`rgb(${stopCol(w,k/20,t).map(Math.round).join(",")})`); } return g; }
 function flameGrad(c,t){ const g=c.createLinearGradient(0,BASE+30,0,30); g.addColorStop(0,PAL.ascua); g.addColorStop(0.2+0.05*Math.sin(t*7.3),PAL.llama); g.addColorStop(0.5+0.08*Math.sin(t*11.1+1),PAL.chispa); g.addColorStop(1,PAL.chispa); return g; }
-const bl=document.createElement("canvas");
-/* costura: halo y humo no siguen a STK (anchura en espacio 1000, como en fogar-brand); con el blur mínimo de 4 px (el escalado ×4)
-   bajan de intensidad en lienzos pequeños en vez de crecer. */
-function bloom(c,pts,style,amt){ const w=c.canvas.width, h=c.canvas.height, bw=Math.max(1,Math.round(w/4)), bh=Math.max(1,Math.round(h/4)); if(bl.width!==bw||bl.height!==bh){ bl.width=bw; bl.height=bh; }
-  const x=bl.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.setTransform(bw/W,0,0,bw/W,0,0); x.lineCap=x.lineJoin="round"; x.strokeStyle=style(x); x.lineWidth=STROKE*3.2; strokeRange(x,pts,0,pts.length-1);
-  c.save(); c.setTransform(1,0,0,1,0,0); c.globalCompositeOperation="lighter"; c.globalAlpha=Math.min(1,amt); c.imageSmoothingQuality="high"; const br=w/110*HALO, bk=Math.min(1,br/4); c.globalAlpha=Math.min(1,amt)*bk; c.filter=`blur(${Math.max(4,Math.round(br))}px)`; c.drawImage(bl,0,0,w,h); c.filter="none"; c.globalAlpha=Math.min(1,amt*.5)*bk; c.drawImage(bl,0,0,w,h); c.restore(); }
+/* costura: margen. El lienzo se sale PAD unidades por cada lado de la caja 1000×420 para que el halo no se corte en el borde;
+   LineaViva.tsx lo coloca con el mismo margen, así la palabra queda donde estaba. */
+const PAD=70, CW=W+2*PAD, CH=H+2*PAD;
+/* costura: halo a resolución completa. Antes era el trazo a ¼ de resolución con ctx.filter=blur: salía a bloques y en Safari
+   (sin ctx.filter) sin difuminar. Ahora son K pasadas del trazo, cada vez más anchas y tenues, sumadas con "lighter": un
+   degradado suave en cualquier navegador y densidad. R, el radio, en unidades del espacio 1000 (como el blur de antes). */
+function bloom(c,pts,style,amt){ const w=c.canvas.width, s=w/CW, br=w*W/CW/110*HALO, bk=Math.min(1,br/4), R=W/110*HALO, K=16, A=Math.min(1,amt)*bk*0.55;
+  c.save(); c.setTransform(s,0,0,s,PAD*s,PAD*s); c.globalCompositeOperation="lighter"; c.lineCap=c.lineJoin="round"; c.strokeStyle=style(c);
+  // Perfil gaussiano (σ = R): cada pasada aporta la parte del degradado que le toca, así no queda una meseta junto al trazo.
+  const r0=STROKE*0.8, dr=3*R/K;
+  for(let k=K;k>=1;k--){ const r=dr*k; c.lineWidth=2*(r0+r); c.globalAlpha=A*(r/(R*R))*Math.exp(-r*r/(2*R*R))*dr; strokeRange(c,pts,0,pts.length-1); }
+  c.restore(); }
 const ctx=cv.getContext("2d"); // costura
-function fitCv(){ const dpr=Math.max(1,window.devicePixelRatio||1), w=Math.round((cv.clientWidth||600)*dpr); if(w>0&&cv.width!==w){ cv.width=w; cv.height=Math.round(w*0.42); }
-  STK=Math.max(STROKE,TRAZO_MIN*W/(cv.clientWidth||600)); }
+function fitCv(){ const dpr=Math.max(1,window.devicePixelRatio||1), w=Math.round((cv.clientWidth||600)*dpr); if(w>0&&cv.width!==w){ cv.width=w; cv.height=Math.round(w*CH/CW); }
+  STK=Math.max(STROKE,TRAZO_MIN*CW/(cv.clientWidth||600)); }
 /* costura: grosor mínimo. Por debajo de 1,09 px CSS el trazo se rompe; 1,09 px es lo que mide fogar-palabra.svg en su tamaño
    mínimo de marca (3,26 / 288,27 × 96 px de alto). En grande, el STROKE de siempre: no engorda. */
 const TRAZO_MIN=3.26/288.27*96; let STK=STROKE;
@@ -303,13 +309,15 @@ function smoke(pts,t){ const w=cv.width, h=cv.height, bw=Math.max(1,Math.round(w
   if(hn++%3===0){ HIST.unshift(pts.map(p=>[p[0],p[1]])); if(HIST.length>HMAX) HIST.pop(); }
   const x=hb.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.lineCap=x.lineJoin="round"; x.strokeStyle=HUMO;
   for(let k=HIST.length-1;k>=0;k--){ const a=(k+1)/(HMAX+1), q=HIST[k];
-    x.setTransform(bw/W,0,0,bw/W,Math.sin(t*0.9+k*0.6)*a*3,-a*a*bh*0.32); x.globalAlpha=0.2*(1-a)*(1-a); x.lineWidth=STROKE*(1.4+a*7); strokeRange(x,q,0,q.length-1); }
+    x.setTransform(bw/CW,0,0,bw/CW,PAD*bw/CW+Math.sin(t*0.9+k*0.6)*a*3,PAD*bw/CW-a*a*bh*0.32); x.globalAlpha=0.2*(1-a)*(1-a); x.lineWidth=STROKE*(1.4+a*7); strokeRange(x,q,0,q.length-1); }
+  // El humo sube hasta el borde de arriba: se funde en el cuarto superior para que no se vea el corte del lienzo.
+  x.setTransform(1,0,0,1,0,0); x.globalAlpha=1; x.globalCompositeOperation="destination-in"; const fm=x.createLinearGradient(0,0,0,bh*0.3); fm.addColorStop(0,"rgba(0,0,0,0)"); fm.addColorStop(1,"#000"); x.fillStyle=fm; x.fillRect(0,0,bw,bh); x.globalCompositeOperation="source-over";
   ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=Math.min(1,w/180/4); ctx.imageSmoothingQuality="high"; ctx.filter=`blur(${Math.max(4,Math.round(w/180))}px)`; ctx.drawImage(hb,0,0,w,h); ctx.filter="none"; ctx.restore(); }
-function paintLine(pts,mul,w,t,f){ const s=cv.width/W; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
+function paintLine(pts,mul,w,t,f){ const s=cv.width/CW; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
   let amt=0; for(const st in w) amt+=w[st]*STP[st].b*(st==="listen"?0.6+0.8*VS:1);
   amt*=HALO; if(HUMO) smoke(pts,t);
   if(amt>0.01) bloom(ctx,pts,x=>f>0.5?flameGrad(x,t):lineGrad(x,w,t),amt);
-  ctx.setTransform(s,0,0,s,0,0); ctx.fillStyle=ctx.strokeStyle=lineGrad(ctx,w,t); trazo(pts,mul,t);
+  ctx.setTransform(s,0,0,s,PAD*s,PAD*s); ctx.fillStyle=ctx.strokeStyle=lineGrad(ctx,w,t); trazo(pts,mul,t);
   if(f>0.01){ ctx.globalAlpha=f; ctx.fillStyle=ctx.strokeStyle=flameGrad(ctx,t); trazo(pts,mul,t); ctx.globalAlpha=1; }
   if(GIRO) brillo(pts,t); }
 /* costura: giro. La línea como una cinta que gira sobre sí misma: el grosor sigue una onda que viaja por el trazo
