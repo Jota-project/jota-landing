@@ -1,6 +1,9 @@
 {
   "diy": {
     "saltar": "Saltar al contenido",
+    "nuevo": "Nuevo",
+    "enlace": {"label": "Ir a la sección DIY", "texto": "DIY"},
+    "portada": {"titulo": "Del DIY", "lead": "Notas técnicas y guías para montarlo tú. Cada entrada dice qué se probó.", "leer": "Leer", "todo": "Ver todo el DIY"},
     "indice": {
       "seccion": "DIY",
       "h1": "Fogar, por dentro y en tu casa",
@@ -40,7 +43,7 @@
       "hilo": {
         "titulo": "Recorrido de una orden",
         "frase": "«Ok Fogar, apaga la luz del salón»",
-        "repetir": "Repetir el recorrido",
+        "repetir": "Reproducir el recorrido",
         "pie": "Todo pasa por el gateway: el cliente nunca habla directamente con las otras piezas.",
         "nodos": [
           { "n": "Cliente", "d": "tu voz", "ahora": "audio en fragmentos, camino del gateway" },
@@ -51,13 +54,15 @@
           { "n": "Cliente", "d": "texto y audio", "ahora": "texto y audio por la misma conexión" }
         ]
       },
+      "escenario": {"reproducir": "Reproducir el recorrido", "paso": "Paso {n} de {total}: {pieza}, {ahora}", "fin": "Recorrido terminado"},
+      "montalo": {"titulo": "Móntalo", "puertas": "Por dónde seguir", "readme": "README de fogar-gateway", "protocolo": "Protocolo del cliente", "wake": "fogar-wake-trainer"},
       "casa": {
-        "titulo": "Qué se queda en tu red y qué puede salir",
+        "titulo": "Qué corre en tus máquinas y qué sale hacia fuera",
         "red": "Tu red",
         "piezas": ["Cliente", "fogar-gateway", "fogar-transcriber", "OpenClaw", "fogar-speaker", "Home Assistant"],
-        "fuera": "Fuera, solo si lo eliges",
-        "ayuda": "Elige un proveedor para ver qué sale de casa.",
-        "nada": "Con todo en local, «apaga la luz del salón» no sale de tu red.",
+        "fuera": "Fuera, los proveedores que eliges",
+        "ayuda": "Pulsa uno para ver qué recibe.",
+        "nada": "Algo siempre sale de casa, hacia los proveedores externos que elijas.",
         "proveedores": [
           { "n": "ElevenLabs", "sale": "ElevenLabs recibe tu audio si transcribe, o el texto de las respuestas si pone la voz." },
           { "n": "Modelo en la nube", "sale": "El modelo en la nube recibe lo que dices, ya convertido en texto." },

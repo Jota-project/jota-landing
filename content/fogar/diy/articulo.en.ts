@@ -26,7 +26,7 @@ export const articuloEn: ArticuloContenido = {
       toc: "What happens when you talk to it",
       html: `
 <h2>What happens when you talk to Fogar</h2>
-<p>Let's follow one specific sentence: “OK Fogar, turn off the living room light”. Picture yourself saying it to a device that works as a speaker in the living room, with fogar-voice installed.</p>
+<p>Let's follow one specific sentence: <span class="frase">“OK Fogar, turn off the living room light”</span>. Picture yourself saying it to a device that works as a speaker in the living room, with fogar-voice installed.</p>
 
 <section id="paso-1" data-estado="listen">
   <h3>1. The client listens</h3>
@@ -36,7 +36,7 @@ export const articuloEn: ArticuloContenido = {
     <li><strong>fogar-voice</strong>, a very simple, open-source, cross-platform voice client. Also covered below.</li>
   </ul>
   <p>fogar-voice ships with “OK Nabu” as its wake word. In this example we use “OK Fogar”. If you'd rather use a different word, you can train it with ${a(REPOS.wakeTrainer, "fogar-wake-trainer")}.</p>
-  <p>fogar-voice listens all the time, but it doesn't send any audio. It spots the wake word on the device itself with openWakeWord, an open library built for exactly that. Until it hears it, no audio leaves the device.</p>
+  <p>fogar-voice listens all the time, but it doesn't send any audio. It spots the wake word on the device itself with openWakeWord, an open library built for exactly that. It only starts sending audio once it hears it.</p>
   <p>Once it hears it, it streams your voice to the gateway in chunks while you're still speaking, over the WebSocket connection it has kept open since it started. It also sends the second and a half before the wake word, so the start of your sentence isn't cut off.</p>
   <p>How does it know you've finished? With fogar-transcriber, the client decides. fogar-voice treats the sentence as done after a second and a half of silence. A client with a button closes it when you let go. With ElevenLabs, its server is the one that detects the end of the sentence.</p>
 </section>
@@ -50,7 +50,7 @@ export const articuloEn: ArticuloContenido = {
 <section id="paso-3" data-estado="think">
   <h3>3. Your voice becomes text</h3>
   <p>The gateway forwards the audio to the transcription service. That can be fogar-transcriber, our server built on whisper.cpp. It can also be ElevenLabs, an external provider. Whoever runs the gateway picks one, and it applies to all of its clients.</p>
-  <p>Transcription happens live. While you speak, the client receives the text as it's recognised. When you finish, it gets the final transcript: “turn off the living room light”.</p>
+  <p>Transcription happens live. While you speak, the client receives the text as it's recognised. When you finish, it gets the final transcript: <span class="frase">“turn off the living room light”</span>.</p>
   <p>That transcript doesn't go straight to the orchestrator. It goes back to the client first, which confirms it and sends it on. That way a client can show you the text and let you fix it, or send it as is if you're talking hands-free.</p>
 </section>
 
@@ -152,15 +152,15 @@ export const articuloEn: ArticuloContenido = {
       toc: "Where it runs, what leaves home",
       html: `
 <h2>Where Fogar runs and what leaves your home</h2>
-<p>Every piece of Fogar installs and runs on a machine of your own. There's no Fogar cloud service your voice passes through. What leaves your home depends on the external providers you choose:</p>
+<p>Every piece of Fogar installs and runs on a machine of your own. There's no Fogar cloud service your voice passes through. Something always leaves your home: what leaves, and where it goes, depends on the external providers you choose:</p>
 <!--figura-->
 <ul>
-  <li><strong>Your voice.</strong> With fogar-transcriber and fogar-speaker, everything stays on your network. If you use ElevenLabs for transcription, it receives your audio. If you use it for Fogar's voice, it receives the text of the answers.</li>
+  <li><strong>Your voice.</strong> With fogar-transcriber and fogar-speaker, your voice is processed on your own machines. If you use ElevenLabs for transcription, it receives your audio. If you use it for Fogar's voice, it receives the text of the answers.</li>
   <li><strong>The language model.</strong> OpenClaw can use a local model or a cloud one. If it's in the cloud, what you say reaches that provider, already turned into text.</li>
   <li><strong>Access from outside.</strong> If you expose the gateway through a tunnel or an external proxy to use it away from home, the audio goes through that service.</li>
 </ul>
 <p>Each provider has its own terms about what it keeps and for how long. It's worth reading them before you pick one.</p>
-<p>With everything local, “turn off the living room light” never leaves your network. With a cloud model, it would go out as text to that provider.</p>`,
+<p>With a cloud model, <span class="frase">“turn off the living room light”</span> goes out as text to that provider. You choose where each thing goes, so your data doesn't end up scattered across services you don't know. And because the ecosystem is open, you can swap any piece for a compatible one or plug in your own.</p>`,
     },
     {
       id: "home-assistant",

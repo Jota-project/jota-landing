@@ -3,8 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Cabecera } from "@/components/fogar/sitio/Cabecera";
 import { Pie } from "@/components/fogar/sitio/Pie";
 import { Apertura } from "@/components/fogar/tv/Apertura";
-import { Contesta } from "@/components/fogar/tv/Contesta";
-import { Completa } from "@/components/fogar/tv/Completa";
 import { Mando } from "@/components/fogar/tv/Mando";
 import { Emparejar } from "@/components/fogar/tv/Emparejar";
 import { Montaje } from "@/components/fogar/tv/Montaje";
@@ -29,14 +27,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function FogarTvPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const t = await getTranslations("tv");
   return (
     <>
+      {/* Salta la tele fija (bloques 1 a 3) y lleva el foco al mando. */}
+      <a href="#tv-t-s4" className="f-saltar">{t("saltar")}</a>
       <Cabecera actual="tv" />
       <main>
+        {/* Bloques 1 a 3: una sola tele fija (la sala, la serie y la receta). */}
         <Apertura />
-        <Contesta />
-        <Completa />
-        {/* Bloques 4 y 5: el móvil como mando. Pendientes de Sito («el móvil no se trata»): se quitan borrando su línea. */}
+        {/* Bloques 4 y 5: el móvil como mando. Se quedan (Sito, 13-11). */}
         <Mando />
         <Emparejar />
         <Montaje />

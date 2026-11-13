@@ -1,8 +1,9 @@
 {
   "tv": {
+    "saltar": "Skip the walk",
     "meta": {
       "title": "Fogar TV — You talk. The TV handles it.",
-      "description": "Fogar TV turns the TV you already own into Fogar's screen: it answers without covering what you watch, your phone is the remote, and everything stays on your network."
+      "description": "Fogar TV turns the TV you already own into Fogar's screen: it answers without covering what you watch, your phone is the remote, and it's an open ecosystem you can plug your own things into."
     },
     "s1": {
       "headline": "You talk. The TV handles it.",
@@ -34,7 +35,7 @@
       "line1": "A mini PC or that old laptop you no longer use, an HDMI cable and your phone.",
       "line2": "Fogar TV provides the screen; fogar-gateway connects it to Fogar's brain.",
       "soon": "For now you install it by hand, following the <readme>READMEs</readme>.",
-      "network": "All on your network. Away from home, through the tunnel or proxy you choose.",
+      "network": "It's an open ecosystem: anyone can build compatible pieces and plug in their own. Away from home, through the tunnel or proxy you choose.",
       "alt": "Diagram: a mini PC or old laptop connects over HDMI to the TV; fogar-gateway connects it to Fogar's brain and to your phone.",
       "pc": "Mini PC or laptop",
       "hdmi": "HDMI",
@@ -70,7 +71,7 @@
         },
         {
           "title": "You choose the providers",
-          "body": "Local, or with the model and voice you prefer.",
+          "body": "The model and voice you prefer, without being tied to any.",
           "icon": "cloud"
         }
       ]

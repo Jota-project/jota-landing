@@ -17,17 +17,18 @@ import type { TextosTele } from "./tele";
  * piedra y el yeso que tiene cerca y el ratón juega con ella; la tele está encendida con Fogar TV de verdad. Encima, poco
  * texto, grande y anclado a la escena. Ningún objeto lleva rótulo salvo cuando la parada habla de él (la balda).
  * Las cinco estaciones están siempre en el DOM (lectores de pantalla y Tab llegan a todas); solo cambia su opacidad.
- * Móvil, puntero táctil y «reducir movimiento»: modo fijo, una imagen por estación y el texto debajo, sin WebGL.
+ * Móvil, puntero táctil, ventanas de 3:2 o menos y «reducir movimiento»: modo fijo, sin WebGL. La portada
+ * va a pantalla completa con el texto encima; el gateway es un esquema y la voz, el cliente en un móvil (sin fotos de altavoz).
  */
 
-const FIJO = "(prefers-reduced-motion: reduce), (max-width: 767px), (pointer: coarse)";
+// Hasta 3:2 la escena recorta los lados y el titular cae sobre la tele: a 1024×700 (≈1,46) el bloque mide ~340 px y la pared
+// libre junto a la tele, otros ~340, sin margen. 1280×800 y 1440×900 (8:5) siguen en escena.
+const FIJO = "(prefers-reduced-motion: reduce), (max-width: 767px), (pointer: coarse), (max-aspect-ratio: 3/2)";
 const foco = "focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[color:var(--hueso)] focus-visible:shadow-[0_0_0_7px_var(--noche)]";
 const h2 = "font-display leading-[1.06] tracking-[-0.035em] text-[color:var(--hueso)]";
 const cuerpo = "text-[color:var(--hueso)]";
 const img = (f: number, ancho = 1280) => `/lab/secuencia/v6/${ancho}/f_${String(f).padStart(3, "0")}.avif`;
 const TEMPERATURA = 21;
-/** Encuadre de cada foto en el recorte 4:5 del móvil (en 16:9 no se nota): la portada va centrada porque la tele fija cuenta con ello. */
-const ENCUADRE = { portada: "50% 50%", gateway: "22% 50%", voz: "50% 50%", balda: "30% 50%", pared: "50% 50%" } as const;
 export const TINTA = { paleta: { ascua: "#9c8f7b", llama: "#e6d9c2", chispa: "#fffaf0", contra: "#cfe6d6", hueso: "#ece6dc" }, halo: 1.6, humo: "#e9e0d0" };
 
 const CSS = `
@@ -42,9 +43,19 @@ const CSS = `
 .d-fijo .d-e,.d-fijo .d-obj{opacity:1;transform:none}
 .d-guia{position:absolute;width:1px;background:var(--hueso);opacity:.3}
 .d-boton{transition:background-color .2s ease-out,color .2s ease-out,border-color .2s ease-out,transform .12s ease-out}
-.d-boton:active{transform:scale(.97)}
+@media (prefers-reduced-motion:no-preference){.d-boton:active{transform:scale(.97)}}
 .d-luz{transition:opacity .3s cubic-bezier(.23,1,.32,1)}
 .d-luz.on{transition-duration:.12s}
+.d-placa,.d-placa-e{padding:14px 16px;margin:-14px -16px;border-radius:18px}
+.d-placa{background:rgb(11 16 18/.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.d-hero-foto{width:max(100cqw,76cqh * 16 / 9)}
+.d-hero-sombra{background:linear-gradient(to bottom,rgb(11 16 18/0) 42%,rgb(11 16 18/.55) 58%,rgb(11 16 18/.86) 68%,var(--noche) 82%)}
+@container (min-aspect-ratio: 3/2){
+.d-hero-foto{width:max(100cqw,100cqh * 16 / 9);top:50%;translate:-50% -50%}
+.d-hero-sombra{background:linear-gradient(to right,rgb(11 16 18/.9) 0,rgb(11 16 18/.78) max(24%,300px),rgb(11 16 18/0) max(38%,400px))}
+.d-hero-texto{top:0;max-width:none;margin:0;justify-content:center;padding-left:max(32px,5cqw);padding-right:0;width:min(440px,34cqw)}
+}
+@container (max-aspect-ratio: 8/5){.d-placa-e{background:rgb(11 16 18/.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}}
 `;
 
 function modoDe() { return new URLSearchParams(location.search).has("fijo") || matchMedia(FIJO).matches ? "fijo" : "escena"; }
@@ -64,9 +75,20 @@ function TeleFija({ textos }: { textos: TextosTele }) {
     });
     return () => { vivo = false; };
   }, [textos]);
-  // La pantalla de la tele en f_000: 693–1226 × 270–570 de 1920 × 1080.
-  // En 4:5 (móvil) se ve el centro de la foto, 864 de sus 1920 px: la pantalla queda en 19,1 % + 61,7 % del ancho.
-  return <div ref={ref} aria-hidden className="absolute left-[19.1%] top-[25%] h-[27.78%] w-[61.7%] md:left-[36.1%] md:w-[27.76%]" />;
+  // La pantalla de la tele en f_000: 693–1226 × 270–570 de 1920 × 1080. Va dentro de la caja 16:9 entera de la foto.
+  return <div ref={ref} aria-hidden className="absolute left-[36.1%] top-[25%] h-[27.78%] w-[27.76%]" />;
+}
+
+/** El cliente de voz en un móvil, escuchando: decorado (el texto y el ejemplo van debajo). Sin marcas, botones ni transcripción inventados. */
+function MovilVoz() {
+  return (
+    <div aria-hidden className="mx-auto my-4 w-[min(230px,62vw)] rounded-[42px] border border-[color:var(--hueso)]/18 bg-[color:var(--noche)] p-2 shadow-[0_40px_90px_-40px_rgb(238_106_44/0.45)]">
+      <div className="flex aspect-[9/17] flex-col rounded-[34px] px-5 pb-8 pt-4" style={{ background: "radial-gradient(120% 60% at 50% 100%, rgb(238 106 44/.16), transparent 70%), var(--piedra)" }}>
+        <span className="mx-auto block h-[5px] w-14 rounded-full bg-[color:var(--hueso)]/20" />
+        <div className="flex flex-1 items-center"><LineaViva estado="listen" tinta={TINTA} /></div>
+      </div>
+    </div>
+  );
 }
 
 type Ctx = { fijo: boolean; estacion: Estacion | null; bus: Bus; irA: (e: Estacion) => void };
@@ -83,10 +105,12 @@ function Capa({ e, children }: { e: Estacion; children: ReactNode }) {
   );
 }
 /** En la escena, anclado a coordenadas del fotograma; en el modo fijo, un bloque normal. */
-function En({ x, y, w, i = 0, entra = true, className = "", children }: { x: number; y: number; w?: number; i?: number; entra?: boolean; className?: string; children: ReactNode }) {
+/** `placa`: fondo oscuro translúcido detrás del texto, siempre o solo en ventanas estrechas (≤ 8:5), donde pisa la foto. */
+function En({ x, y, w, i = 0, entra = true, placa, className = "", children }: { x: number; y: number; w?: number; i?: number; entra?: boolean; placa?: "siempre" | "estrecha"; className?: string; children: ReactNode }) {
   const { fijo } = useContext(DCtx)!;
   if (fijo) return <div className={className}>{children}</div>;
-  return <Anclado x={x} y={y} w={w} className={`!pointer-events-none ${entra ? "d-e" : ""} ${className}`}><div style={{ "--i": i } as CSSProperties}>{children}</div></Anclado>;
+  const fondo = placa === "siempre" ? "d-placa" : placa === "estrecha" ? "d-placa-e" : undefined;
+  return <Anclado x={x} y={y} w={w} className={`!pointer-events-none ${entra ? "d-e" : ""} ${className}`}><div className={fondo} style={{ "--i": i } as CSSProperties}>{children}</div></Anclado>;
 }
 
 export function DireccionD() {
@@ -167,7 +191,7 @@ export function DireccionD() {
 
   const portada = (
     <Capa e="portada">
-      <En x={1340} y={170} w={480} entra={false}>
+      <En x={1340} y={170} w={480} entra={false} placa="estrecha">
         <h1 id="d-t-portada" className={h2} style={{ fontSize: letra(80, 40), lineHeight: 0.96 }}>{t.raw("h1")[0]}<br />{t.raw("h1")[1]}</h1>
         <p className={`${cuerpo} mt-[calc(34*var(--s,1px))] max-w-[24ch]`} style={{ fontSize: letra(24, 17), lineHeight: 1.42 }}>{t("portada")}</p>
         <p className="mt-[calc(40*var(--s,1px))] flex flex-wrap gap-3">
@@ -180,7 +204,7 @@ export function DireccionD() {
   );
   const gateway = (
     <Capa e="gateway">
-      <En x={180} y={150} w={470}>
+      <En x={180} y={170} w={470} placa="siempre">
         <h2 id="d-t-gateway" className={h2} style={{ fontSize: letra(56, 26) }}>{t.raw("gatewayH2")[0]}{" "}<br className="max-md:hidden" />{t.raw("gatewayH2")[1]}</h2>
         <p className={`${cuerpo} mt-[calc(28*var(--s,1px))]`} style={{ fontSize: letra(24, 17), lineHeight: 1.42 }}>{t("gateway")}</p>
       </En>
@@ -188,20 +212,21 @@ export function DireccionD() {
   );
   const voz = (
     <Capa e="voz">
-      <En x={180} y={110} w={800}>
+      <En x={180} y={140} w={800}>
         <h2 id="d-t-voz" className={h2} style={{ fontSize: letra(56, 26) }}>{t.raw("vozH2")[0]}{" "}<br className="max-md:hidden" />{t.raw("vozH2")[1]}</h2>
       </En>
-      <En x={180} y={262} w={340} i={1}>
+      {fijo && <MovilVoz />}
+      <En x={180} y={292} w={340} i={1}>
         <p className={cuerpo} style={{ fontSize: letra(24, 17), lineHeight: 1.42 }}>{t("voz")}</p>
       </En>
-      <En x={890} y={300} w={290} i={3}>
+      <En x={890} y={330} w={290} i={3}>
         <p className={cuerpo} style={{ fontSize: letra(24, 17), lineHeight: 1.42 }}>{t("vozEjemplo")}</p>
       </En>
     </Capa>
   );
   const balda = (
     <Capa e="balda">
-      <En x={180} y={96} w={800} i={0}>
+      <En x={180} y={126} w={800} i={0}>
         <h2 id="d-t-balda" className={h2} style={{ fontSize: letra(56, 24) }}>{t.raw("baldaH2")[0]}{" "}<br className="max-md:hidden" />{t.raw("baldaH2")[1]}</h2>
       </En>
       <ul className={fijo ? "mt-8 flex flex-col gap-8" : "contents"}>
@@ -235,7 +260,7 @@ export function DireccionD() {
   const enlace = `underline decoration-[color:var(--hueso)]/50 underline-offset-4 hover:decoration-[color:var(--hueso)] ${foco}`;
   const pared = (
     <Capa e="pared">
-      <En x={180} y={120} w={760}>
+      <En x={180} y={140} w={760}>
         <h2 id="d-t-pared" className={`${h2} md:whitespace-nowrap`} style={{ fontSize: letra(56, 26) }}>{t("paredH2")}</h2>
         <p className={`${cuerpo} mt-[calc(24*var(--s,1px))] max-w-[calc(520*var(--s,1px))]`} style={{ fontSize: letra(22, 17), lineHeight: 1.42 }}>{t("gateway2")}</p>
       </En>
@@ -265,6 +290,37 @@ export function DireccionD() {
       </En>
     </Capa>
   );
+  const flecha = <span aria-hidden className="mx-auto block h-8 w-px bg-[color:var(--hueso)]/35 md:h-px md:w-10" />;
+  const paredFijo = (
+    <>
+      <h2 id="d-t-pared" className={h2} style={{ fontSize: 26 }}>{t("paredH2")}</h2>
+      <p className={`${cuerpo} max-w-[52ch] text-[17px] leading-[1.45]`}>{t("gateway2")}</p>
+      <div className="mt-2 grid items-center gap-3 rounded-3xl border border-[color:var(--hueso)]/12 bg-[color:var(--piedra)] p-5 md:grid-cols-[1fr_auto_auto_auto_1.2fr] md:gap-5 md:p-7">
+        <div>
+          <p id="d-clientes" className="text-[15px] font-semibold text-[color:var(--hueso)]">{t("clientesLabel")}</p>
+          <ul aria-labelledby="d-clientes" className={`${cuerpo} mt-2 flex flex-col text-[17px] leading-[1.6]`}>
+            {(t.raw("clientes") as string[]).map((c) => <li key={c}>{c}</li>)}
+            <li><a className={`${enlace} inline-flex min-h-11 items-center`} href={PROTOCOLO}>+ {t("tuCliente")}</a></li>
+          </ul>
+        </div>
+        {flecha}
+        <div className="py-2 text-center">
+          <p className="font-display text-[28px] leading-none tracking-[-0.035em] text-[color:var(--hueso)]">Gateway</p>
+          <div aria-hidden className="mx-auto my-1 w-44"><LineaViva estado="line" tinta={TINTA} label="" /></div>
+          <p className={`${cuerpo} text-[15px]`}>OpenClaw</p>
+        </div>
+        {flecha}
+        <div>
+          <p className="text-[15px] font-semibold text-[color:var(--hueso)]">MCP</p>
+          <ul aria-label={t("herramientasLabel")} className={`${cuerpo} mt-2 flex flex-col text-[17px] leading-[1.6]`}>
+            {(t.raw("herramientas") as [string, string][]).map(([a, b]) => <li key={a}>{a} <span className="opacity-80">· {b}</span></li>)}
+            <li><a className={`${enlace} inline-flex min-h-11 items-center`} href={GITHUB_ORG}>+ {t("tuHerramienta")}</a></li>
+          </ul>
+        </div>
+      </div>
+      <p className={`${cuerpo} max-w-[60ch] text-[16px] leading-[1.5] opacity-90`}>{t("nota")}</p>
+    </>
+  );
   const cierre = (
     <Capa e="cierre">
       {/* La línea vuelve a escribir «Fogar»; lo que sigue (instalar, privacidad, puertas y pie) va debajo del recorrido. */}
@@ -274,30 +330,42 @@ export function DireccionD() {
 
   if (!modo) return <div className="min-h-screen bg-[color:var(--noche)]" />;
 
-  if (fijo)
+  if (fijo) {
+    const bloque = "mx-auto flex max-w-[1100px] flex-col gap-5 px-4 md:px-8";
     return (
-      <DCtx.Provider value={ctx}><div className="d-fijo bg-[color:var(--noche)] pb-24">
+      <DCtx.Provider value={ctx}><div className="d-fijo bg-[color:var(--noche)] pb-24" style={{ "--s": "0.5px" } as CSSProperties}>
         <style>{CSS}</style>
-        {([["portada", portada], ["gateway", gateway], ["voz", voz], ["balda", balda], ["pared", pared]] as const).map(([e, contenido]) => (
-          <section key={e} id={`d-${e}`} aria-labelledby={`d-t-${e}`} className="mx-auto max-w-[1100px]">
-            <div className="relative">
-              {e !== "pared" && <img src={img(FIJA[e])} alt="" className="block aspect-[4/5] w-full object-cover md:aspect-video" style={{ objectPosition: ENCUADRE[e] }} fetchPriority={e === "portada" ? "high" : "auto"} loading={e === "portada" ? "eager" : "lazy"} />}
-              {e === "portada" && <TeleFija textos={textosTele} />}
-              {e === "balda" && <img src="/lab/secuencia/v6/1280/balda_lampara.webp" alt="" aria-hidden style={{ objectPosition: ENCUADRE.balda }} className={`d-luz absolute inset-0 h-full w-full object-cover ${lampara ? "on opacity-100" : "opacity-0"}`} />}
-            </div>
-            <div className="flex flex-col gap-5 px-4 pb-16 pt-8 md:px-8" style={{ "--s": "0.5px" } as CSSProperties}>
-              {e === "portada" && <div className="w-40"><LineaViva tinta={TINTA} quieta label={t("lineaLabel")} /></div>}
-              {contenido}
-            </div>
-          </section>
-        ))}
+        {/* Portada a pantalla completa: la foto 16:9 entera, alta al 76 % de la pantalla y centrada en la tele; el texto, abajo. */}
+        <section id="d-portada" aria-labelledby="d-t-portada" className="relative h-[100svh] min-h-[540px] overflow-hidden [container-type:size]">
+          <div className="d-hero-foto absolute left-1/2 top-0 aspect-video -translate-x-1/2">
+            <img src={img(FIJA.portada)} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full" />
+            <TeleFija textos={textosTele} />
+          </div>
+          {/* Hueso sobre blanco con noche encima: α ≥ 0,5 da 3:1 (titular grande) y α ≥ 0,65, 4,5:1. El titular empieza pasado el 66 % de alto y el resto, pasado el 75 %. */}
+          {/* Apaisado (solo llega aquí con «reducir movimiento» o puntero táctil): degradado lateral y texto a la izquierda, sin tapar el fuego. */}
+          <div aria-hidden className="d-hero-sombra absolute inset-0" />
+          <div className="d-hero-texto absolute inset-x-0 bottom-0 mx-auto flex max-w-[1100px] flex-col gap-4 px-4 pb-[max(2rem,env(safe-area-inset-bottom))] md:px-8 md:pb-12">
+            <div className="w-36"><LineaViva tinta={TINTA} quieta label={t("lineaLabel")} /></div>
+            {portada}
+          </div>
+        </section>
+        <section id="d-gateway" aria-labelledby="d-t-gateway" className={`${bloque} pt-16`}>{gateway}</section>
+        <section id="d-pared" aria-labelledby="d-t-pared" className={`${bloque} pt-12`}>{paredFijo}</section>
+        <section id="d-voz" aria-labelledby="d-t-voz" className={`${bloque} pt-24`}>{voz}</section>
+        <section id="d-balda" aria-labelledby="d-t-balda" className={`${bloque} pt-24`}>
+          <div className="relative -mx-4 md:mx-0">
+            <img src={img(FIJA.balda)} alt="" loading="lazy" className="block aspect-video w-full object-cover md:aspect-[21/9] md:rounded-3xl" />
+            <img src="/lab/secuencia/v6/1280/balda_lampara.webp" alt="" aria-hidden className={`d-luz absolute inset-0 h-full w-full object-cover md:rounded-3xl ${lampara ? "on opacity-100" : "opacity-0"}`} />
+          </div>
+          {balda}
+        </section>
       </div></DCtx.Provider>
     );
+  }
 
   return (
     <DCtx.Provider value={ctx}><div>
       <style>{CSS}</style>
-      <a href="#instala" className={`sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[color:var(--hueso)] focus:px-5 focus:py-3 focus:text-[color:var(--noche)]`}>{t("saltar")}</a>
       <div ref={tramo} id="seq-scroll" className="relative bg-[color:var(--noche)]" style={{ height: `${ALTO_VH}vh` }}>
         <div className="sticky top-0 h-screen w-full overflow-hidden [container-type:size]" data-gl={gl ? "1" : undefined}>
           <img src={img(0, ancho)} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />

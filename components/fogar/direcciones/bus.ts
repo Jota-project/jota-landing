@@ -9,7 +9,7 @@ export type Bus = {
   /** Ratón normalizado 0–1 en la ventana. */
   mouse: [number, number];
   estacion: "portada" | "gateway" | "voz" | "balda" | "pared" | "cierre" | null;
-  /** Scroll del recorrido en vh sobre 1400 (solo la dirección D). */
+  /** Scroll del recorrido en vh sobre ALTO_VH (solo la dirección D). */
   v?: number;
   /** Valores que la interfaz pasa a la capa WebGL (p. ej. la energía del estado de la voz). */
   extra?: Record<string, number>;

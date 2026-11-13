@@ -27,7 +27,7 @@ export const articuloEs = {
       toc: "Qué pasa cuando le hablas",
       html: `
 <h2>Qué pasa cuando le hablas a Fogar</h2>
-<p>Vamos a seguir una frase concreta: «Ok Fogar, apaga la luz del salón». Imagina que se la dices a un dispositivo que hace de altavoz en el salón, con fogar-voice instalado.</p>
+<p>Vamos a seguir una frase concreta: <span class="frase">«Ok Fogar, apaga la luz del salón»</span>. Imagina que se la dices a un dispositivo que hace de altavoz en el salón, con fogar-voice instalado.</p>
 
 <section id="paso-1" data-estado="listen">
   <h3>1. El cliente escucha</h3>
@@ -37,7 +37,7 @@ export const articuloEs = {
     <li><strong>fogar-voice</strong>, un cliente de voz multiplataforma, muy sencillo y de código abierto. También lo vemos más abajo.</li>
   </ul>
   <p>fogar-voice viene configurado con la palabra de activación «Ok Nabu». En este ejemplo usamos «Ok Fogar». Si prefieres otra palabra, puedes entrenarla con ${a(REPOS.wakeTrainer, "fogar-wake-trainer")}.</p>
-  <p>fogar-voice escucha todo el rato, pero no envía audio. Detecta la palabra de activación en el propio aparato con openWakeWord, una librería abierta para eso. Hasta que la oye, el audio no sale del dispositivo.</p>
+  <p>fogar-voice escucha todo el rato, pero no envía audio. Detecta la palabra de activación en el propio aparato con openWakeWord, una librería abierta para eso. Solo cuando la oye empieza a enviar audio.</p>
   <p>Cuando la oye, manda tu voz al gateway en fragmentos, mientras hablas. Usa la conexión WebSocket que tiene abierta desde que arranca. También envía el segundo y medio anterior, para no cortarte el principio.</p>
   <p>¿Cómo sabe que has terminado? Con fogar-transcriber, lo decide el cliente. fogar-voice da la frase por acabada cuando llevas un segundo y medio en silencio. Un cliente con botón la cierra cuando lo sueltas. Con ElevenLabs, es su servidor el que detecta el final de la frase.</p>
 </section>
@@ -51,7 +51,7 @@ export const articuloEs = {
 <section id="paso-3" data-estado="think">
   <h3>3. Tu voz se convierte en texto</h3>
   <p>El gateway reenvía el audio al servicio de transcripción. Puede ser fogar-transcriber, nuestro servidor basado en whisper.cpp. También puede ser ElevenLabs, un proveedor externo. Lo elige quien administra el gateway, y vale para todos sus clientes.</p>
-  <p>La transcripción va en directo. Mientras hablas, el cliente recibe el texto que se va reconociendo. Cuando terminas, recibe la transcripción final: «apaga la luz del salón».</p>
+  <p>La transcripción va en directo. Mientras hablas, el cliente recibe el texto que se va reconociendo. Cuando terminas, recibe la transcripción final: <span class="frase">«apaga la luz del salón»</span>.</p>
   <p>Esa transcripción no pasa directamente al orquestador. Primero vuelve al cliente, que la confirma y la envía. Así un cliente puede enseñarte el texto y dejarte corregirlo, o mandarlo tal cual si hablas con las manos libres.</p>
 </section>
 
@@ -153,15 +153,15 @@ export const articuloEs = {
       toc: "Dónde corre y qué sale de casa",
       html: `
 <h2>Dónde corre Fogar y qué sale de casa</h2>
-<p>Todas las piezas de Fogar se instalan y funcionan en una máquina tuya. No hay un servicio de Fogar en la nube por el que pase tu voz. Lo que sale de casa depende de los proveedores externos que elijas:</p>
+<p>Todas las piezas de Fogar se instalan y funcionan en una máquina tuya. No hay un servicio de Fogar en la nube por el que pase tu voz. Algo siempre sale de casa: qué sale y hacia dónde depende de los proveedores externos que elijas:</p>
 <!--figura-->
 <ul>
-  <li><strong>La voz.</strong> Con fogar-transcriber y fogar-speaker, todo se queda en tu red. Si usas ElevenLabs para transcribir, le llega tu audio. Si lo usas para la voz de Fogar, le llega el texto de las respuestas.</li>
+  <li><strong>La voz.</strong> Con fogar-transcriber y fogar-speaker, la voz se procesa en tus máquinas. Si usas ElevenLabs para transcribir, le llega tu audio. Si lo usas para la voz de Fogar, le llega el texto de las respuestas.</li>
   <li><strong>El modelo de lenguaje.</strong> OpenClaw puede usar un modelo local o uno en la nube. Si está en la nube, lo que dices le llega a ese proveedor, ya convertido en texto.</li>
   <li><strong>El acceso desde fuera.</strong> Si publicas el gateway con un túnel o un proxy externo para usarlo fuera de casa, el audio pasa por ese servicio.</li>
 </ul>
 <p>Cada proveedor tiene sus propias condiciones sobre qué guarda y durante cuánto tiempo. Conviene leerlas antes de elegirlo.</p>
-<p>Con todo en local, «apaga la luz del salón» no sale de tu red. Con un modelo en la nube, saldría como texto hacia ese proveedor.</p>`,
+<p>Con un modelo en la nube, <span class="frase">«apaga la luz del salón»</span> sale como texto hacia ese proveedor. Tú eliges a quién va cada cosa, así que tus datos no acaban repartidos por servicios que no conoces. Y como el ecosistema es abierto, puedes cambiar cualquier pieza por otra compatible o conectar la tuya.</p>`,
     },
     {
       id: "home-assistant",

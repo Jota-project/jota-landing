@@ -1,8 +1,9 @@
 {
   "tv": {
+    "saltar": "Saltar el recorrido",
     "meta": {
       "title": "Fogar TV — Le hablas. La tele se encarga.",
-      "description": "Fogar TV convierte la tele que ya tienes en la pantalla de Fogar: contesta sin tapar lo que ves, el mando es tu móvil y todo queda en tu red."
+      "description": "Fogar TV convierte la tele que ya tienes en la pantalla de Fogar: contesta sin tapar lo que ves, el mando es tu móvil y es un ecosistema abierto: puedes conectar lo tuyo."
     },
     "s1": {
       "headline": "Le hablas. La tele se encarga.",
@@ -34,7 +35,7 @@
       "line1": "Un mini PC o ese portátil que ya no usas, un HDMI y tu móvil.",
       "line2": "Fogar TV pone la pantalla; fogar-gateway la conecta con el cerebro de Fogar.",
       "soon": "De momento se instala a mano, siguiendo los <readme>README</readme>.",
-      "network": "Todo en tu red. Fuera de casa, con el túnel o proxy que elijas.",
+      "network": "Es un ecosistema abierto: cualquiera puede hacer piezas compatibles y conectar las suyas. Fuera de casa, con el túnel o proxy que elijas.",
       "alt": "Esquema: un mini PC o portátil viejo se conecta por HDMI a la tele; fogar-gateway la conecta con el cerebro de Fogar y con tu móvil.",
       "pc": "Mini PC o portátil",
       "hdmi": "HDMI",
@@ -70,7 +71,7 @@
         },
         {
           "title": "Tú eliges los proveedores",
-          "body": "Local, o con el modelo y la voz que prefieras.",
+          "body": "El modelo y la voz que prefieras, sin atarte a ninguno.",
           "icon": "cloud"
         }
       ]

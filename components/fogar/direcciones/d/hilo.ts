@@ -180,7 +180,11 @@ export function crearHilo(reduce = false) {
      * Por vértice: posición proyectada (x, y) y el lado; datos = (u, brillo, desenfoque, giro).
      */
     geometria(ojoX: number, ojoY: number, t: number) {
-      const zf = s.z, grosor = s.grosor;
+      // Grosor mínimo: el núcleo es una gaussiana (exp(-5,5·lado²)) cuyo ancho a media altura es 0,71·hw; no baja de 1,09 px CSS,
+      // lo que mide el trazo de fogar-palabra.svg en su tamaño mínimo (3,26 / 288,27 × 96 px).
+      // shortcut: la escala de escena se deduce de la ventana como en gl.ts (lienzo a pantalla completa, cover 1920 × 1080); pasarla desde gl.ts si el lienzo deja de serlo.
+      const esc = typeof innerWidth === "number" ? Math.max(innerWidth / 1920, innerHeight / 1080) : 1;
+      const zf = s.z, grosor = Math.max(s.grosor, 1.09 / (0.71 * esc));
       let ax = 0, ay = 0, bx = 0, by = 0, nx = 0, ny = -1;
       const proy = (i: number, o: "a" | "b") => {
         const j = Math.max(0, Math.min(N - 1, i)) * 3, k = FOCAL / (FOCAL - Math.min(pos[j + 2], FOCAL * 0.6));

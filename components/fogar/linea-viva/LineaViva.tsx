@@ -32,11 +32,18 @@ export function LineaViva({ estado = "rest", className = "", label = "Fogar", ti
       motor.current = crearLineaViva(ref.current, { ...tintaRef.current, reduce });
       if (pendiente.current !== "rest") motor.current.set(pendiente.current);
     });
+    // Repinta si cambia el tamaño del contenedor o el devicePixelRatio (zoom, otra pantalla); la consulta de DPR se rehace tras cada cambio.
     const onResize = () => motor.current?.resize();
-    addEventListener("resize", onResize);
+    const ro = new ResizeObserver(onResize);
+    if (ref.current) ro.observe(ref.current);
+    let mq: MediaQueryList | null = null;
+    const onDpr = () => { mq?.removeEventListener("change", onDpr); onResize(); if (!vivo) return; mq = matchMedia(`(resolution: ${devicePixelRatio}dppx)`); mq.addEventListener("change", onDpr); };
+    mq = matchMedia(`(resolution: ${devicePixelRatio}dppx)`);
+    mq.addEventListener("change", onDpr);
     return () => {
       vivo = false;
-      removeEventListener("resize", onResize);
+      ro.disconnect();
+      mq?.removeEventListener("change", onDpr);
       motor.current?.destroy();
       motor.current = null;
     };
@@ -47,5 +54,5 @@ export function LineaViva({ estado = "rest", className = "", label = "Fogar", ti
     motor.current?.set(estado);
   }, [estado]);
 
-  return <canvas ref={ref} role="img" aria-label={label} className={`block aspect-[1000/420] w-full ${className}`} />;
+  return <canvas ref={ref} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={`block aspect-[1000/420] w-full ${className}`} />;
 }

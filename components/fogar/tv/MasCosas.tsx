@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
+import type { CSSProperties } from "react";
 import { bloque, h2 } from "./comun";
+import { Progreso } from "./Progreso";
 
 const P = { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true, width: 24, height: 24 } as const;
 
@@ -13,22 +15,24 @@ const ICONOS: Record<string, ReactNode> = {
   cloud: <svg {...P}><path d="M7 18a4 4 0 0 1-.6-7.96A5.5 5.5 0 0 1 17 8.5 4.8 4.8 0 0 1 17 18H7Z" /></svg>,
 };
 
-/** Bloque 7: más cosas que ya hace. */
+/** Bloque 7: más cosas que ya hace. Al entrar, cada punto tira su hilo y su texto lo sigue. No reacciona al ratón: no es clicable. */
 export async function MasCosas() {
   const t = await getTranslations("tv.s7");
   const items = t.raw("items") as { title: string; body: string; icon: string }[];
   return (
     <section id="s7" aria-labelledby="tv-t-s7" className={bloque}>
       <h2 id="tv-t-s7" className={h2}>{t("title")}</h2>
+      <Progreso marcas={{ dentro: 0.15 }}>
       <ul className="mt-12 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-5">
-        {items.map((it) => (
-          <li key={it.icon} className="border-t border-[color:var(--veta)] py-6">
-            <span className="text-[color:var(--hueso-suave)]">{ICONOS[it.icon]}</span>
+        {items.map((it, i) => (
+          <li key={it.icon} style={{ "--i": i } as CSSProperties} className="tv-cosa py-6">
+            <span className={`tv-icono tv-icono-${it.icon} inline-block text-[color:var(--hueso-suave)]`}>{ICONOS[it.icon]}</span>
             <h3 className="mt-4 text-[17px] font-semibold leading-[1.3]">{it.title}</h3>
             <p className="mt-2 text-[15px] leading-[1.5] text-[color:var(--hueso-suave)]">{it.body}</p>
           </li>
         ))}
       </ul>
+      </Progreso>
     </section>
   );
 }

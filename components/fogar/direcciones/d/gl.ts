@@ -175,7 +175,7 @@ export default function montar(lienzo: HTMLCanvasElement, bus: Bus, textos?: Tex
   // ?medir conserva el búfer para leer los píxeles (medida de contraste).
   const medir = new URLSearchParams(location.search).has("medir");
   const renderer = new WebGLRenderer({ canvas: lienzo, antialias: false, alpha: false, powerPreference: "high-performance", preserveDrawingBuffer: medir });
-  const dpr = Math.min(devicePixelRatio, 1.5);
+  const dpr = Math.min(devicePixelRatio, 2); // 2 y no 1,5: con 1,5 el filamento de la línea viva salía blando en pantallas retina; por encima de 2 el sombreador a pantalla completa ya no compensa
   renderer.setPixelRatio(dpr);
   renderer.autoClear = false;
   const tipo = renderer.extensions.has("EXT_color_buffer_float") || renderer.extensions.has("EXT_color_buffer_half_float") ? HalfFloatType : UnsignedByteType;

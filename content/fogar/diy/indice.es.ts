@@ -1,5 +1,5 @@
 // Portada de DIY en español: meta y la ficha de cada entrada. Los textos cortos de interfaz están en messages/diy.es.json.
-import { SLUG } from "./entrada";
+import { FECHA, SLUG } from "./entrada";
 export const indiceEs = {
   meta: {
     title: "Fogar DIY",
@@ -14,6 +14,7 @@ export const indiceEs = {
       estado: "Estable",
       dificultad: "Media",
       lectura: "9 min",
+      iso: FECHA,
       fecha: "27 oct 2026",
       montar: "Nada",
       resumen:

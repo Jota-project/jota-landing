@@ -18,9 +18,9 @@ export default async function DiyPage({ params }: Props) {
   const t = await getTranslations("diy");
   return (
     <>
-      <a href="#contenido" className="f-foco sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[color:var(--hueso)] focus:px-4 focus:py-2 focus:text-[color:var(--noche)]">{t("saltar")}</a>
+      <a href="#contenido" className="f-saltar">{t("saltar")}</a>
       <Cabecera actual="diy" />
-      <main id="contenido" tabIndex={-1} className="outline-none">
+      <main>
         <Indice c={diyIndice(locale)} />
       </main>
       <Pie />

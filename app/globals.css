@@ -10,6 +10,16 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* Movimiento del contenido (portada, Fogar TV, DIY): duraciones y curvas comunes. */
+:root {
+  --t-pulso: 120ms;
+  --t-fundido: 160ms;
+  --t-paso: 300ms;
+  --t-entrada: 500ms;
+  --curva-entrada: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-desliza: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 body {
   background: var(--noche);
   color: var(--hueso);
@@ -36,21 +46,51 @@ main .vidrio-b { background: color-mix(in srgb, var(--hueso) 7%, var(--noche)); 
 /* Piezas comunes del sitio (pie, cabecera, subpáginas). */
 .f-ancho { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
 @media (min-width: 768px) { .f-ancho { padding-inline: 48px; } }
-.f-foco:focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; border-radius: 4px; }
-.f-enlace { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hueso) 35%, transparent); text-underline-offset: 4px; transition: color .2s ease-out, text-decoration-color .2s ease-out; }
-.f-enlace:hover { color: var(--hueso); text-decoration-color: var(--hueso); }
+/* ---------- Estados de lo interactivo: cursor, hover, foco y pulsado ---------- */
+/* El preflight de Tailwind 4 deja cursor:default en <button>: una base común para todo lo que se pulsa. */
+:where(button:not(:disabled), [role="button"], summary, label[for], select, input[type="button"], input[type="submit"]) { cursor: pointer; }
+:where(a, button, summary, [role="button"]) { -webkit-tap-highlight-color: color-mix(in srgb, var(--hueso) 14%, transparent); }
+/* Foco visible en dos tonos (hueso + halo noche): se lee sobre la foto clara de la portada y sobre la piedra (≥ 3:1 en ambos). Lo propio de un componente solo ajusta el radio. */
+:root { --f-anillo: 0 0 0 6px var(--noche); }
+:where(a[href], button, summary, select, [role="button"], [tabindex]:not([tabindex="-1"])):focus-visible { outline: 2px solid var(--hueso); outline-offset: 3px; box-shadow: var(--f-anillo); }
+.f-foco:focus-visible { border-radius: 4px; }
+/* Ficha del índice DIY: el enlace del título cubre la tarjeta; el anillo lo pinta la tarjeta (diy.css), no el título. Va aquí porque lo sin capa gana a diy.css. */
+.diy-ficha h3 a:focus-visible { outline: none; box-shadow: none; }
+.f-boton.f-foco:focus-visible { border-radius: 999px; }
+/* Pulsado sin hover (táctil): lo que no es enlace ni botón de marca se atenúa un instante. */
+.f-foco:not(.f-enlace, .f-boton) { transition: opacity var(--t-pulso) ease-out; }
+.f-foco:not(.f-enlace, .f-boton, summary):active { opacity: .7; }
+.f-enlace { text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--hueso) 35%, transparent); text-underline-offset: 4px; transition: color var(--t-fundido) ease-out, text-decoration-color var(--t-fundido) ease-out, text-decoration-thickness var(--t-fundido) ease-out; }
+.f-enlace:active { color: var(--chispa); text-decoration-color: var(--chispa); text-decoration-thickness: 2px; }
 .f-boton {
   display: inline-flex; align-items: center; min-height: 44px; padding-inline: 20px; border-radius: 999px; font-size: 15px; font-weight: 500;
   border: 1px solid color-mix(in srgb, var(--hueso) 16%, transparent); background: var(--piedra-alta); color: var(--hueso);
-  transition: background-color .2s ease-out, transform .12s ease-out;
+  transition: background-color var(--t-fundido) ease-out, border-color var(--t-fundido) ease-out, transform var(--t-pulso) ease-out;
 }
-.f-boton:hover { background: var(--veta); }
-.f-boton:active { transform: scale(.97); }
+.f-boton:active { background: var(--piedra); border-color: var(--hueso-tenue); }
 .f-boton-claro { background: var(--hueso); color: var(--noche); border-color: var(--hueso); }
-.f-boton-claro:hover { background: #fff; }
-/* El hilo de la portada baja por los bloques finales: una línea fina a la izquierda que se apaga al llegar al pie. */
-.f-hilos { position: relative; }
-@media (min-width: 768px) {
-  .f-hilos::before { content: ""; position: absolute; left: 24px; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--hueso), color-mix(in srgb, var(--hueso) 30%, transparent) 70%, transparent); opacity: .5; }
-  .f-hilo::before { content: ""; position: absolute; left: -28.5px; top: calc(clamp(64px, 10vw, 140px) + .45em); width: 8px; height: 8px; border-radius: 50%; background: var(--hueso); box-shadow: 0 0 12px 2px color-mix(in srgb, var(--hueso) 45%, transparent); }
+.f-boton-claro:active { background: var(--hueso-suave); border-color: var(--hueso-suave); }
+@media (hover: hover) and (pointer: fine) {
+  .f-enlace:hover { color: var(--hueso); text-decoration-color: var(--hueso); text-decoration-thickness: 2px; }
+  .f-boton:hover { background: var(--veta); border-color: var(--hueso-tenue); }
+  .f-boton-claro:hover { background: #fff; border-color: #fff; }
+  summary:hover { color: var(--hueso); }
 }
+@media (prefers-reduced-motion: no-preference) { .f-boton:active, .d-boton:active { transform: scale(.97); } }
+@media (prefers-reduced-motion: reduce) { .f-boton, .f-enlace { transition-property: background-color, border-color, color, text-decoration-color; } }
+/* Saltar al contenido: invisible hasta el foco; entonces, una franja en el flujo encima de la cabecera (no tapa el logo).
+   .f-saltar-fijo, sobre la escena de la portada: arriba en el centro, entre el botón de pausa y la esquina. */
+.f-saltar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.f-saltar:focus-visible, .f-saltar:focus {
+  position: static; width: auto; height: auto; clip-path: none; display: flex; justify-content: center; align-items: center; min-height: 44px;
+  background: var(--hueso); color: var(--noche); font-size: 15px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px;
+  outline: 2px solid var(--noche); outline-offset: -5px; box-shadow: none;
+}
+.f-saltar-fijo:focus-visible, .f-saltar-fijo:focus { position: fixed; z-index: 60; top: 8px; left: 50%; transform: translateX(-50%); padding-inline: 20px; border-radius: 999px; }
+/* Destinos de enlaces internos: que no queden pegados al borde ni bajo nada fijo; el foco programático no pinta anillo. */
+[id] { scroll-margin-top: 24px; }
+[tabindex="-1"]:focus { outline: none; }
+/* Copiar: los dos rótulos apilados en una celda (el ancho no salta) y cruzados con un fundido. */
+.f-copiar { display: inline-grid; place-items: center; }
+.f-copiar > span { grid-area: 1 / 1; transition: opacity var(--t-fundido) ease-out; }
+.f-copiar:not([data-ok]) > span:last-child, .f-copiar[data-ok] > span:first-child { opacity: 0; }

@@ -1,5 +1,5 @@
 // DIY index in English: meta and one card per entry. Short UI strings live in messages/diy.en.json.
-import { SLUG } from "./entrada";
+import { FECHA, SLUG } from "./entrada";
 import type { IndiceContenido } from "./indice.es";
 
 export const indiceEn: IndiceContenido = {
@@ -16,6 +16,7 @@ export const indiceEn: IndiceContenido = {
       estado: "Stable",
       dificultad: "Medium",
       lectura: "9 min",
+      iso: FECHA,
       fecha: "Oct 27, 2026",
       montar: "Nothing",
       resumen:

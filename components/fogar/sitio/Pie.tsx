@@ -4,6 +4,7 @@ import { CONTACT_EMAIL } from "@/lib/contact";
 import { GITHUB_ORG } from "@/lib/github";
 import { Copiar } from "./Copiar";
 import { Idioma } from "./Idioma";
+import { Logo } from "./Logo";
 
 /*
  * Pie común. Decidido por Sito (plan JLD 2026-11-13, §5): sin lista de espera ni línea de equipo, solo enlaces;
@@ -15,6 +16,7 @@ export async function Pie() {
     <footer id="contacto" className="border-t border-[color:var(--veta)]">
       <div className="f-ancho grid gap-12 py-16 md:grid-cols-[1fr_auto] md:gap-24">
         <div>
+          <Link href="/" aria-label={t("marca")} className="f-foco mb-4 inline-flex min-h-11 min-w-11 items-center text-[color:var(--hueso)]"><Logo /></Link>
           <h2 className="font-display text-[clamp(26px,3vw,36px)] leading-[1.1] tracking-[-0.035em]">{t("pie.pregunta")}</h2>
           <p className="mt-3 max-w-[44ch] text-[17px] leading-[1.5] text-[color:var(--hueso-suave)]">{t("pie.cuerpo")}</p>
           <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">

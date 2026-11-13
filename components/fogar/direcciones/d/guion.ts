@@ -7,19 +7,20 @@ import type { Pose, Punto3 } from "./hilo";
  */
 
 export const N = 283;
-export const ALTO_VH = 1400;
+export const ALTO_VH = 1310;
 export type Estacion = "portada" | "gateway" | "voz" | "balda" | "pared" | "cierre";
 
-/** Tramos del vídeo: fotogramas y scroll (en vh sobre 1400). Las paradas se estiran aquí; el vídeo no se toca. */
+/** Tramos del vídeo: fotogramas y scroll (en vh sobre ALTO_VH). Las paradas se estiran aquí; el vídeo no se toca. */
 export const TRAMOS: { id: string; f: [number, number]; v: [number, number] }[] = [
   { id: "portada", f: [0, 18], v: [0, 90] },
   { id: "empuje", f: [19, 89], v: [90, 330] },
-  { id: "voz", f: [90, 102], v: [330, 510] },
-  { id: "giro", f: [103, 175], v: [510, 720] },
-  { id: "balda", f: [176, 198], v: [720, 940] },
-  { id: "lateral", f: [199, 250], v: [940, 1120] },
-  { id: "pared", f: [251, 271], v: [1120, 1300] },
-  { id: "fundido", f: [272, 282], v: [1300, 1400] },
+  // El altavoz es un objeto más de la sala: su parada es corta (antes, 180 vh).
+  { id: "voz", f: [90, 102], v: [330, 420] },
+  { id: "giro", f: [103, 175], v: [420, 630] },
+  { id: "balda", f: [176, 198], v: [630, 850] },
+  { id: "lateral", f: [199, 250], v: [850, 1030] },
+  { id: "pared", f: [251, 271], v: [1030, 1210] },
+  { id: "fundido", f: [272, 282], v: [1210, 1310] },
 ];
 
 /** Progreso del scroll (0–1) → fotograma con decimales. Cada tramo acaba donde empieza el siguiente. */
@@ -35,15 +36,15 @@ export const VISIBLE: Record<Estacion, [number, number]> = {
 };
 export const ORDEN: Estacion[] = ["portada", "gateway", "voz", "balda", "pared", "cierre"];
 export const estacionDe = (f: number): Estacion | null => ORDEN.find((e) => f >= VISIBLE[e][0] && f <= VISIBLE[e][1]) ?? null;
-/** Scroll (vh sobre 1400) al que salta la navegación: dentro de la parada, con el texto ya puesto. */
-export const ANCLA: Record<Estacion, number> = { portada: 0, gateway: 190, voz: 345, balda: 730, pared: 1135, cierre: 1390 };
+/** Scroll (vh sobre ALTO_VH) al que salta la navegación: dentro de la parada, con el texto ya puesto. */
+export const ANCLA: Record<Estacion, number> = { portada: 0, gateway: 190, voz: 345, balda: 640, pared: 1045, cierre: 1300 };
 /** Imagen fija de cada estación en el modo apilado (spec §4.1). */
 export const FIJA: Record<Exclude<Estacion, "cierre">, number> = { portada: 0, gateway: 60, voz: 96, balda: 187, pared: 265 };
 
 /** La balda nombra sus cuatro objetos uno tras otro según avanza el scroll dentro de la parada. */
 export const OBJETOS = ["lampara", "termometro", "radio", "libreta"] as const;
 export type Objeto = (typeof OBJETOS)[number];
-const CORTES_BALDA = [742, 792, 842, 890];
+const CORTES_BALDA = [652, 702, 752, 800];
 /** Cuántos objetos de la balda se han nombrado ya (0–4) con el scroll en `v`. */
 export const pasoBalda = (v: number) => CORTES_BALDA.filter((c) => v >= c).length;
 
@@ -91,7 +92,7 @@ export function poseHilo(f: number, t: number, tVoz: number, vista: Vista, caja:
     return { estado: "rest", ...palabra(izq, xb, 300, caja), z: 20, zOnda: 26, cinta: 6, vueltas: 1.4, grosor: 1.6, luz: 1, suelta: 0.5 };
   }
   // Empuje: la recta bajo el texto del gateway, fija en pantalla. Hace de bus.
-  if (f <= 86) return { estado: "line", ...recta(izq, Math.min(izq + 440, 585), 400, caja), z: 50, zOnda: 44, cinta: 14, vueltas: 2.2, grosor: 2.2, luz: 1, suelta: 0.5 };
+  if (f <= 86) return { estado: "line", ...recta(izq, Math.min(izq + 440, 585), 420, caja), z: 50, zOnda: 44, cinta: 14, vueltas: 2.2, grosor: 2.2, luz: 1, suelta: 0.5 };
   // Voz: sobre el altavoz. Una pasada por tiempo y vuelve a la recta: callada, a la espera de su palabra.
   if (f <= 104) {
     const [cx, arriba] = enPista(pista.altavoz.p, pista.altavoz.f0, Math.min(f, 102));
@@ -128,10 +129,10 @@ export function escudos(e: Estacion | null, vista: Vista): [number, number, numb
   const izq = margenIzq(vista) - 20;
   switch (e) {
     case "portada": return [[1320, 130, Math.min(1890, vista.x1 - 10), 600]];
-    case "gateway": return [[izq, 130, Math.min(izq + 520, 640), 370]];
-    case "voz": return [[izq, 100, izq + 860, 240], [izq, 260, izq + 370, 440], [870, 290, 1190, 400]];
-    case "balda": return [[izq, 90, izq + 860, 230], [410, 690, 760, 910], [850, 690, 1600, 800]];
-    case "pared": return [[izq, 110, izq + 900, 300], [izq, 320, izq + 400, 500], [1100, 320, 1560, 500], [izq, 850, izq + 740, 930]];
+    case "gateway": return [[izq, 150, Math.min(izq + 520, 640), 390]];
+    case "voz": return [[izq, 130, izq + 860, 270], [izq, 290, izq + 370, 470], [870, 320, 1190, 430]];
+    case "balda": return [[izq, 120, izq + 860, 260], [410, 690, 760, 910], [850, 690, 1600, 800]];
+    case "pared": return [[izq, 130, izq + 900, 320], [izq, 320, izq + 400, 500], [1100, 320, 1560, 500], [izq, 850, izq + 740, 930]];
     default: return [];
   }
 }

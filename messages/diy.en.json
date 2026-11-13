@@ -1,6 +1,9 @@
 {
   "diy": {
     "saltar": "Skip to content",
+    "nuevo": "New",
+    "enlace": {"label": "Go to the DIY section", "texto": "DIY"},
+    "portada": {"titulo": "From the DIY", "lead": "Technical notes and guides to build it yourself. Every entry says what was tested.", "leer": "Read", "todo": "See all DIY"},
     "indice": {
       "seccion": "DIY",
       "h1": "Fogar, inside out and in your home",
@@ -40,7 +43,7 @@
       "hilo": {
         "titulo": "The path of a command",
         "frase": "“OK Fogar, turn off the living room light”",
-        "repetir": "Replay the path",
+        "repetir": "Play the path",
         "pie": "Everything goes through the gateway: the client never talks to the other pieces directly.",
         "nodos": [
           { "n": "Client", "d": "your voice", "ahora": "audio in chunks, on its way to the gateway" },
@@ -51,13 +54,15 @@
           { "n": "Client", "d": "text and audio", "ahora": "text and audio over the same connection" }
         ]
       },
+      "escenario": {"reproducir": "Play the path", "paso": "Step {n} of {total}: {pieza}, {ahora}", "fin": "Path finished"},
+      "montalo": {"titulo": "Set it up", "puertas": "Where to go next", "readme": "fogar-gateway README", "protocolo": "Client protocol", "wake": "fogar-wake-trainer"},
       "casa": {
-        "titulo": "What stays on your network and what can leave it",
+        "titulo": "What runs on your machines and what goes out",
         "red": "Your network",
         "piezas": ["Client", "fogar-gateway", "fogar-transcriber", "OpenClaw", "fogar-speaker", "Home Assistant"],
-        "fuera": "Outside, only if you choose it",
-        "ayuda": "Pick a provider to see what leaves your home.",
-        "nada": "With everything local, “turn off the living room light” never leaves your network.",
+        "fuera": "Outside, the providers you choose",
+        "ayuda": "Press one to see what it receives.",
+        "nada": "Something always leaves your home, to the external providers you choose.",
         "proveedores": [
           { "n": "ElevenLabs", "sale": "ElevenLabs receives your audio if it transcribes, or the text of the answers if it provides the voice." },
           { "n": "Cloud model", "sale": "The cloud model receives what you say, already turned into text." },

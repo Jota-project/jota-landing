@@ -22,7 +22,7 @@
         "Escucha tras su palabra",
         "de activación."
       ],
-      "voz": "La que tú elijas. Hasta oírla, el audio no sale del aparato. Es un cliente más.",
+      "voz": "La que tú elijas. Se detecta en el propio aparato. Es un cliente más.",
       "vozEjemplo": "p. ej. “¿Qué tengo pendiente esta semana?”",
       "baldaH2": [
         "Fogar no trae su suite.",
@@ -71,7 +71,8 @@
         "copiado": "Copiado",
         "requisitos": "Pide Linux con systemd de usuario y OpenClaw 2026.6.11 o posterior, en el mismo equipo o por túnel SSH.",
         "diy": "Paso a paso en DIY",
-        "como": "Cómo está hecho"
+        "como": "Cómo está hecho",
+        "terminal": "Terminal"
       },
       "usas": {
         "titulo": "Con lo que ya usas",
@@ -99,7 +100,7 @@
       },
       "casa": {
         "titulo": "Qué sale de casa y qué no",
-        "cuerpo": "No hay un servicio de Fogar en la nube por el que pase tu voz. Con fogar-transcriber y fogar-speaker, tu audio no sale de tu red. Lo único que sale es lo que le pides al modelo de IA que tengas contratado.",
+        "cuerpo": "No hay un servicio de Fogar en la nube por el que pase tu voz, pero algo sale siempre: lo que le pides al modelo de IA llega a quien te lo sirve. Si usas ElevenLabs, o un túnel para hablarle desde fuera, tu audio o tus respuestas pasan también por ellos. Cada pieza la eliges tú: tus datos van a donde decides y no acaban repartidos por ahí.",
         "link": "Dónde corre y qué sale de casa, en detalle",
         "abierto": "Son de código abierto:",
         "piezas": {
@@ -129,10 +130,90 @@
             "Cada pieza de Fogar es un repositorio público: gateway, transcripción, voz y cliente."
           ]
         ]
+      },
+      "mapa": {
+        "label": "Mapa del ecosistema de Fogar",
+        "abierto": "Es un ecosistema abierto: el protocolo está documentado y cualquiera puede escribir su propio cliente o conectar su herramienta.",
+        "clientes": "Le hablas desde",
+        "detras": "Por detrás",
+        "centro": [
+          "fogar-gateway",
+          "Decide quién pasa y con qué agente"
+        ],
+        "estados": {
+          "hoy": "Funciona hoy",
+          "desarrollo": "En desarrollo",
+          "tuyo": "Lo conectas tú"
+        },
+        "nodosClientes": [
+          [
+            "Fogar TV",
+            "La tele, con el mando en el móvil",
+            "hoy"
+          ],
+          [
+            "Cliente de voz",
+            "macOS y Android",
+            "hoy"
+          ],
+          [
+            "Home Assistant",
+            "Su asistente de voz puede ser Fogar",
+            "hoy"
+          ],
+          [
+            "Panel web",
+            "La interfaz principal",
+            "desarrollo"
+          ],
+          [
+            "App de iPhone",
+            "Primera fase",
+            "desarrollo"
+          ],
+          [
+            "Tu cliente",
+            "Con el protocolo documentado",
+            "tuyo"
+          ]
+        ],
+        "nodosDetras": [
+          [
+            "OpenClaw",
+            "Orquesta: memoria, agentes y tareas",
+            "hoy"
+          ],
+          [
+            "El modelo de IA",
+            "El que tengas en OpenClaw",
+            "hoy"
+          ],
+          [
+            "fogar-transcriber",
+            "Transcripción con whisper.cpp",
+            "hoy"
+          ],
+          [
+            "fogar-speaker",
+            "Voz con Kokoro",
+            "hoy"
+          ],
+          [
+            "Home Assistant y Obsidian",
+            "Herramientas por MCP",
+            "hoy"
+          ],
+          [
+            "Tu herramienta",
+            "Por MCP, a través de OpenClaw",
+            "tuyo"
+          ]
+        ]
       }
     }
   },
   "sitio": {
+    "marca": "Fogar, inicio",
     "idioma": "Read in English",
     "nav": {
       "label": "Principal",

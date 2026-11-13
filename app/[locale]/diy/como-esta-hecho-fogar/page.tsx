@@ -20,10 +20,10 @@ export default async function ComoEstaHechoFogarPage({ params }: Props) {
   const ficha = diyIndice(locale).entradas.find((e) => e.slug === SLUG)!;
   return (
     <>
-      <a href="#texto" className="f-foco sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-[color:var(--hueso)] focus:px-4 focus:py-2 focus:text-[color:var(--noche)]">{t("saltar")}</a>
+      <a href="#texto" className="f-saltar">{t("saltar")}</a>
       <Cabecera actual="diy" />
       {/* key: al cambiar de idioma se remonta entero y el hilo y la casa no arrastran estado */}
-      <main id="texto" tabIndex={-1} className="outline-none" key={locale}>
+      <main key={locale}>
         <Articulo c={diyArticulo(locale)} ficha={ficha} />
       </main>
       <Pie />

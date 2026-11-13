@@ -284,12 +284,18 @@ function stopCol(w,x,t){ let acc=[0,0,0], tot=0;
 function lineGrad(c,w,t){ const g=c.createLinearGradient(XMIN-30,0,XMAX+30,0); for(let k=0;k<=20;k++){ g.addColorStop(k/20,`rgb(${stopCol(w,k/20,t).map(Math.round).join(",")})`); } return g; }
 function flameGrad(c,t){ const g=c.createLinearGradient(0,BASE+30,0,30); g.addColorStop(0,PAL.ascua); g.addColorStop(0.2+0.05*Math.sin(t*7.3),PAL.llama); g.addColorStop(0.5+0.08*Math.sin(t*11.1+1),PAL.chispa); g.addColorStop(1,PAL.chispa); return g; }
 const bl=document.createElement("canvas");
+/* costura: halo y humo no siguen a STK (anchura en espacio 1000, como en fogar-brand); con el blur mínimo de 4 px (el escalado ×4)
+   bajan de intensidad en lienzos pequeños en vez de crecer. */
 function bloom(c,pts,style,amt){ const w=c.canvas.width, h=c.canvas.height, bw=Math.max(1,Math.round(w/4)), bh=Math.max(1,Math.round(h/4)); if(bl.width!==bw||bl.height!==bh){ bl.width=bw; bl.height=bh; }
   const x=bl.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.setTransform(bw/W,0,0,bw/W,0,0); x.lineCap=x.lineJoin="round"; x.strokeStyle=style(x); x.lineWidth=STROKE*3.2; strokeRange(x,pts,0,pts.length-1);
-  c.save(); c.setTransform(1,0,0,1,0,0); c.globalCompositeOperation="lighter"; c.globalAlpha=Math.min(1,amt); c.filter=`blur(${Math.max(2,Math.round(w/110*HALO))}px)`; c.drawImage(bl,0,0,w,h); c.filter="none"; c.globalAlpha=Math.min(1,amt*.5); c.drawImage(bl,0,0,w,h); c.restore(); }
+  c.save(); c.setTransform(1,0,0,1,0,0); c.globalCompositeOperation="lighter"; c.globalAlpha=Math.min(1,amt); c.imageSmoothingQuality="high"; const br=w/110*HALO, bk=Math.min(1,br/4); c.globalAlpha=Math.min(1,amt)*bk; c.filter=`blur(${Math.max(4,Math.round(br))}px)`; c.drawImage(bl,0,0,w,h); c.filter="none"; c.globalAlpha=Math.min(1,amt*.5)*bk; c.drawImage(bl,0,0,w,h); c.restore(); }
 const ctx=cv.getContext("2d"); // costura
-function fitCv(){ const dpr=Math.max(1,window.devicePixelRatio||1), w=Math.round((cv.clientWidth||600)*dpr); if(w>0&&cv.width!==w){ cv.width=w; cv.height=Math.round(w*0.42); } }
-/* costura: humo. Un historial corto del trazo (una copia cada 3 fotogramas) pintado a ¼ de resolución: cada copia sube,
+function fitCv(){ const dpr=Math.max(1,window.devicePixelRatio||1), w=Math.round((cv.clientWidth||600)*dpr); if(w>0&&cv.width!==w){ cv.width=w; cv.height=Math.round(w*0.42); }
+  STK=Math.max(STROKE,TRAZO_MIN*W/(cv.clientWidth||600)); }
+/* costura: grosor mínimo. Por debajo de 1,09 px CSS el trazo se rompe; 1,09 px es lo que mide fogar-palabra.svg en su tamaño
+   mínimo de marca (3,26 / 288,27 × 96 px de alto). En grande, el STROKE de siempre: no engorda. */
+const TRAZO_MIN=3.26/288.27*96; let STK=STROKE;
+/* costura: humo. Un historial corto del trazo (una copia cada 3 fotogramas) pintado a ¼ de resolución (blur ≥ 4 px, el escalado, para que no salga a bloques): cada copia sube,
    engorda y se apaga con la edad. Sin realimentación, así que no deja poso. */
 const hb=document.createElement("canvas"), HIST=[], HMAX=14; let hn=0;
 function smoke(pts,t){ const w=cv.width, h=cv.height, bw=Math.max(1,Math.round(w/4)), bh=Math.max(1,Math.round(h/4));
@@ -298,7 +304,7 @@ function smoke(pts,t){ const w=cv.width, h=cv.height, bw=Math.max(1,Math.round(w
   const x=hb.getContext("2d"); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,bw,bh); x.lineCap=x.lineJoin="round"; x.strokeStyle=HUMO;
   for(let k=HIST.length-1;k>=0;k--){ const a=(k+1)/(HMAX+1), q=HIST[k];
     x.setTransform(bw/W,0,0,bw/W,Math.sin(t*0.9+k*0.6)*a*3,-a*a*bh*0.32); x.globalAlpha=0.2*(1-a)*(1-a); x.lineWidth=STROKE*(1.4+a*7); strokeRange(x,q,0,q.length-1); }
-  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.filter=`blur(${Math.max(1,Math.round(w/180))}px)`; ctx.drawImage(hb,0,0,w,h); ctx.filter="none"; ctx.restore(); }
+  ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=Math.min(1,w/180/4); ctx.imageSmoothingQuality="high"; ctx.filter=`blur(${Math.max(4,Math.round(w/180))}px)`; ctx.drawImage(hb,0,0,w,h); ctx.filter="none"; ctx.restore(); }
 function paintLine(pts,mul,w,t,f){ const s=cv.width/W; ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,cv.width,cv.height);
   let amt=0; for(const st in w) amt+=w[st]*STP[st].b*(st==="listen"?0.6+0.8*VS:1);
   amt*=HALO; if(HUMO) smoke(pts,t);
@@ -309,12 +315,12 @@ function paintLine(pts,mul,w,t,f){ const s=cv.width/W; ctx.setTransform(1,0,0,1,
 /* costura: giro. La línea como una cinta que gira sobre sí misma: el grosor sigue una onda que viaja por el trazo
    (cara y canto) y un filo de luz encima, desplazado hacia arriba, le da cuerpo de tubo. Sin giro, el trazo de siempre. */
 function anchoGiro(i,n,t){ return 1-GIRO*0.55+GIRO*1.1*(0.5+0.5*Math.sin(6.2832*(i/n)*1.4-t*1.8)); }
-function trazo(pts,mul,t){ if(!GIRO){ drawLine(ctx,pts,STROKE,I_TIN,I_TOUT,TIP/STROKE,mul); return; }
+function trazo(pts,mul,t){ if(!GIRO){ drawLine(ctx,pts,STK,I_TIN,I_TOUT,TIP/STROKE,mul); return; }
   const n=pts.length, tp=TIP/STROKE, taper=i=> i<I_TIN ? tp+(1-tp)*smooth(i/I_TIN) : i>n-1-I_TOUT ? 0.14+0.86*smooth((n-1-i)/I_TOUT) : 1;
-  ribbon(ctx,pts,0,n-1,i=>STROKE*1.25*taper(i)*anchoGiro(i,n,t)*(mul?mul[i]:1)); }
+  ribbon(ctx,pts,0,n-1,i=>STK*1.25*taper(i)*anchoGiro(i,n,t)*(mul?mul[i]:1)); }
 function brillo(pts,t){ const n=pts.length; ctx.save(); ctx.lineCap="round"; ctx.strokeStyle="rgba(255,252,246,0.8)";
-  for(let a=0;a<n-1;a+=6){ const k=anchoGiro(a,n,t); if(k<1.05) continue; ctx.globalAlpha=Math.min(1,(k-1.05)*1.6)*GIRO; ctx.lineWidth=STROKE*0.26*k;
-    ctx.beginPath(); ctx.moveTo(pts[a][0],pts[a][1]-STROKE*0.3*k); const b=Math.min(n-1,a+6); ctx.lineTo(pts[b][0],pts[b][1]-STROKE*0.3*anchoGiro(b,n,t)); ctx.stroke(); }
+  for(let a=0;a<n-1;a+=6){ const k=anchoGiro(a,n,t); if(k<1.05) continue; ctx.globalAlpha=Math.min(1,(k-1.05)*1.6)*GIRO; ctx.lineWidth=STK*0.26*k;
+    ctx.beginPath(); ctx.moveTo(pts[a][0],pts[a][1]-STK*0.3*k); const b=Math.min(n-1,a+6); ctx.lineTo(pts[b][0],pts[b][1]-STK*0.3*anchoGiro(b,n,t)); ctx.stroke(); }
   ctx.restore(); }
 
 /* ===== costura: bucle propio, sin controles; el consumidor elige el estado y el nivel de voz ===== */
@@ -325,15 +331,25 @@ function frame(){ if(!alive) return; const nw=performance.now(), d=Math.min(0.25
   const t0=nw/1000-accT; let k=0; while(accT>=1/120){ step(t0+k/120,1/120); accT-=1/120; k++; }
   const cs=cur==="fonly"||cur==="line"?"rest":cur; for(const st in SW) SW[st]+=((st===cs?1:0)-SW[st])*Math.min(1,d*3); flameF+=((cs==="speak"?1:0)-flameF)*Math.min(1,d*3);
   drawn(nw/1000); fitCv(); paintLine(DR,WMUL,SW,nw/1000,flameF); raf=requestAnimationFrame(frame); }
+/* costura: pausa. Fuera de pantalla o con la pestaña oculta no se pinta; al volver sigue donde estaba. */
+let visto=true;
+function corre(){ const on=alive&&visto&&!document.hidden;
+  if(on&&!raf){ lastT=performance.now(); accT=0; raf=requestAnimationFrame(frame); }
+  else if(!on&&raf){ cancelAnimationFrame(raf); raf=0; } }
+const io=reduce||typeof IntersectionObserver==="undefined"?null:new IntersectionObserver(([e])=>{ visto=e.isIntersecting; corre(); });
+io?.observe(cv); if(!reduce) document.addEventListener("visibilitychange",corre);
 function drawStatic(){ const cs=cur==="line"||cur==="fonly"?"rest":cur, out=mk(); shape(cs,1.3,out); fitCv(); cv.style.transition="opacity .16s ease-out"; cv.style.opacity="0";
   setTimeout(()=>{ if(!alive) return; paintLine(out,null,{[cs]:1},0,cs==="speak"?1:0); cv.style.opacity="1"; },160); }
+// costura: repintado sin fundido para resize (el ResizeObserver dispara al observar y mientras se arrastra)
+function pintaYa(){ const cs=cur==="line"||cur==="fonly"?"rest":cur, out=mk(); shape(cs,1.3,out); fitCv(); paintLine(out,null,{[cs]:1},0,cs==="speak"?1:0); }
+let boot=0; // costura: el arranque a reposo; un set() antes de los 400 ms lo cancela para no pisar el estado pedido
 if(reduce){ cur="rest"; drawStatic(); }
-else { for(let i=0;i<N;i++){ P[i][0]=LX0+(LX1-LX0)*i/(N-1); P[i][1]=BASE; } cur="line"; lastT=performance.now(); setTimeout(()=>alive&&go("rest",now()),400); raf=requestAnimationFrame(frame); }
+else { for(let i=0;i<N;i++){ P[i][0]=LX0+(LX1-LX0)*i/(N-1); P[i][1]=BASE; } cur="line"; boot=setTimeout(()=>alive&&go("rest",now()),400); corre(); }
 return {
   /** @param {"rest"|"listen"|"think"|"tool"|"speak"|"line"} st */
-  set(st){ if(st===cur) return; if(reduce){ cur=st; drawStatic(); return; } go(st,now()); },
+  set(st){ clearTimeout(boot); if(st===cur) return; if(reduce){ cur=st; drawStatic(); return; } go(st,now()); },
   /** Repinta tras cambiar de tamaño (solo hace falta con «reducir movimiento»). */
-  resize(){ if(reduce) drawStatic(); },
-  destroy(){ alive=false; cancelAnimationFrame(raf); },
+  resize(){ if(reduce) pintaYa(); },
+  destroy(){ alive=false; clearTimeout(boot); cancelAnimationFrame(raf); raf=0; io?.disconnect(); document.removeEventListener("visibilitychange",corre); },
 };
 }

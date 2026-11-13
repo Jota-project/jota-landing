@@ -1,47 +1,56 @@
-/* Página Fogar TV. Dirección D «Hilo»: noche, hueso, líneas finas, sin naranja. */
+/*
+ * Página Fogar TV. Dirección D «Hilo» relajada para esta página (Sito, 13-11): noche y hueso, una sola tele fija como
+ * escenario, hilos que se dibujan y el naranja de la marca solo en dos momentos (la pulsación de «Abrir en la tele» y el
+ * pulso del HDMI). Regla de la página: lo que se ve con «reducir movimiento» es el estado de llegada; el movimiento
+ * (transform, filter, clip-path, escalonados) solo se añade dentro de `prefers-reduced-motion: no-preference`.
+ */
 
-/* Bloque 1: la sala y el zoom hacia la tele. --z (0–1) y --s (escala) los escribe Apertura.tsx al hacer scroll. */
-.tv-apertura { --z: 0; --s: 1; position: relative; height: 260svh; }
-.tv-escenario { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+/* ───────── Bloques 1–3 · la pista con la tele fija ─────────
+ * Apertura.tsx escribe en .tv-pista: --tx/--ty/--tw/--th (la caja de la tele en el escenario), --rt (dónde van los
+ * rótulos), --z (zoom 0–1), --prog (avance de la pista), --q2, --g, data-paso y data-e (pasos alcanzados). */
+.tv-pista { --z: 0; --prog: 0; --q2: 0; --g: 0; --tx: 16px; --ty: 20px; --tw: 100vw; --th: 56vw; --rt: 70svh; position: relative; }
+.tv-escenario { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--noche); }
 .tv-sala {
-  position: absolute; left: 50%; top: 50%; width: max(100vw, 177.78svh); aspect-ratio: 16 / 9;
-  transform-origin: 50% 38.89%; /* el centro de la pantalla de la tele en el fotograma */
-  transform: translate(-50%, -50%) translateY(calc(var(--z) * 11.11%)) scale(var(--s));
+  position: absolute; left: 0; top: 0; width: max(100vw, 177.78svh); aspect-ratio: 16 / 9; transform-origin: 0 0;
+  transform: translate(calc(50vw - 50%), calc(50svh - 50%)); /* antes del JS: la sala centrada */
   will-change: transform;
 }
 .tv-velo { position: absolute; inset: 0; background: var(--noche); opacity: calc(var(--z) * .92); }
+
+/* Los pasos son las secciones de verdad; se montan encima del escenario y solo llevan los rótulos. */
+.tv-paso { position: relative; pointer-events: none; }
+.tv-paso a, .tv-paso button { pointer-events: auto; }
+.tv-pista { --u: 100svh; } /* una «pantalla de recorrido»: en móvil, el 60 % (Apertura.tsx usa lo mismo) */
+@media (max-width: 767px) { .tv-pista { --u: 60svh; } }
+.tv-paso-1 { margin-top: -100svh; height: calc(2.6 * var(--u)); }
+.tv-paso-2 { height: calc(2.4 * var(--u)); }
+.tv-paso-3 { height: calc(3 * var(--u)); }
 .tv-portada {
-  position: absolute; inset: auto 0 0; padding-block: 120px 140px; /* al cargar, la cabecera empuja la escena hacia abajo */
-  background: linear-gradient(to top, var(--noche) 55%, color-mix(in srgb, var(--noche) 0%, transparent));
+  position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 12svh;
+  background: linear-gradient(to top, var(--noche) 30%, color-mix(in srgb, var(--noche) 0%, transparent) 62%);
   opacity: calc(1 - var(--z) * 3);
 }
-.tv-pie-tele { position: absolute; inset: auto 0 3svh; text-align: center; opacity: calc((var(--z) - .85) * 7); }
-.tv-solo-quieto { display: none; }
-
-@media (prefers-reduced-motion: reduce) {
-  .tv-apertura { height: auto; }
-  .tv-escenario { position: relative; height: auto; overflow: visible; display: flex; flex-direction: column; }
-  .tv-sala { position: relative; left: auto; top: auto; width: 100%; transform: none; will-change: auto; order: 2; }
-  .tv-velo { display: none; }
-  .tv-portada { position: relative; order: 1; opacity: 1; background: none; padding-block: 48px 40px; }
-  .tv-pie-tele { display: none; }
-  .tv-solo-quieto { display: block; padding-block: 48px 0; }
+.tv-rotulo {
+  position: sticky; top: var(--rt); padding-inline: max(var(--tx), 16px);
+  opacity: var(--sal, 1);
 }
+.tv-paso-1 .tv-rotulo { opacity: min(var(--sal, 1), calc((var(--z) - .85) * 7)); }
+.tv-paso-1 .tv-rotulo { margin-top: 0; }
 
-/* Un marco de tele: 16:9, borde fino, las medidas de dentro en unidades del contenedor. */
-.tv-marco {
-  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radio-bloque); background: var(--noche);
-  box-shadow: 0 0 0 1px var(--veta), 0 40px 80px -40px rgb(0 0 0 / .7); container-type: inline-size;
+/* La capa de escenas, encima de la tele del escenario y del mismo tamaño (sin escalar: texto nítido). */
+.tv-capa {
+  position: absolute; left: var(--tx); top: var(--ty); width: var(--tw); height: var(--th);
+  container-type: inline-size; color: var(--hueso);
 }
-.tv-sin-marco { aspect-ratio: auto; border-radius: 0; box-shadow: none; }
-.tv-txt { font-size: clamp(9px, 1.6cqw, 22px); line-height: 1.3; }
-
-/* El vidrio de Fogar TV, en CSS. */
-.tv-vidrio {
-  background: var(--vidrio); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); box-shadow: var(--sombra-vidrio);
+.tv-e2, .tv-e3 { overflow: hidden; }
+.tv-regla {
+  position: absolute; left: 0; right: 0; bottom: -10px; height: 2px; background: var(--hueso); opacity: calc(var(--z) * .7);
+  transform: scaleX(var(--prog)); transform-origin: left;
 }
+.tv-e2, .tv-e3 { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity var(--t-paso), visibility 0s var(--t-paso); }
+.tv-pista[data-paso="2"] .tv-e2, .tv-pista[data-paso="3"] .tv-e3 { opacity: 1; visibility: visible; transition: opacity var(--t-paso), visibility 0s; }
 
-/* Bloque 2: una serie que sigue sonando. Mar de noche sin naranja. */
+/* Escena 2: una serie que sigue sonando. Mar de noche; la luna respira un poco con el scroll. */
 .tv-serie {
   position: absolute; inset: 0;
   background:
@@ -49,10 +58,159 @@
     radial-gradient(ellipse 45% 30% at 68% 50%, color-mix(in srgb, var(--hueso) 14%, transparent), transparent 70%),
     linear-gradient(to bottom, #1b2a33 0%, #2e434c 54%, #13222a 54.4%, #0b151a 100%);
 }
+.tv-avance { transform-origin: left; transform: scaleX(calc(.38 + var(--q2) * .05)); }
 
-/* Bloque 3: la web de la receta a pantalla completa. */
-.tv-web { position: absolute; inset: 0; background: var(--hueso); color: var(--noche); }
+/* Arriba de la tele: la píldora del chat en el centro y lo pendiente a la derecha; en una tele estrecha, una debajo de otra. */
+.tv-arriba {
+  position: absolute; top: 5%; left: 3.5%; right: 3.5%;
+  display: grid; grid-template-columns: 1fr minmax(0, 64%) 1fr; align-items: start; gap: 1.2cqw;
+}
+.tv-pild { grid-area: 1 / 2; border-radius: 2cqw; padding: 1.6cqw 2.4cqw; opacity: 0; transition: opacity var(--t-fundido); }
+.tv-cena {
+  grid-area: 1 / 3; justify-self: end; display: flex; align-items: center; gap: 1cqw; border-radius: 999px; padding: .9cqw 1.8cqw .9cqw 1cqw;
+  opacity: 0; transition: opacity var(--t-fundido);
+}
+@container (max-width: 560px) {
+  .tv-arriba { grid-template-columns: 1fr; top: 4%; }
+  .tv-pild { grid-area: 1 / 1; border-radius: 10px; padding: 8px 10px; }
+  .tv-cena { grid-area: 2 / 1; padding: 4px 10px 4px 6px; }
+}
+.tv-pal { opacity: 0; transition: opacity var(--t-fundido); }
+.tv-herr { opacity: 0; transition: opacity var(--t-fundido); }
+.tv-punto { width: .7em; height: .7em; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; }
 
-/* Bloque 6: el esquema. */
+/* Los pasos alcanzados (data-e). La píldora 2 sustituye a la 1. */
+[data-e~="p1"] .tv-pild-1, [data-e~="r1"] .tv-pild-1 .tv-pal,
+[data-e~="p2"] .tv-pild-2, [data-e~="h2"] .tv-herr, [data-e~="r2"] .tv-pild-2 .tv-pal,
+[data-e~="cena"] .tv-cena,
+[data-e~="p3"] .tv-pild-3, [data-e~="r3"] .tv-pild-3 .tv-pal { opacity: 1; }
+[data-e~="p2"] .tv-pild-1 { opacity: 0; }
+[data-e~="r2"] .tv-herr { opacity: .6; }
+
+/* Escena 3: la web de la receta, que crece desde la píldora «Abrir en la tele». */
+.tv-web { position: absolute; inset: 0; background: var(--hueso); color: var(--noche); opacity: 0; transition: opacity var(--t-fundido); }
+[data-e~="abre"] .tv-web { opacity: 1; }
+.tv-abrir {
+  position: absolute; bottom: 5%; left: 50%; translate: -50% 0; display: flex; align-items: center; gap: 1.4cqw; white-space: nowrap;
+  border-radius: 999px; padding: 1cqw 2cqw; opacity: 0; transition: opacity var(--t-fundido);
+}
+[data-e~="herr"] .tv-abrir { opacity: 1; }
+[data-e~="p3"] .tv-abrir { opacity: 0; }
+/* Sobre la web, la conversación va abajo, donde estaba la píldora: no tapa el título de la receta. */
+.tv-e3 .tv-arriba { top: auto; bottom: 5%; }
+
+/* El vidrio de Fogar TV, sin backdrop-filter (debajo hay un lienzo que se repinta): casi opaco, AA sobre lo claro. */
+.tv-vidrio { background: color-mix(in srgb, var(--noche) 88%, transparent); box-shadow: var(--sombra-vidrio); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tv-sigue { animation: tv-sigue var(--t-entrada) var(--curva-entrada) 150ms both; }
+  .tv-serie { transform: scale(calc(1.06 - var(--q2) * .025)); transform-origin: 68% 50%; }
+  .tv-galeria { transform: translateY(calc(var(--g) * -3cqw)); }
+  .tv-pild { translate: 0 -8px; transition: opacity var(--t-entrada) var(--curva-entrada), translate var(--t-entrada) var(--curva-entrada); }
+  [data-e~="p1"] .tv-pild-1, [data-e~="p2"] .tv-pild-2, [data-e~="p3"] .tv-pild-3 { translate: 0 0; }
+  [data-e~="p2"] .tv-pild-1 { translate: 0 -8px; transition-duration: var(--t-fundido); }
+  /* «emerge»: cada palabra sale del desenfoque, 60 ms después de la anterior. */
+  .tv-pal { filter: blur(6px); transition: opacity var(--t-entrada) var(--curva-entrada), filter var(--t-entrada) var(--curva-entrada); transition-delay: calc(var(--i) * 60ms); }
+  [data-e~="r1"] .tv-pild-1 .tv-pal, [data-e~="r2"] .tv-pild-2 .tv-pal, [data-e~="r3"] .tv-pild-3 .tv-pal { filter: none; }
+  .tv-punto { animation: tv-gira 900ms linear infinite; }
+  [data-e~="r2"] .tv-punto, .tv-pista:not([data-e~="h2"]) .tv-punto { animation: none; }
+  .tv-cena { scale: .96; transition: opacity var(--t-paso) var(--curva-entrada), scale var(--t-paso) var(--curva-entrada); }
+  [data-e~="cena"] .tv-cena { scale: 1; }
+  /* El anillo de la cena cuenta mientras está a la vista. */
+  .tv-anillo { stroke-dashoffset: 6; }
+  [data-e~="cena"] .tv-anillo { animation: tv-cuenta 90s linear forwards; }
+  .tv-abrir { translate: -50% 8px; transition: opacity var(--t-entrada) var(--curva-entrada), translate var(--t-entrada) var(--curva-entrada); }
+  [data-e~="herr"] .tv-abrir { translate: -50% 0; }
+  /* La pulsación: se hunde 120 ms y deja un aro de brasa. */
+  [data-e~="abre"] .tv-abrir { animation: tv-pulsa 600ms var(--curva-entrada) both; }
+  /* La web crece desde la caja de la píldora (clip-path, nada se escala). */
+  .tv-web { clip-path: inset(84% 30% 5% 30% round 999px); transition: opacity var(--t-pulso), clip-path var(--t-entrada) var(--curva-entrada) var(--t-pulso); }
+  [data-e~="abre"] .tv-web { clip-path: inset(0 0 0 0 round 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-sala { will-change: auto; }
+  .tv-anillo { stroke-dashoffset: 17; }
+}
+@keyframes tv-sigue { from { opacity: 0; translate: 0 6px; } }
+@keyframes tv-gira { to { rotate: 1turn; } }
+@keyframes tv-cuenta { from { stroke-dashoffset: 6; } to { stroke-dashoffset: 40; } }
+@keyframes tv-pulsa {
+  0% { scale: 1; box-shadow: var(--sombra-vidrio), 0 0 0 0 color-mix(in srgb, var(--llama) 70%, transparent); }
+  20% { scale: .94; }
+  45% { scale: 1; box-shadow: var(--sombra-vidrio), 0 0 0 .5cqw color-mix(in srgb, var(--llama) 45%, transparent); }
+  100% { scale: 1; box-shadow: var(--sombra-vidrio), 0 0 0 1.4cqw transparent; }
+}
+
+/* ───────── Un marco de tele (bloque 5) y el texto de dentro, en unidades del contenedor ───────── */
+.tv-marco {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radio-bloque); background: var(--noche);
+  box-shadow: 0 0 0 1px var(--veta), 0 40px 80px -40px rgb(0 0 0 / .7); container-type: inline-size;
+}
+.tv-sin-marco { aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+.tv-txt { font-size: clamp(11px, 1.6cqw, 22px); line-height: 1.3; }
+
+/* ───────── Bloques 4–7 · Progreso.tsx escribe --p y data-e; sin JS (sin data-e) todo queda visible ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  /* 4 · el dedo recorre el trackpad y las zonas se encienden por turnos; «Hablar» se queda con su aro. */
+  .tv-mando[data-e~="dentro"] .tv-dedo { animation: tv-dedo 2.4s ease-in-out both; }
+  .tv-mando[data-e~="dentro"] .tv-zona-1 { animation: tv-zona 2.4s ease both; }
+  .tv-mando[data-e~="dentro"] .tv-zona-2 { animation: tv-zona 900ms ease 2.3s both; }
+  .tv-mando[data-e~="dentro"] .tv-zona-3 { animation: tv-zona 900ms ease 2.9s both; }
+  .tv-mando[data-e~="dentro"] .tv-zona-4 { animation: tv-habla 1.2s var(--curva-entrada) 3.5s both; }
+
+  /* 5 · las cifras llegan una a una y después se dibuja la marca de «Emparejado». */
+  .tv-codigo[data-e] .tv-cifra, .tv-codigo[data-e] .tv-hecho { opacity: 0; translate: 0 6px; transition: opacity var(--t-paso) var(--curva-entrada), translate var(--t-paso) var(--curva-entrada); }
+  .tv-codigo[data-e~="dentro"] .tv-cifra { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 110ms); }
+  .tv-codigo[data-e~="dentro"] .tv-hecho { opacity: 1; translate: 0 0; transition-delay: 550ms; }
+  .tv-codigo .tv-check { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .tv-codigo[data-e]:not([data-e~="dentro"]) .tv-check { stroke-dashoffset: 1; }
+  .tv-codigo[data-e~="dentro"] .tv-check { transition: stroke-dashoffset var(--t-paso) var(--curva-entrada) 700ms; }
+  [data-e] > ul > .tv-sigue-e { opacity: 0; translate: 0 6px; transition: opacity var(--t-entrada) var(--curva-entrada), translate var(--t-entrada) var(--curva-entrada); }
+  [data-e~="dentro"] > ul > .tv-sigue-e { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 70ms); }
+
+  /* 7 · cada punto tira su hilo de izquierda a derecha y el texto lo sigue. */
+  [data-e] .tv-cosa::before { scale: 0 1; transition: scale var(--t-entrada) var(--curva-desliza); transition-delay: calc(var(--i) * 90ms); }
+  [data-e~="dentro"] .tv-cosa::before { scale: 1 1; }
+  [data-e] .tv-cosa > * { opacity: 0; translate: 0 6px; transition: opacity var(--t-entrada) var(--curva-entrada), translate var(--t-entrada) var(--curva-entrada); transition-delay: calc(var(--i) * 90ms + 200ms); }
+  [data-e~="dentro"] .tv-cosa > * { opacity: 1; translate: 0 0; }
+}
+/* Sin hover en .tv-cosa: no son clicables y un gesto al pasar el ratón haría creer que sí. */
+.tv-cosa { position: relative; }
+.tv-cosa::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--veta); transform-origin: left; }
+@keyframes tv-dedo { 0% { translate: 0 0; } 25% { translate: -38px 22px; } 55% { translate: -8px -34px; } 80% { translate: 14px 6px; } 100% { translate: 0 0; } }
+@keyframes tv-zona { 0%, 100% { border-color: var(--veta); background-color: transparent; } 25%, 70% { border-color: var(--hueso-tenue); background-color: var(--piedra-alta); } }
+@keyframes tv-habla { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--hueso) 50%, transparent); } 100% { box-shadow: 0 0 0 10px transparent; } }
+
+/* ───────── 6 · el esquema: cables SVG con pathLength 1 que se dibujan entre --a y --a+--w ───────── */
 .tv-nodo { border: 1px solid var(--veta); border-radius: var(--radio-nodo); background: var(--piedra); padding: 12px 14px; }
-.tv-hilo { background: color-mix(in srgb, var(--hueso) 30%, transparent); }
+.tv-cable { display: block; width: 100%; height: 2px; overflow: visible; }
+.tv-esquema .h-12 > .tv-cable { width: 2px; height: 100%; }
+.tv-cable path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tv-cable-base { stroke: var(--veta); }
+.tv-cable-traza { stroke: color-mix(in srgb, var(--hueso) 80%, transparent); stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - clamp(0, (var(--p, 1) - var(--a)) / var(--w), 1)); }
+.tv-cable-pulso { stroke: var(--llama); stroke-width: 3; stroke-linecap: round; stroke-dasharray: .12 2; stroke-dashoffset: .12; opacity: 0; }
+.tv-fase { transition: color var(--t-fundido), opacity var(--t-fundido); }
+@media (prefers-reduced-motion: no-preference) {
+  .tv-esquema[data-e~="hdmi"] .tv-cable-pulso { animation: tv-pulso 1.2s linear both; }
+  .tv-esquema[data-e~="hdmi"] .tv-nodo-tele { animation: tv-llega 900ms var(--curva-entrada) 1.05s both; }
+  .tv-esquema[data-e] .tv-fase { opacity: .35; }
+  .tv-esquema[data-e~="gw"] .tv-fase { opacity: 1; color: var(--hueso); }
+  .tv-esquema[data-e~="gw"] .tv-fase:nth-of-type(2) { transition-delay: 120ms; }
+  .tv-esquema[data-e~="gw"] .tv-fase:nth-of-type(3) { transition-delay: 240ms; }
+  .tv-esquema[data-e] .tv-nodo-movil, .tv-esquema[data-e] .tv-rot-cable { opacity: .4; transition: opacity var(--t-paso); }
+  .tv-esquema[data-e~="fin"] .tv-nodo-movil, .tv-esquema[data-e~="hdmi"] .tv-rot-cable { opacity: 1; }
+}
+@keyframes tv-pulso { 0% { opacity: 1; stroke-dashoffset: .12; } 92% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: -1; } }
+@keyframes tv-llega { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--llama) 60%, transparent); border-color: var(--llama); } 100% { box-shadow: 0 0 0 12px transparent; border-color: var(--veta); } }
+
+/* ───────── 8 · cierre: la sala se aleja (Final.tsx escribe --k) y la luz baja; los enlaces, en el flujo ───────── */
+.tv-fin { --k: 0; position: relative; }
+.tv-fin-pista { height: 200svh; }
+@media (orientation: portrait) { .tv-fin-pista { height: 130svh; } }
+.tv-fin-escena { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--noche); }
+.tv-fin-sala { border-radius: 28px; overflow: hidden; }
+.tv-noche { position: absolute; inset: 0; background: var(--noche); opacity: calc(var(--k) * .4); }
+.tv-fin-texto { position: relative; margin-top: -24svh; padding-top: 72px; background: linear-gradient(to bottom, transparent, var(--noche) 72px); }
+@media (prefers-reduced-motion: reduce) {
+  .tv-fin-pista { height: 100svh; }
+}
