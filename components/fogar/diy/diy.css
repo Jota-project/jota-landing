@@ -147,6 +147,8 @@ html:has(.diy-articulo) { scroll-padding-top: 76px; }
 /* ---------- Escenario (≥ 1024 px): línea viva, mapa de las cinco piezas, recorrido e índice ---------- */
 .diy-escenario {
   position: sticky; top: 24px; display: grid; gap: 14px; max-height: calc(100dvh - 48px); overflow-y: auto; scrollbar-width: none;
+  /* El scroll propio recorta a su caja: margen interior (compensado fuera) para que el halo de la línea viva no se corte. */
+  padding: 32px 48px; margin: -32px -48px; max-height: calc(100dvh - 48px + 64px); top: -8px;
 }
 .diy-escenario .linea { width: 260px; margin-left: -8px; }
 .diy-escenario .mapa { position: relative; width: 320px; height: 196px; }

@@ -54,5 +54,10 @@ export function LineaViva({ estado = "rest", className = "", label = "Fogar", ti
     motor.current?.set(estado);
   }, [estado]);
 
-  return <canvas ref={ref} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className={`block aspect-[1000/420] w-full ${className}`} />;
+  // El lienzo se sale 70 unidades por lado (PAD en motor.js) para que el halo no se corte: 1140×560 sobre la caja 1000×420.
+  return (
+    <div className={`relative aspect-[1000/420] w-full ${className}`}>
+      <canvas ref={ref} {...(label ? { role: "img", "aria-label": label } : { "aria-hidden": true })} className="pointer-events-none absolute left-[-7%] top-[-16.6667%] block h-[133.3333%] w-[114%] max-w-none" />
+    </div>
+  );
 }
