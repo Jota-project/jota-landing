@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Indice } from "@/components/fogar/diy/Indice";
 import { Cabecera } from "@/components/fogar/sitio/Cabecera";
 import { Pie } from "@/components/fogar/sitio/Pie";
@@ -15,10 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function DiyPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("diy");
   return (
     <>
-      <a href="#contenido" className="f-saltar">{t("saltar")}</a>
       <Cabecera actual="diy" />
       <main>
         <Indice c={diyIndice(locale)} />

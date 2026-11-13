@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { Articulo } from "@/components/fogar/diy/Articulo";
 import { Cabecera } from "@/components/fogar/sitio/Cabecera";
 import { Pie } from "@/components/fogar/sitio/Pie";
@@ -16,11 +16,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ComoEstaHechoFogarPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations("diy");
   const ficha = diyIndice(locale).entradas.find((e) => e.slug === SLUG)!;
   return (
     <>
-      <a href="#texto" className="f-saltar">{t("saltar")}</a>
       <Cabecera actual="diy" />
       {/* key: al cambiar de idioma se remonta entero y el hilo y la casa no arrastran estado */}
       <main key={locale}>

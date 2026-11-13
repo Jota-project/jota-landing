@@ -78,15 +78,15 @@ main .vidrio-b { background: color-mix(in srgb, var(--hueso) 7%, var(--noche)); 
 }
 @media (prefers-reduced-motion: no-preference) { .f-boton:active, .d-boton:active { transform: scale(.97); } }
 @media (prefers-reduced-motion: reduce) { .f-boton, .f-enlace { transition-property: background-color, border-color, color, text-decoration-color; } }
-/* Saltar al contenido: invisible hasta el foco; entonces, una franja en el flujo encima de la cabecera (no tapa el logo).
-   .f-saltar-fijo, sobre la escena de la portada: arriba en el centro, entre el botón de pausa y la esquina. */
+/* Saltar el recorrido: solo para quien navega con teclado (:focus-visible, nunca con clic ni foco programático).
+   Píldora fija arriba en el centro, entre el botón de pausa y la esquina. */
 .f-saltar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.f-saltar:focus-visible, .f-saltar:focus {
-  position: static; width: auto; height: auto; clip-path: none; display: flex; justify-content: center; align-items: center; min-height: 44px;
-  background: var(--hueso); color: var(--noche); font-size: 15px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px;
-  outline: 2px solid var(--noche); outline-offset: -5px; box-shadow: none;
+.f-saltar:focus-visible {
+  position: fixed; z-index: 60; top: 12px; left: 50%; transform: translateX(-50%); width: auto; height: auto; clip-path: none;
+  padding: 10px 18px; border-radius: 999px; background: color-mix(in srgb, var(--noche) 88%, transparent); color: var(--hueso);
+  font-size: 14px; font-weight: 500; text-decoration: none; outline: 2px solid var(--hueso); outline-offset: 2px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
 }
-.f-saltar-fijo:focus-visible, .f-saltar-fijo:focus { position: fixed; z-index: 60; top: 8px; left: 50%; transform: translateX(-50%); padding-inline: 20px; border-radius: 999px; }
 /* Destinos de enlaces internos: que no queden pegados al borde ni bajo nada fijo; el foco programático no pinta anillo. */
 [id] { scroll-margin-top: 24px; }
 [tabindex="-1"]:focus { outline: none; }
