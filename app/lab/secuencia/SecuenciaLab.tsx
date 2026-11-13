@@ -114,7 +114,7 @@ export function SecuenciaLab() {
               de tu casa
             </h1>
             <p className="mt-[calc(36*var(--s))] max-w-[calc(480*var(--s))] text-[color:var(--hueso)]" style={{ fontSize: letra(20, 16), lineHeight: 1.5 }}>
-              Cualquier pantalla o altavoz puede ser un cliente.
+              Una pantalla o un altavoz compatibles pueden ser clientes.
             </p>
           </Anclado>
           <Anclado x={720} y={516}><span className={rotulo} style={{ fontSize: letra(16) }}>Fogar TV</span></Anclado>
@@ -138,7 +138,7 @@ export function SecuenciaLab() {
             <p className="text-center font-medium tabular-nums text-[color:var(--hueso)]" style={{ fontSize: letra(22, 11) }} aria-label="Temperatura: 21 grados">21°</p>
           </Anclado>
           <Anclado x={858} y={700} w={420}>
-            <p className={rotulo} style={{ fontSize: letra(16) }}>Un altavoz satélite con un cliente ligero.</p>
+            <p className={rotulo} style={{ fontSize: letra(16) }}>Un altavoz conectado a un cliente ligero: basta un ESP32.</p>
           </Anclado>
           <Anclado x={1500} y={380} w={380}>
             <p className="fg-etiqueta" style={{ fontSize: letra(16), animation: "none" }}>Tu segundo cerebro, donde ya escribes.</p>

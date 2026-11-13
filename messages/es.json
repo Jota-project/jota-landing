@@ -9,7 +9,7 @@
         "El fuego",
         "de tu casa"
       ],
-      "portada": "Cualquier pantalla o altavoz puede ser un cliente.",
+      "portada": "Una pantalla o un altavoz compatibles pueden ser clientes.",
       "instalalo": "Instálalo",
       "verTv": "Fogar TV",
       "gatewayH2": [
@@ -32,7 +32,7 @@
       "lampara": "Fogar enciende la lámpara a través de Home Assistant.",
       "lamparaBoton": "Lámpara",
       "temperatura": "Temperatura: {n} grados",
-      "radio": "Un altavoz satélite con un cliente ligero.",
+      "radio": "Un altavoz conectado a un cliente ligero: basta un ESP32.",
       "libreta": "Tu segundo cerebro, donde ya escribes.",
       "paredH2": "Todo pasa por el gateway.",
       "clientesLabel": "Clientes",
@@ -76,7 +76,7 @@
       },
       "usas": {
         "titulo": "Con lo que ya usas",
-        "lead": "Fogar se monta encima de lo que ya tienes en casa y lo lleva a la tele y al altavoz.",
+        "lead": "Fogar se monta encima de lo que ya tienes en casa y lo lleva a tus pantallas y altavoces compatibles.",
         "filas": [
           [
             "Home Assistant",
